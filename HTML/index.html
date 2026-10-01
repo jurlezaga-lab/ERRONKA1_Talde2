@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="eu" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e3eae6">
+  <title>Sarbide-kontrola | CIFP Txurdinaga LHII</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/estilos.css">
+  <script src="../JS/theme.js" defer></script>
+  <script src="../JS/dashboard.js" defer></script>
+</head>
+<body>
+    <div class="global-controls">
+      <label class="visually-hidden" for="language-select" data-i18n="languageLabel">Hizkuntza</label>
+      <select class="language-select" id="language-select" aria-label="Hizkuntza">
+        <option value="eu">EUS</option>
+        <option value="es">ESP</option>
+        <option value="en">ENG</option>
+      </select>
+      <button class="theme-toggle theme-toggle-global" type="button" data-theme-toggle aria-label="Modu iluna" title="Modu iluna">
+        <svg class="moon-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path></svg>
+        <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42 1.42m11.3-11.3 1.42-1.42"></path></svg>
+        <span data-theme-label>Modu iluna</span>
+      </button>
+    </div>
+
+  <section class="cover-screen" id="cover-screen" aria-labelledby="cover-title">
+    <header class="cover-header">
+      <img class="cover-logo" src="../IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
+    </header>
+    <div class="cover-content">
+      <p class="eyebrow"><span data-i18n="schoolName">FP TXURDINAGA</span> <span>·</span> <span data-i18n="accessControl">SARBIDE-KONTROLA</span></p>
+      <h1 id="cover-title"><span data-i18n="welcome">Ongi etorri</span><br><span data-i18n="welcomePlace">Txurdinagara.</span></h1>
+      <p class="cover-description" data-i18n="coverDescription">Ikastetxeko sarrera eta irteeren kontrola, toki bakar batean.</p>
+      <form class="login-form" id="login-form">
+        <div class="login-field">
+          <label for="login-username" data-i18n="username">Erabiltzailea</label>
+          <input id="login-username" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div class="login-field">
+          <label for="login-password" data-i18n="password">Pasahitza</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required aria-describedby="login-error">
+        </div>
+        <p class="login-error" id="login-error" role="alert" data-i18n="invalidLogin" hidden></p>
+        <button class="enter-button" type="submit">
+          <span data-i18n="signIn">Sartu</span>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </button>
+      </form>
+    </div>
+    <div class="cover-art" aria-hidden="true">
+      <span class="cover-orbit orbit-one"></span>
+      <span class="cover-orbit orbit-two"></span>
+      <span class="cover-orbit orbit-three"></span>
+      <span class="cover-crosshair"></span>
+      <span class="cover-art-core">TX</span>
+      <span class="cover-art-label">SARBIDEA <b>01 / 03</b></span>
+    </div>
+    <footer class="cover-footer"><span data-i18n="location">BILBO · TXURDINAGA</span><span data-i18n="welcomeLabel">ONGI ETORRI</span></footer>
+  </section>
+
+  <main class="app-shell dashboard-screen" id="dashboard-screen" hidden>
+    <header class="topbar">
+      <div class="brand-slot" aria-label="Txurdinagako logotipoa">
+        <img src="../IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
+      </div>
+      <div class="topbar-right">
+        <div class="live-indicator"><span class="live-dot"></span><span data-i18n="controlActive">Sarbide-kontrola aktibo</span></div>
+        <div class="date-display" aria-label="Ordu lokala" data-i18n-aria-label="localTime">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          <time id="clock">--:--:--</time>
+        </div>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow"><span data-i18n="schoolReception">Txurdinaga · Harrera</span></p>
+        <p class="session-identity" aria-live="polite">
+          <span data-i18n="signedInAs">Saioa irekita:</span>
+          <strong id="session-user"></strong>
+          <span class="session-role" id="session-role"></span>
+        </p>
+        <h1 id="page-title"><span data-i18n="goodDay">Egun on,</span><br><span id="profile-title">gaurko jarduna.</span></h1>
+        <p class="intro-note" data-i18n="introNote">Ikastetxeko sarrera-irteeren erregistroa.</p>
+      </div>
+      <div class="date-card">
+        <span class="date-card-label" data-i18n="todayLabel">Gaurko jardunaldia</span>
+        <strong id="today-date" data-i18n="loadingDate">Data kargatzen...</strong>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" aria-label="Sarbide-erregistroa eta laburpena" data-i18n-aria-label="accessSummary">
+      <article class="glass-panel entry-panel">
+        <div class="panel-heading">
+          <div>
+            <h2 data-i18n="registerAccess">Sarbide bat erregistratu</h2>
+            <p data-i18n="enterIdentifierHint">Erregistratu ibilgailuen sarrerak eta irteerak matrikularen bidez.</p>
+          </div>
+          <select class="access-type" id="access-type" name="access_type" aria-label="Sarrera mota" data-i18n-aria-label="accessType">
+            <option value="entrada" data-i18n="entry">Sarrera</option>
+            <option value="salida" data-i18n="exit">Irteera</option>
+          </select>
+        </div>
+        <form class="entry-form" id="access-form" action="#" method="post">
+          <label for="identifier" data-i18n="identifierLabel">Ibilgailuaren matrikula</label>
+          <fieldset class="plate-format" aria-describedby="plate-format-hint">
+            <legend class="visually-hidden" data-i18n="plateFormatLabel">Matrikula mota</legend>
+            <label><input type="radio" name="plate-format" value="current" checked><span data-i18n="currentPlateOption">Berria</span></label>
+            <label><input type="radio" name="plate-format" value="old"><span data-i18n="oldPlateOption">Antzinakoa</span></label>
+          </fieldset>
+          <p class="plate-format-hint" id="plate-format-hint" data-i18n="currentPlateHint">Formatua: 1234 BCD</p>
+          <div class="input-row">
+            <div class="input-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="10" r="1.7"></circle><path d="M6 16c.5-1.5 1.4-2.2 2.5-2.2S10.5 14.5 11 16M14 9h4M14 13h4"></path></svg>
+              <input id="identifier" name="identifier" type="text" placeholder="1234BCD" data-i18n-placeholder="identifierPlaceholder" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7" pattern="[0-9]{4}[BCDFGHJKLMNPRSTVWXYZ]{3}" required aria-describedby="plate-format-hint entry-help">
+            </div>
+            <button class="submit-button" type="submit">
+              <span data-i18n="register">Erregistratu</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+          </div>
+          <p class="form-footnote" id="entry-help">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4 6v5c0 5 3.4 8.2 8 10 4.6-1.8 8-5 8-10V6l-8-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            <span data-i18n="demoStorage">Demo modua: erregistroak nabigatzaile honetan bakarrik gordetzen dira.</span>
+          </p>
+        </form>
+      </article>
+
+      <article class="glass-panel stat-panel" aria-live="polite">
+        <div class="stat-top">
+          <span class="stat-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"></path></svg>
+            <span data-i18n="entryCardTitle">Sarrerak</span>
+          </span>
+          <span class="stat-date" data-i18n="dailyTotal">Eguneko guztira</span>
+        </div>
+        <div class="stat-value" id="entry-total">0</div>
+        <div class="stat-footer">
+          <span data-i18n="entryCardDescription">Gaur erregistratutako sarrerak</span>
+          <span class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"></path></svg><span data-i18n="today">Gaur</span></span>
+        </div>
+      </article>
+
+      <article class="glass-panel stat-panel exit-stat" aria-live="polite">
+        <div class="stat-top">
+          <span class="stat-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h13M12 7l5 5-5 5M20 5v14"></path></svg>
+            <span data-i18n="exitCardTitle">Irteerak</span>
+          </span>
+          <span class="stat-date" data-i18n="dailyTotal">Eguneko guztira</span>
+        </div>
+        <div class="stat-value" id="exit-total">0</div>
+        <div class="stat-footer">
+          <span data-i18n="exitCardDescription">Gaur erregistratutako irteerak</span>
+          <span class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"></path></svg><span data-i18n="today">Gaur</span></span>
+        </div>
+      </article>
+    </section>
+
+    <section class="glass-panel records-section" aria-labelledby="records-title">
+      <div class="section-heading">
+        <div class="section-title-group">
+          <span class="section-icon" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3M8 12h8M12 8v8"></path></svg>
+          </span>
+          <div>
+            <h2 id="records-title" data-i18n="recentEntries">Azken sarrerak</h2>
+            <p data-i18n="recentActivity">Ikastetxeko azken mugimenduak</p>
+          </div>
+        </div>
+        <span class="record-count" id="record-count">0 ERREGISTRO</span>
+      </div>
+      <div class="table-wrap" role="region" tabindex="0" aria-label="Azken sarrerak" data-i18n-aria-label="recentEntries">
+        <table>
+          <thead><tr><th scope="col" data-i18n="person">Pertsona</th><th scope="col" data-i18n="identifier">Identifikatzailea</th><th scope="col" data-i18n="time">Ordua</th><th scope="col" data-i18n="type">Mota</th><th scope="col" data-i18n="status">Egoera</th></tr></thead>
+          <tbody id="access-records"><tr class="empty-row"><td colspan="5" data-i18n="emptyRecords">Oraindik ez dago sarbiderik erregistratuta.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer-note">
+      <span data-i18n="footerBrand">FP TXURDINAGA · SARBIDE-KONTROLA</span>
+      <span data-i18n="localDemo">Demo lokala</span>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
