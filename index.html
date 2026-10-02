@@ -4,13 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#e3eae6">
-  <title>Sarbide-kontrola | CIFP Txurdinaga LHII</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../CSS/estilos.css">
-  <script src="../JS/theme.js" defer></script>
-  <script src="../JS/dashboard.js" defer></script>
+  <link rel="stylesheet" href="CSS/estilos.css">
+  <script src="JS/theme.js" defer></script>
+  <script src="JS/dashboard.js" defer></script>
 </head>
 <body>
     <div class="global-controls">
@@ -22,14 +21,14 @@
       </select>
       <button class="theme-toggle theme-toggle-global" type="button" data-theme-toggle aria-label="Modu iluna" title="Modu iluna">
         <svg class="moon-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path></svg>
-        <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42 1.42m11.3-11.3 1.42-1.42"></path></svg>
+        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
         <span data-theme-label>Modu iluna</span>
       </button>
     </div>
 
   <section class="cover-screen" id="cover-screen" aria-labelledby="cover-title">
     <header class="cover-header">
-      <img class="cover-logo" src="../IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
+      <img class="cover-logo" src="IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
     </header>
     <div class="cover-content">
       <p class="eyebrow"><span data-i18n="schoolName">FP TXURDINAGA</span> <span>·</span> <span data-i18n="accessControl">SARBIDE-KONTROLA</span></p>
@@ -62,10 +61,10 @@
     <footer class="cover-footer"><span data-i18n="location">BILBO · TXURDINAGA</span><span data-i18n="welcomeLabel">ONGI ETORRI</span></footer>
   </section>
 
-  <main class="app-shell dashboard-screen" id="dashboard-screen" hidden>
+  <main class="app-shell dashboard-screen" id="dashboard-screen" tabindex="-1" hidden>
     <header class="topbar">
       <div class="brand-slot" aria-label="Txurdinagako logotipoa">
-        <img src="../IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
+        <img src="IMG/Logotipo_Txurdinaga.png" alt="Txurdinaga ikastetxea">
       </div>
       <div class="topbar-right">
         <div class="live-indicator"><span class="live-dot"></span><span data-i18n="controlActive">Sarbide-kontrola aktibo</span></div>
@@ -94,42 +93,6 @@
     </section>
 
     <section class="dashboard-grid" aria-label="Sarbide-erregistroa eta laburpena" data-i18n-aria-label="accessSummary">
-      <article class="glass-panel entry-panel">
-        <div class="panel-heading">
-          <div>
-            <h2 data-i18n="registerAccess">Sarbide bat erregistratu</h2>
-            <p data-i18n="enterIdentifierHint">Erregistratu ibilgailuen sarrerak eta irteerak matrikularen bidez.</p>
-          </div>
-          <select class="access-type" id="access-type" name="access_type" aria-label="Sarrera mota" data-i18n-aria-label="accessType">
-            <option value="entrada" data-i18n="entry">Sarrera</option>
-            <option value="salida" data-i18n="exit">Irteera</option>
-          </select>
-        </div>
-        <form class="entry-form" id="access-form" action="#" method="post">
-          <label for="identifier" data-i18n="identifierLabel">Ibilgailuaren matrikula</label>
-          <fieldset class="plate-format" aria-describedby="plate-format-hint">
-            <legend class="visually-hidden" data-i18n="plateFormatLabel">Matrikula mota</legend>
-            <label><input type="radio" name="plate-format" value="current" checked><span data-i18n="currentPlateOption">Berria</span></label>
-            <label><input type="radio" name="plate-format" value="old"><span data-i18n="oldPlateOption">Antzinakoa</span></label>
-          </fieldset>
-          <p class="plate-format-hint" id="plate-format-hint" data-i18n="currentPlateHint">Formatua: 1234 BCD</p>
-          <div class="input-row">
-            <div class="input-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="10" r="1.7"></circle><path d="M6 16c.5-1.5 1.4-2.2 2.5-2.2S10.5 14.5 11 16M14 9h4M14 13h4"></path></svg>
-              <input id="identifier" name="identifier" type="text" placeholder="1234BCD" data-i18n-placeholder="identifierPlaceholder" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7" pattern="[0-9]{4}[BCDFGHJKLMNPRSTVWXYZ]{3}" required aria-describedby="plate-format-hint entry-help">
-            </div>
-            <button class="submit-button" type="submit">
-              <span data-i18n="register">Erregistratu</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-            </button>
-          </div>
-          <p class="form-footnote" id="entry-help">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4 6v5c0 5 3.4 8.2 8 10 4.6-1.8 8-5 8-10V6l-8-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>
-            <span data-i18n="demoStorage">Demo modua: erregistroak nabigatzaile honetan bakarrik gordetzen dira.</span>
-          </p>
-        </form>
-      </article>
-
       <article class="glass-panel stat-panel" aria-live="polite">
         <div class="stat-top">
           <span class="stat-label">
@@ -159,7 +122,133 @@
           <span class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"></path></svg><span data-i18n="today">Gaur</span></span>
         </div>
       </article>
+
+      <article class="glass-panel stat-panel parking-free-stat" aria-live="polite">
+        <div class="stat-top">
+          <span class="stat-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h4v4H7zM13 8h4v4h-4zM7 14h4v3H7zM13 14h4v3h-4z"></path></svg>
+            <span data-i18n="spacesFree">Libres</span>
+          </span>
+          <span class="stat-date" data-i18n="parkingNow">Orain</span>
+        </div>
+        <div class="stat-value" id="parking-free-total">0</div>
+        <div class="stat-footer"><span data-i18n="parkingFreeDescription">Une honetan erabilgarri dauden plazak</span></div>
+      </article>
+
+      <article class="glass-panel stat-panel parking-occupied-stat" aria-live="polite">
+        <div class="stat-top">
+          <span class="stat-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M12 8v4m0 3v.01"></path></svg>
+            <span data-i18n="spacesOccupied">Okupatuta</span>
+          </span>
+          <span class="stat-date" data-i18n="parkingNow">Orain</span>
+        </div>
+        <div class="stat-value" id="parking-occupied-total">0</div>
+        <div class="stat-footer"><span data-i18n="parkingOccupiedDescription">Une honetan okupatuta dauden plazak</span></div>
+      </article>
     </section>
+
+    <section class="glass-panel parking-section" id="parking-section" aria-labelledby="parking-title">
+      <div class="section-heading parking-heading">
+        <div class="section-title-group">
+          <span class="section-icon parking-sign" aria-hidden="true">P</span>
+          <div>
+            <h2 id="parking-title" data-i18n="parkingTitle">Parking</h2>
+            <p data-i18n="parkingDescription">Plazas, aforo y movimientos del aparcamiento.</p>
+          </div>
+        </div>
+      </div>
+      <div class="parking-toolbar">
+        <div class="parking-legend" aria-label="Leyenda de estados y vehículos" data-i18n-aria-label="parkingLegendLabel">
+          <span><i class="legend-space free" aria-hidden="true"></i><span data-i18n="spaceFree">Libre</span></span>
+          <span><i class="legend-space occupied" aria-hidden="true"></i><span data-i18n="spaceOccupied">Ocupada</span></span>
+        </div>
+        <div class="parking-filters" role="group" aria-label="Filtrar zonas" data-i18n-aria-label="parkingFiltersLabel">
+          <button class="parking-filter is-active" type="button" data-parking-filter="all" aria-pressed="true" data-i18n="filterAll">Todas</button>
+          <button class="parking-filter" type="button" data-parking-filter="visits" aria-pressed="false" data-i18n="zoneVisits">Visitas</button>
+          <button class="parking-filter" type="button" data-parking-filter="others" aria-pressed="false" data-i18n="zoneOthers">Otros</button>
+          <button class="parking-filter" type="button" data-parking-filter="teachers" aria-pressed="false" data-i18n="zoneTeachers">Profesorado</button>
+          <button class="parking-filter" type="button" data-parking-filter="students" aria-pressed="false" data-i18n="zoneStudents">Alumnado</button>
+        </div>
+      </div>
+      <div class="parking-plan" aria-label="Plano superior del aparcamiento" data-i18n-aria-label="parkingPlanLabel">
+        <div class="parking-compound">
+          <div class="parking-zones">
+            <article class="parking-zone visits-zone" data-parking-zone="visits">
+              <h3><span class="zone-marker" aria-hidden="true"></span><span data-i18n="zoneVisits">Bisitariak</span><span class="zone-prefix" data-i18n="zoneCodeVisits">B</span><span class="zone-count" id="count-visits"></span></h3>
+              <div class="parking-zone-layout">
+                <div class="parking-spaces" id="spaces-visits-upper"></div>
+                <div class="parking-spaces" id="spaces-visits-lower"></div>
+              </div>
+            </article>
+            <article class="parking-zone others-zone" data-parking-zone="others">
+              <h3><span class="zone-marker" aria-hidden="true"></span><span data-i18n="zoneOthers">Besteak</span><span class="zone-prefix" data-i18n="zoneCodeOthers">BE</span><span class="zone-count" id="count-others"></span></h3>
+              <div class="others-zone-legend" aria-label="Plaza motak" data-i18n-aria-label="otherSpacesLegendLabel">
+                <span><i class="other-space-marker motorcycle" aria-hidden="true"></i><span data-i18n="otherCapacityMotorcycles">5 moto</span></span>
+                <span><i class="other-space-marker electric" aria-hidden="true"></i><span data-i18n="otherCapacityElectric">3 elektriko</span></span>
+                <span><i class="other-space-marker accessible" aria-hidden="true"></i><span data-i18n="otherCapacityAccessible">2 mugikortasun urriko</span></span>
+              </div>
+              <div class="parking-zone-layout">
+                <div class="parking-spaces" id="spaces-others-upper"></div>
+                <div class="parking-spaces" id="spaces-others-lower"></div>
+              </div>
+            </article>
+            <article class="parking-zone teachers-zone" data-parking-zone="teachers">
+              <h3><span class="zone-marker" aria-hidden="true"></span><span data-i18n="zoneTeachers">Profesorado</span><span class="zone-prefix" data-i18n="zoneCodeTeachers">IR</span><span class="zone-count" id="count-teachers"></span></h3>
+              <div class="parking-zone-layout">
+                <div class="parking-spaces" id="spaces-teachers-upper"></div>
+                <div class="parking-spaces" id="spaces-teachers-lower"></div>
+              </div>
+            </article>
+            <article class="parking-zone students-zone" data-parking-zone="students">
+              <h3><span class="zone-marker" aria-hidden="true"></span><span data-i18n="zoneStudents">Alumnado</span><span class="zone-prefix" data-i18n="zoneCodeStudents">IK</span><span class="zone-count" id="count-students"></span></h3>
+              <div class="parking-zone-layout">
+                <div class="parking-spaces" id="spaces-students-upper"></div>
+                <div class="parking-spaces" id="spaces-students-lower"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="parking-dialog" id="parking-dialog" aria-labelledby="parking-dialog-title">
+      <div class="parking-dialog-content">
+        <div class="parking-dialog-heading">
+          <div>
+            <p class="eyebrow" data-i18n="parkingDialogEyebrow">Parking · plaza seleccionada</p>
+            <h2 id="parking-dialog-title" data-i18n="parkingReserveTitle">Reservar plaza</h2>
+          </div>
+          <button class="parking-dialog-close" id="parking-dialog-close" type="button" aria-label="Cerrar" data-i18n-aria-label="closeDialogLabel">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+        <p class="parking-dialog-space" id="parking-dialog-space"></p>
+        <form class="parking-reservation-form" id="parking-reservation-form">
+          <fieldset class="plate-format parking-plate-format" aria-describedby="parking-plate-hint">
+            <legend class="visually-hidden" data-i18n="plateFormatLabel">Formato de matrícula</legend>
+            <label><input type="radio" name="parking-plate-format" value="current" checked><span data-i18n="currentPlateOption">Actual</span></label>
+            <label><input type="radio" name="parking-plate-format" value="old"><span data-i18n="oldPlateOption">Provincial</span></label>
+          </fieldset>
+          <label class="parking-plate-label" for="parking-plate" data-i18n="identifierLabel">Matrícula del vehículo</label>
+          <div class="license-plate" id="license-plate-preview" data-format="current">
+            <span class="license-plate-country" aria-hidden="true">E</span>
+            <input class="parking-plate-input" id="parking-plate" name="plate" type="text" placeholder="1234 BCD" data-i18n-aria-label="identifierLabel" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7" required>
+          </div>
+          <p class="plate-format-hint" id="parking-plate-hint" data-i18n="currentPlateHint">Formato actual: 1234BCD.</p>
+          <p class="login-error" id="parking-plate-error" role="alert" hidden></p>
+          <button class="submit-button parking-reserve-button" type="submit">
+            <span data-i18n="reserveParkingSpace">Confirmar reserva</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+        </form>
+        <div class="parking-reserved-details" id="parking-reserved-details" hidden>
+          <p data-i18n="reservedForPlate">Reserva asociada a la matrícula</p>
+          <strong class="reserved-license-plate" id="reserved-plate"></strong>
+          <button class="parking-release-button" id="parking-release-button" type="button" data-i18n="releaseParkingSpace">Liberar plaza</button>
+        </div>
+      </div>
+    </dialog>
 
     <section class="glass-panel records-section" aria-labelledby="records-title">
       <div class="section-heading">
