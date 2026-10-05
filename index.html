@@ -75,6 +75,11 @@
       </div>
     </header>
 
+    <nav class="view-switcher" aria-label="Nabigazio nagusia" data-i18n-aria-label="appNavigation">
+      <button class="view-tab is-active" id="overview-view-button" type="button" data-app-view="overview" aria-pressed="true" data-i18n="overviewView">Ikuspegi orokorra</button>
+      <button class="view-tab" id="users-view-button" type="button" data-app-view="users" aria-pressed="false" data-i18n="usersView">Erabiltzaileak</button>
+    </nav>
+
     <section class="intro" aria-labelledby="page-title">
       <div>
         <p class="eyebrow"><span data-i18n="schoolReception">Txurdinaga · Harrera</span></p>
@@ -93,36 +98,6 @@
     </section>
 
     <section class="dashboard-grid" aria-label="Sarbide-erregistroa eta laburpena" data-i18n-aria-label="accessSummary">
-      <article class="glass-panel stat-panel" aria-live="polite">
-        <div class="stat-top">
-          <span class="stat-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"></path></svg>
-            <span data-i18n="entryCardTitle">Sarrerak</span>
-          </span>
-          <span class="stat-date" data-i18n="dailyTotal">Eguneko guztira</span>
-        </div>
-        <div class="stat-value" id="entry-total">0</div>
-        <div class="stat-footer">
-          <span data-i18n="entryCardDescription">Gaur erregistratutako sarrerak</span>
-          <span class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"></path></svg><span data-i18n="today">Gaur</span></span>
-        </div>
-      </article>
-
-      <article class="glass-panel stat-panel exit-stat" aria-live="polite">
-        <div class="stat-top">
-          <span class="stat-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h13M12 7l5 5-5 5M20 5v14"></path></svg>
-            <span data-i18n="exitCardTitle">Irteerak</span>
-          </span>
-          <span class="stat-date" data-i18n="dailyTotal">Eguneko guztira</span>
-        </div>
-        <div class="stat-value" id="exit-total">0</div>
-        <div class="stat-footer">
-          <span data-i18n="exitCardDescription">Gaur erregistratutako irteerak</span>
-          <span class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"></path></svg><span data-i18n="today">Gaur</span></span>
-        </div>
-      </article>
-
       <article class="glass-panel stat-panel parking-free-stat" aria-live="polite">
         <div class="stat-top">
           <span class="stat-label">
@@ -146,6 +121,61 @@
         <div class="stat-value" id="parking-occupied-total">0</div>
         <div class="stat-footer"><span data-i18n="parkingOccupiedDescription">Une honetan okupatuta dauden plazak</span></div>
       </article>
+    </section>
+
+    <section class="users-view" id="users-view" aria-labelledby="users-view-title" hidden>
+      <div class="users-view-heading">
+        <div>
+          <p class="eyebrow" data-i18n="attendanceEyebrow">Txurdinaga · Erabiltzaileak</p>
+          <h2 id="users-view-title" data-i18n="usersTitle">Erabiltzaileen fitxaketa</h2>
+          <p data-i18n="usersDescription">Aukeratu zure izena sarrera edo irteera erregistratzeko.</p>
+        </div>
+      </div>
+      <div class="attendance-summary" aria-live="polite">
+        <article class="glass-panel attendance-counter attendance-inside">
+          <span data-i18n="attendanceInside">Barruan</span>
+          <strong id="attendance-inside-count">0</strong>
+        </article>
+        <article class="glass-panel attendance-counter attendance-outside">
+          <span data-i18n="attendanceOutside">Kanpoan</span>
+          <strong id="attendance-outside-count">0</strong>
+        </article>
+      </div>
+      <div class="users-toolbar">
+        <label class="user-search-field" for="user-search">
+          <span data-i18n="searchUsersLabel">Bilatu erabiltzaileak</span>
+          <input id="user-search" type="search" autocomplete="off" data-i18n-placeholder="searchUsersPlaceholder" placeholder="Izena edo abizena">
+        </label>
+        <label class="user-role-field" for="user-role-filter">
+          <span data-i18n="filterByRoleLabel">Iragazi rolaren arabera</span>
+          <select id="user-role-filter">
+            <option value="all" data-i18n="allRoles">Rol guztiak</option>
+            <option value="2" data-i18n="roleStudent">Ikaslea</option>
+            <option value="3" data-i18n="roleTeacher">Irakaslea</option>
+            <option value="1" data-i18n="roleAdmin">Administratzailea</option>
+            <option value="4" data-i18n="roleInventory">Inbentarioa</option>
+          </select>
+        </label>
+      </div>
+      <div class="glass-panel users-panel">
+        <div class="table-wrap users-table-wrap" role="region" tabindex="0" aria-label="Erabiltzaileen zerrenda" data-i18n-aria-label="usersTableLabel">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th scope="col" data-i18n="userIdLabel">ID</th>
+                <th scope="col" data-i18n="firstNameLabel">Izena</th>
+                <th scope="col" data-i18n="lastNameLabel">Abizena</th>
+                <th scope="col" data-i18n="emailLabel">Emaila</th>
+                <th scope="col" data-i18n="roleIdLabel">Rola / ID</th>
+                <th scope="col" data-i18n="centerIdLabel">Zentroa / ID</th>
+                <th scope="col" data-i18n="attendanceStatusLabel">Egoera</th>
+                <th scope="col" data-i18n="attendanceActionLabel">Fichatu</th>
+              </tr>
+            </thead>
+            <tbody id="users-list"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <section class="glass-panel parking-section" id="parking-section" aria-labelledby="parking-title">

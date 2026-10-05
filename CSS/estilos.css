@@ -137,6 +137,7 @@ button { color: inherit; }
 }
 
 .cover-screen[hidden], .dashboard-screen[hidden] { display: none !important; }
+.dashboard-screen:focus { outline: none; }
 
 .cover-screen {
   position: relative;
@@ -587,10 +588,45 @@ h1 span { color: var(--acid); }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
 }
+
+.view-switcher { display: flex; gap: 6px; margin: -34px 0 30px; }
+.view-tab { min-height: 36px; padding: 0 13px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--surface); font-size: 10px; font-weight: 700; cursor: pointer; }
+.view-tab:hover { color: var(--text); background: var(--accent-fill); }
+.view-tab.is-active { border-color: var(--accent-border); color: var(--mint); background: var(--accent-fill); }
+.view-tab[hidden] { display: none !important; }
+#dashboard-screen[data-view="users"] > .intro,
+#dashboard-screen[data-view="users"] > .dashboard-grid,
+#dashboard-screen[data-view="users"] > #parking-section,
+#dashboard-screen[data-view="users"] > .records-section,
+#dashboard-screen[data-view="users"] > .footer-note { display: none; }
+.users-view { display: grid; gap: 16px; }
+.users-view[hidden] { display: none !important; }
+.users-view-heading h2 { margin: 0; font-size: 20px; }
+.users-view-heading p:not(.eyebrow) { margin: 7px 0 0; color: var(--muted); font-size: 11px; }
+.attendance-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.attendance-counter { display: flex; min-height: 104px; align-items: center; justify-content: space-between; padding: 16px 22px; color: var(--muted); font-size: 11px; font-weight: 700; }
+.attendance-counter strong { font: 600 42px/1 var(--sans); }
+.attendance-inside strong { color: var(--parking-free); }
+.attendance-outside strong { color: var(--parking-occupied); }
+.users-toolbar { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(180px, .55fr); gap: 12px; }
+.users-toolbar label { display: grid; gap: 6px; color: var(--field-label); font-size: 10px; font-weight: 700; }
+.users-toolbar input, .users-toolbar select { width: 100%; min-width: 0; height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 6px; outline: none; color: var(--text); background: var(--input-background); font: 11px var(--sans); }
+.users-toolbar input:focus, .users-toolbar select:focus { border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-fill); }
+.users-toolbar input::placeholder { color: var(--muted); opacity: .8; }
+.users-panel { min-width: 0; overflow: hidden; padding: 5px 12px; }
+.users-table { min-width: 940px; }
+.users-table td:nth-child(1), .users-table td:nth-child(5), .users-table td:nth-child(6) { color: var(--muted); font-family: var(--mono); }
+.attendance-status { display: inline-flex; min-height: 25px; align-items: center; padding: 0 8px; border: 1px solid var(--line); border-radius: 999px; font-size: 9px; font-weight: 700; }
+.attendance-status.is-inside { border-color: color-mix(in srgb, var(--parking-free) 40%, transparent); color: var(--parking-free); background: color-mix(in srgb, var(--parking-free) 10%, transparent); }
+.attendance-status.is-outside { border-color: color-mix(in srgb, var(--parking-occupied) 35%, transparent); color: var(--parking-occupied); background: color-mix(in srgb, var(--parking-occupied) 8%, transparent); }
+.attendance-status.is-inactive { color: var(--muted); }
+.attendance-action { min-height: 32px; padding: 0 10px; border: 1px solid var(--accent-border); border-radius: 5px; color: var(--mint); background: var(--accent-fill); font-size: 9px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.attendance-action:hover { background: var(--accent-fill); filter: brightness(1.15); }
+.attendance-action:focus-visible, .view-tab:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
 
 .glass-panel {
   border: 1px solid var(--line);
@@ -1214,6 +1250,7 @@ tbody tr:hover { background: rgba(255, 255, 255, .025); }
   .cover-footer { min-height: 48px; }
   .app-shell { width: min(100% - 40px, 700px); padding-top: 24px; }
   .topbar { margin-bottom: 38px; }
+  .view-switcher { margin: -18px 0 26px; }
   .intro { grid-template-columns: 1fr; gap: 20px; }
   .date-card { min-height: auto; padding: 14px 17px; }
   .dashboard-grid { grid-template-columns: 1fr; }
@@ -1266,6 +1303,8 @@ tbody tr:hover { background: rgba(255, 255, 255, .025); }
   .brand-slot img { width: 145px; }
   .dashboard-screen .topbar-right { margin-right: 90px; }
   .topbar-right { gap: 8px; }
+  .view-switcher { margin: -16px 0 24px; }
+  .view-tab { flex: 1; }
   .live-indicator { font-size: 0; }
   .date-display { display: none; }
   .intro { margin-bottom: 23px; }
@@ -1280,6 +1319,12 @@ tbody tr:hover { background: rgba(255, 255, 255, .025); }
   .input-row { flex-direction: column; }
   .submit-button { width: 100%; }
   .stat-panel { min-height: 205px; padding: 22px 20px 19px; }
+  .users-view { gap: 12px; }
+  .users-toolbar { grid-template-columns: 1fr; gap: 9px; }
+  .attendance-summary { gap: 8px; }
+  .attendance-counter { min-height: 82px; padding: 12px; font-size: 9px; }
+  .attendance-counter strong { font-size: 34px; }
+  .users-panel { margin: 0 -14px; }
   .records-section { margin-top: 16px; padding: 19px 14px 8px; }
   .parking-section { margin-top: 16px; padding: 19px 14px 17px; }
   .parking-heading { align-items: flex-start; }
