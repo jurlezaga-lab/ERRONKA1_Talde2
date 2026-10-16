@@ -63,3 +63,38 @@ themeButtons.forEach((button) => {
     }
   });
 });
+
+const fullscreenButton = document.querySelector("#fullscreen-toggle");
+const fullscreenLabels = {
+  eu: { enter: "Pantaila osoa", exit: "Pantaila osotik irten" },
+  es: { enter: "Pantalla completa", exit: "Salir de pantalla completa" },
+  en: { enter: "Enter full screen", exit: "Exit full screen" }
+};
+
+function updateFullscreenButton() {
+  const isFullscreen = Boolean(document.fullscreenElement);
+  const language = fullscreenLabels[themeRoot.lang] ? themeRoot.lang : "eu";
+  const label = isFullscreen ? fullscreenLabels[language].exit : fullscreenLabels[language].enter;
+
+  fullscreenButton.setAttribute("aria-label", label);
+  fullscreenButton.title = label;
+}
+
+fullscreenButton.addEventListener("click", async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch {
+    updateFullscreenButton();
+  }
+});
+
+document.addEventListener("fullscreenchange", updateFullscreenButton);
+new MutationObserver(updateFullscreenButton).observe(themeRoot, {
+  attributes: true,
+  attributeFilter: ["lang"]
+});
+updateFullscreenButton();

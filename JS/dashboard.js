@@ -1,5 +1,6 @@
 const coverScreen = document.querySelector("#cover-screen");
 const dashboardScreen = document.querySelector("#dashboard-screen");
+const pageTransition = document.querySelector("#page-transition");
 const loginForm = document.querySelector("#login-form");
 const loginUsername = document.querySelector("#login-username");
 const loginPassword = document.querySelector("#login-password");
@@ -16,6 +17,18 @@ const languageSelect = document.querySelector("#language-select");
 const viewButtons = document.querySelectorAll("[data-app-view]");
 const overviewViewButton = document.querySelector("#overview-view-button");
 const usersView = document.querySelector("#users-view");
+const inventoryViewButton = document.querySelector("#inventory-view-button");
+const inventoryView = document.querySelector("#inventory-view");
+const inventoryDatabaseView = document.querySelector("#inventory-database-view");
+const inventoryExcelView = document.querySelector("#inventory-excel-view");
+const inventoryBudgetView = document.querySelector("#inventory-budget-view");
+const inventoryModeButtons = document.querySelectorAll("[data-inventory-mode]");
+const inventoryList = document.querySelector("#inventory-list");
+const inventoryLoadMessage = document.querySelector("#inventory-load-message");
+const inventoryRefreshButton = document.querySelector("#inventory-refresh");
+const inventoryItemCount = document.querySelector("#inventory-item-count");
+const inventoryUnitCount = document.querySelector("#inventory-unit-count");
+const inventoryAttentionCount = document.querySelector("#inventory-attention-count");
 const usersList = document.querySelector("#users-list");
 const userSearchInput = document.querySelector("#user-search");
 const userRoleFilter = document.querySelector("#user-role-filter");
@@ -73,7 +86,11 @@ const translations = {
     localDemo: "Demo lokala", emptyRecords: "Oraindik ez dago sarbiderik erregistratuta.", demoPerson: "Demo ikaslea", demoStatus: "Demoa",
     signedInAs: "Saioa irekita:", roleAdmin: "Administratzailea", roleTeacher: "Irakaslea", roleStudent: "Ikaslea",
     titleAdmin: "Administrazioa", titleTeacher: "Irakaslearen panela", titleStudent: "Ikaslearen panela", titleInventory: "Inbentarioa", roleInventory: "Inbentarioa",
-    appNavigation: "Nabigazio nagusia", overviewView: "Orokorra", usersView: "Erabiltzaileak", attendanceEyebrow: "Txurdinaga · Erabiltzaileak", usersTitle: "Zentroko fitxaketa", usersDescription: "Ikusi nor dagoen barruan eta erregistratu sarrera edo irteera.", usersTableLabel: "Zentroko erabiltzaileen zerrenda", userIdLabel: "ID", firstNameLabel: "Izena", lastNameLabel: "Abizena", emailLabel: "Emaila", roleIdLabel: "Rola / ID", centerIdLabel: "Zentroa / ID", attendanceStatusLabel: "Egoera", attendanceActionLabel: "Ekintza", attendanceInside: "Barruan", attendanceOutside: "Kanpoan", attendanceNotApplicable: "Ez dagokio", attendanceInAction: "Sarrera erregistratu", attendanceOutAction: "Irteera erregistratu", attendanceEntrySaved: "Sarrera erregistratu da.", attendanceExitSaved: "Irteera erregistratu da.", searchUsersLabel: "Bilatu erabiltzaileak", searchUsersPlaceholder: "Izena edo abizena", filterByRoleLabel: "Iragazi rolaren arabera", allRoles: "Rol guztiak", noUsersFound: "Ez da erabiltzailerik aurkitu.",
+    appNavigation: "Nabigazio nagusia", overviewView: "Orokorra", usersView: "Erabiltzaileak", attendanceEyebrow: "Txurdinaga · Erabiltzaileak", usersTitle: "Zentroko fitxaketa", usersDescription: "Ikusi nor dagoen barruan eta erregistratu sarrera edo irteera.", usersTableLabel: "Zentroko erabiltzaileen zerrenda", userIdLabel: "ID", firstNameLabel: "Izena", lastNameLabel: "Abizena", emailLabel: "Emaila", roleIdLabel: "Rola / ID", centerIdLabel: "Zentroa / ID", attendanceStatusLabel: "Egoera", attendanceActionLabel: "Ekintza", attendanceInside: "Barruan", attendanceOutside: "Kanpoan", attendanceNotApplicable: "Ez dagokio", attendanceInAction: "Sarrera erregistratu", attendanceOutAction: "Irteera erregistratu", attendanceEntrySaved: "Sarrera erregistratu da.", attendanceExitSaved: "Irteera erregistratu da.", searchUsersLabel: "Bilatu erabiltzaileak", searchUsersPlaceholder: "Izena edo abizena", filterByRoleLabel: "Iragazi rolaren arabera", allRoles: "Rol guztiak", noUsersFound: "Ez da erabiltzailerik aurkitu.", loadingUsers: "Erabiltzaileak kargatzen...", usersLoadError: "Ezin izan dira erabiltzaileak kargatu. Egiaztatu PHP zerbitzaria eta datu-basearen konexioa.",
+    databaseConnectionError: "Ezin da MySQL zerbitzaria atzitu. Egiaztatu martxan dagoela.", databaseAccessDenied: "MySQL-k konexioa ukatu du. Egiaztatu PHP/db.konexioa.php fitxategiko erabiltzailea eta pasahitza.", databaseNotFound: "Ez da kudeaketa_db datu-basea aurkitu. Sortu eta inportatu SQL eskemak.", usersTableMissing: "Ez da usuarios taula aurkitu. Inportatu SQL/kudeaketa_2_estruktura.sql eskema.", invalidUsersResponse: "PHP zerbitzariak ez du JSON erantzun baliozkorik itzuli.",
+    inventoryView: "Inbentarioa", inventoryEyebrow: "Txurdinaga · Inbentarioa", inventoryTitle: "Inbentarioa eta aurrekontua", inventoryDescription: "Kontsultatu ekipamendua eta planifikatu etorkizuneko beharrak.", inventoryModesLabel: "Inbentarioaren ikuspegiak", inventoryDatabaseTab: "Uneko inbentarioa · Datu-basea", inventoryBudgetTab: "Etorkizuneko aurrekontua · Demoa", inventoryDatabaseTitle: "Uneko ekipamendua", inventoryDatabaseDescription: "MySQL datu-basetik zuzenean kargatua.", inventoryRefresh: "Berritu", inventoryKinds: "Artikulu mota", inventoryUnits: "Guztizko unitateak", inventoryNeedsAttention: "Arreta behar dute", inventoryTableLabel: "Datu-baseko inbentario-zerrenda", inventoryIdLabel: "ID", inventoryNameLabel: "Artikulua", inventoryQuantityLabel: "Kopurua", inventoryStatusLabel: "Egoera", inventoryCenterLabel: "Zentroa", inventoryReviewLabel: "Azken berrikuspena", inventoryLoading: "Inbentarioa kargatzen...", inventoryError: "Ezin izan da inbentarioa kargatu. Egiaztatu PHP zerbitzaria, datu-basea eta inbentario-taula.", inventoryEmpty: "Ez dago inbentario-artikulurik datu-basean.", inventoryStatusGood: "Ondo", inventoryStatusUnusable: "Erabili ezinik", inventoryStatusMaintenance: "Mantentze-lanetan", inventoryStatusLost: "Galduta", inventoryNoReview: "Berrikuspen-datarik ez",
+    budgetPlanningEyebrow: "Etorkizuneko plangintza · Demoa", budgetPlanningTitle: "10.000 €-ko aurrekontua planifikatzea", budgetPlanningDescription: "Kalkulu orientagarriak dira; ez daude datu-basera konektatuta eta ez dira benetako gastuak.", budgetAvailableLabel: "Urteko aurrekontua", budgetPlannedLabel: "Aurreikusitako beharrak", budgetRemainingLabel: "Erreserba geratzen da", budgetUseLabel: "Aurrekontuaren zatia", budgetDistributionTitle: "Beharren banaketa lehentasunaren arabera", budgetDistributionDescription: "Kolore bakoitzak etorkizunerako aurreikusitako gastua erakusten du.", budgetChartLabel: "Aurrekontuaren banaketa: lehentasun baxua berdez, ertaina laranjaz eta altua gorriz.", priorityLow: "Baxua · Berdea", priorityMedium: "Ertaina · Laranja", priorityHigh: "Altua · Gorria", budgetItemsTitle: "Etorkizuneko behar posibleak", budgetItemsDescription: "Aurrekontuaren adibide ilustratiboa, lehentasunaren arabera.", budgetPriorityTotal: "Guztira", budgetLowLaptop: "Ordenagailu eramangarrietarako RAM memoria", budgetLowMice: "Sagu eta teklatu sorta", budgetMediumWifi: "Ikasgelako Wi-Fi sarbide-puntuak", budgetMediumProjector: "Proiektoreen mantentzea eta piezak", budgetHighServer: "Laborategiko zerbitzari berritzea", budgetHighElectrical: "Laborategiko instalazio elektrikoak",
+    inventoryExcelTab: "PC osagaiak · Excel", inventoryExcelTitle: "PCaren osagaiak · Excel", inventoryExcelDescription: "Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.", inventoryExcelDownload: "Excel deskargatu", inventoryExcelSummary: "PCaren zehaztapen nagusiak", inventoryExcelTableLabel: "Excel fitxategiko osagaien zerrenda", excelStorage: "Biltegiratzea guztira", excelMemory: "RAM memoria", excelPower: "Energia-iturria", excelNumber: "Zk.", excelComponent: "Osagaia / Kategoria", excelManufacturer: "Fabrikatzailea / Marka", excelModel: "Modeloa / Zehaztapena", excelCapacity: "Edukiera / Potentzia", excelNotes: "Ohar teknikoak", excelMotherboard: "Plaka nagusia", excelMotherboardNote: "Intel mahai gaineko socket estandarra", excelGraphics: "Txartel grafikoa", excelGraphicsNote: "Oinarrizko gama eta bulegotika", excelHardDriveOne: "1. disko gogorra", excelHardDriveTwo: "2. disko gogorra", excelRam: "RAM memoria", excelGeneric: "Generikoa / Hainbat", excelRamNote: "2 GB-ko DDR3 modulua", excelPowerSupply: "Energia-iturria", excelCase: "Kaxa / Txasisa", excelMidTower: "Mid Tower", excelCaseNote: "ATX/MicroATX kaxa beltza", excelOpticalDrive: "Unitate optikoa / DVD irakurgailua", excelDvdModel: "DVD 24x (irakurri eta grabatu)", excelDvdNote: "SATA DVD/CD irakurgailu eta grabagailua", excelRecommendationTitle: "Excel fitxategiko gomendioa", excelRecommendationText: "RAM memoria 8 GB-ra zabaltzea eta SATA SSD disko bat gehitzea proposatzen da.",
     invalidLogin: "Erabiltzailea edo pasahitza ez da zuzena.", storageError: "Erregistroa pantaila honetan bakarrik dago eskuragarri.", accessSaved: "Sarbidea demo moduan erregistratu da.",
     recordCount: (count) => `${count} ERREGISTRO`, dateLocale: "eu-ES", darkTheme: "Modu iluna", lightTheme: "Modu argia", pageTitle: "Sarbide-kontrola | CIFP Txurdinaga LHII",
     viewParking: "Aparkalekua ikusi", parkingTitle: "Aparkalekua", parkingDescription: "Plazak, aforoa eta mugimenduak denbora errealean.", parkingLegendLabel: "Aparkalekuko egoeren legenda", parkingPlanLabel: "Aparkalekuko planoa goitik ikusita", spacesFree: "Libre", spacesOccupied: "Okupatuta", filterAll: "Denak", parkingFiltersLabel: "Aparkalekuko eremuak iragazi",
@@ -97,7 +114,11 @@ const translations = {
     localDemo: "Demo local", emptyRecords: "Todavía no hay accesos registrados.", demoPerson: "Alumno/a de demo", demoStatus: "Demo",
     signedInAs: "Sesión iniciada:", roleAdmin: "Administrador", roleTeacher: "Profesor/a", roleStudent: "Alumno/a",
     titleAdmin: "Administración", titleTeacher: "Panel del profesorado", titleStudent: "Panel del alumnado", titleInventory: "Panel de inventario", roleInventory: "Inventario",
-    appNavigation: "Navegación principal", overviewView: "Resumen", usersView: "Usuarios", attendanceEyebrow: "Txurdinaga · Usuarios", usersTitle: "Fichaje del centro", usersDescription: "Consulta quién está dentro y registra entradas o salidas.", usersTableLabel: "Lista de usuarios del centro", userIdLabel: "ID", firstNameLabel: "Nombre", lastNameLabel: "Apellidos", emailLabel: "Email", roleIdLabel: "Rol / ID", centerIdLabel: "Centro / ID", attendanceStatusLabel: "Estado", attendanceActionLabel: "Acción", attendanceInside: "Dentro", attendanceOutside: "Fuera", attendanceNotApplicable: "No aplica", attendanceInAction: "Registrar entrada", attendanceOutAction: "Registrar salida", attendanceEntrySaved: "Entrada registrada.", attendanceExitSaved: "Salida registrada.", searchUsersLabel: "Buscar usuarios", searchUsersPlaceholder: "Nombre o apellidos", filterByRoleLabel: "Filtrar por rol", allRoles: "Todos los roles", noUsersFound: "No se encontraron usuarios.",
+    appNavigation: "Navegación principal", overviewView: "Resumen", usersView: "Usuarios", attendanceEyebrow: "Txurdinaga · Usuarios", usersTitle: "Fichaje del centro", usersDescription: "Consulta quién está dentro y registra entradas o salidas.", usersTableLabel: "Lista de usuarios del centro", userIdLabel: "ID", firstNameLabel: "Nombre", lastNameLabel: "Apellidos", emailLabel: "Email", roleIdLabel: "Rol / ID", centerIdLabel: "Centro / ID", attendanceStatusLabel: "Estado", attendanceActionLabel: "Acción", attendanceInside: "Dentro", attendanceOutside: "Fuera", attendanceNotApplicable: "No aplica", attendanceInAction: "Registrar entrada", attendanceOutAction: "Registrar salida", attendanceEntrySaved: "Entrada registrada.", attendanceExitSaved: "Salida registrada.", searchUsersLabel: "Buscar usuarios", searchUsersPlaceholder: "Nombre o apellidos", filterByRoleLabel: "Filtrar por rol", allRoles: "Todos los roles", noUsersFound: "No se encontraron usuarios.", loadingUsers: "Cargando usuarios...", usersLoadError: "No se pudieron cargar los usuarios. Comprueba el servidor PHP y la conexión con la base de datos.",
+    databaseConnectionError: "No se puede conectar con MySQL. Comprueba que el servidor está iniciado.", databaseAccessDenied: "MySQL ha rechazado la conexión. Revisa el usuario y la contraseña en PHP/db.konexioa.php.", databaseNotFound: "No se encontró la base de datos kudeaketa_db. Créala e importa los esquemas SQL.", usersTableMissing: "No se encontró la tabla usuarios. Importa el esquema SQL/kudeaketa_2_estruktura.sql.", invalidUsersResponse: "El servidor PHP no devolvió una respuesta JSON válida.",
+    inventoryView: "Inventario", inventoryEyebrow: "Txurdinaga · Inventario", inventoryTitle: "Inventario y presupuesto", inventoryDescription: "Consulta el equipamiento y planifica necesidades futuras.", inventoryModesLabel: "Vistas del inventario", inventoryDatabaseTab: "Inventario actual · Base de datos", inventoryBudgetTab: "Presupuesto futuro · Demo", inventoryDatabaseTitle: "Equipamiento actual", inventoryDatabaseDescription: "Cargado directamente desde la base de datos MySQL.", inventoryRefresh: "Actualizar", inventoryKinds: "Tipos de artículos", inventoryUnits: "Unidades totales", inventoryNeedsAttention: "Necesitan atención", inventoryTableLabel: "Lista de inventario de la base de datos", inventoryIdLabel: "ID", inventoryNameLabel: "Artículo", inventoryQuantityLabel: "Cantidad", inventoryStatusLabel: "Estado", inventoryCenterLabel: "Centro", inventoryReviewLabel: "Última revisión", inventoryLoading: "Cargando inventario...", inventoryError: "No se pudo cargar el inventario. Comprueba PHP, la base de datos y la tabla de inventario.", inventoryEmpty: "No hay artículos de inventario en la base de datos.", inventoryStatusGood: "Correcto", inventoryStatusUnusable: "Inutilizable", inventoryStatusMaintenance: "En mantenimiento", inventoryStatusLost: "Perdido", inventoryNoReview: "Sin fecha de revisión",
+    budgetPlanningEyebrow: "Planificación futura · Demo", budgetPlanningTitle: "Planificación de un presupuesto de 10.000 €", budgetPlanningDescription: "Son estimaciones orientativas; no están conectadas a la base de datos ni representan gastos reales.", budgetAvailableLabel: "Presupuesto anual", budgetPlannedLabel: "Necesidades previstas", budgetRemainingLabel: "Reserva restante", budgetUseLabel: "Parte del presupuesto", budgetDistributionTitle: "Distribución de necesidades por prioridad", budgetDistributionDescription: "Cada color muestra el gasto previsto para necesidades futuras.", budgetChartLabel: "Distribución del presupuesto: prioridad baja en verde, media en naranja y alta en rojo.", priorityLow: "Baja · Verde", priorityMedium: "Media · Naranja", priorityHigh: "Alta · Rojo", budgetItemsTitle: "Posibles necesidades futuras", budgetItemsDescription: "Ejemplo ilustrativo de presupuesto, ordenado por prioridad.", budgetPriorityTotal: "Total", budgetLowLaptop: "Memoria RAM para portátiles", budgetLowMice: "Lote de ratones y teclados", budgetMediumWifi: "Puntos de acceso Wi-Fi para aulas", budgetMediumProjector: "Mantenimiento y piezas para proyectores", budgetHighServer: "Renovación del servidor del laboratorio", budgetHighElectrical: "Instalación eléctrica del laboratorio",
+    inventoryExcelTab: "Componentes PC · Excel", inventoryExcelTitle: "Componentes del PC · Excel", inventoryExcelDescription: "Resumen de las especificaciones técnicas del archivo Excel original.", inventoryExcelDownload: "Descargar Excel", inventoryExcelSummary: "Especificaciones principales del PC", inventoryExcelTableLabel: "Lista de componentes del archivo Excel", excelStorage: "Almacenamiento total", excelMemory: "Memoria RAM", excelPower: "Fuente de alimentación", excelNumber: "N.º", excelComponent: "Componente / Categoría", excelManufacturer: "Fabricante / Marca", excelModel: "Modelo / Especificación", excelCapacity: "Capacidad / Potencia", excelNotes: "Notas técnicas", excelMotherboard: "Placa base", excelMotherboardNote: "Socket de sobremesa Intel estándar", excelGraphics: "Tarjeta gráfica", excelGraphicsNote: "Gama básica y ofimática", excelHardDriveOne: "Disco duro 1", excelHardDriveTwo: "Disco duro 2", excelRam: "Memoria RAM", excelGeneric: "Genérico / Varios", excelRamNote: "Módulo DDR3 de 2 GB", excelPowerSupply: "Fuente de alimentación", excelCase: "Caja / Chasis", excelMidTower: "Semitorre", excelCaseNote: "Caja negra ATX/MicroATX", excelOpticalDrive: "Unidad óptica / Lector DVD", excelDvdModel: "DVD 24x (lectura y grabación)", excelDvdNote: "Lector y grabador SATA DVD/CD", excelRecommendationTitle: "Recomendación del Excel", excelRecommendationText: "Se recomienda ampliar la RAM a 8 GB y añadir una unidad SSD SATA.",
     invalidLogin: "El usuario o la contraseña no son correctos.", storageError: "El registro solo está disponible en esta pantalla.", accessSaved: "Acceso registrado en modo demo.",
     recordCount: (count) => `${count} ${count === 1 ? "REGISTRO" : "REGISTROS"}`, dateLocale: "es-ES", darkTheme: "Modo oscuro", lightTheme: "Modo claro", pageTitle: "Control de acceso | CIFP Txurdinaga LHII",
     viewParking: "Ver parking", parkingTitle: "Parking", parkingDescription: "Plazas, aforo y movimientos del aparcamiento.", parkingLegendLabel: "Leyenda del estado de las plazas", parkingPlanLabel: "Plano del parking visto desde arriba", spacesFree: "Libres", spacesOccupied: "Ocupadas", filterAll: "Todas", parkingFiltersLabel: "Filtrar zonas del parking",
@@ -121,7 +142,11 @@ const translations = {
     localDemo: "Local demo", emptyRecords: "No access records yet.", demoPerson: "Demo student", demoStatus: "Demo",
     signedInAs: "Signed in as:", roleAdmin: "Administrator", roleTeacher: "Teacher", roleStudent: "Student",
     titleAdmin: "Administration", titleTeacher: "Teacher dashboard", titleStudent: "Student dashboard", titleInventory: "Inventory dashboard", roleInventory: "Inventory",
-    appNavigation: "Main navigation", overviewView: "Overview", usersView: "Users", attendanceEyebrow: "Txurdinaga · Users", usersTitle: "Attendance", usersDescription: "See who is inside and record check-ins or check-outs.", usersTableLabel: "School user list", userIdLabel: "ID", firstNameLabel: "First name", lastNameLabel: "Last name", emailLabel: "Email", roleIdLabel: "Role / ID", centerIdLabel: "Center / ID", attendanceStatusLabel: "Status", attendanceActionLabel: "Action", attendanceInside: "Inside", attendanceOutside: "Outside", attendanceNotApplicable: "Not applicable", attendanceInAction: "Check in", attendanceOutAction: "Check out", attendanceEntrySaved: "Check-in recorded.", attendanceExitSaved: "Check-out recorded.", searchUsersLabel: "Search users", searchUsersPlaceholder: "Name or surname", filterByRoleLabel: "Filter by role", allRoles: "All roles", noUsersFound: "No users found.",
+    appNavigation: "Main navigation", overviewView: "Overview", usersView: "Users", attendanceEyebrow: "Txurdinaga · Users", usersTitle: "Attendance", usersDescription: "See who is inside and record check-ins or check-outs.", usersTableLabel: "School user list", userIdLabel: "ID", firstNameLabel: "First name", lastNameLabel: "Last name", emailLabel: "Email", roleIdLabel: "Role / ID", centerIdLabel: "Center / ID", attendanceStatusLabel: "Status", attendanceActionLabel: "Action", attendanceInside: "Inside", attendanceOutside: "Outside", attendanceNotApplicable: "Not applicable", attendanceInAction: "Check in", attendanceOutAction: "Check out", attendanceEntrySaved: "Check-in recorded.", attendanceExitSaved: "Check-out recorded.", searchUsersLabel: "Search users", searchUsersPlaceholder: "Name or surname", filterByRoleLabel: "Filter by role", allRoles: "All roles", noUsersFound: "No users found.", loadingUsers: "Loading users...", usersLoadError: "Could not load users. Check the PHP server and database connection.",
+    databaseConnectionError: "Cannot reach MySQL. Check that the server is running.", databaseAccessDenied: "MySQL rejected the connection. Check the username and password in PHP/db.konexioa.php.", databaseNotFound: "Database kudeaketa_db was not found. Create it and import the SQL schema.", usersTableMissing: "Table usuarios was not found. Import SQL/kudeaketa_2_estruktura.sql.", invalidUsersResponse: "The PHP server did not return a valid JSON response.",
+    inventoryView: "Inventory", inventoryEyebrow: "Txurdinaga · Inventory", inventoryTitle: "Inventory and budget", inventoryDescription: "Review equipment and plan for future needs.", inventoryModesLabel: "Inventory views", inventoryDatabaseTab: "Current inventory · Database", inventoryBudgetTab: "Future budget · Demo", inventoryDatabaseTitle: "Current equipment", inventoryDatabaseDescription: "Loaded directly from the MySQL database.", inventoryRefresh: "Refresh", inventoryKinds: "Item types", inventoryUnits: "Total units", inventoryNeedsAttention: "Need attention", inventoryTableLabel: "Database inventory list", inventoryIdLabel: "ID", inventoryNameLabel: "Item", inventoryQuantityLabel: "Quantity", inventoryStatusLabel: "Status", inventoryCenterLabel: "Center", inventoryReviewLabel: "Last review", inventoryLoading: "Loading inventory...", inventoryError: "Could not load inventory. Check PHP, the database and the inventory table.", inventoryEmpty: "There are no inventory items in the database.", inventoryStatusGood: "Good", inventoryStatusUnusable: "Unusable", inventoryStatusMaintenance: "Under maintenance", inventoryStatusLost: "Lost", inventoryNoReview: "No review date",
+    budgetPlanningEyebrow: "Future planning · Demo", budgetPlanningTitle: "Planning a €10,000 budget", budgetPlanningDescription: "These are illustrative estimates, not connected to the database or actual expenses.", budgetAvailableLabel: "Annual budget", budgetPlannedLabel: "Forecast needs", budgetRemainingLabel: "Remaining reserve", budgetUseLabel: "Budget allocated", budgetDistributionTitle: "Forecast needs by priority", budgetDistributionDescription: "Each colour represents forecast spending for future needs.", budgetChartLabel: "Budget allocation: low priority in green, medium in orange and high in red.", priorityLow: "Low · Green", priorityMedium: "Medium · Orange", priorityHigh: "High · Red", budgetItemsTitle: "Possible future needs", budgetItemsDescription: "Illustrative budget example grouped by priority.", budgetPriorityTotal: "Total", budgetLowLaptop: "Laptop RAM upgrades", budgetLowMice: "Mouse and keyboard bundle", budgetMediumWifi: "Classroom Wi-Fi access points", budgetMediumProjector: "Projector maintenance and parts", budgetHighServer: "Laboratory server upgrade", budgetHighElectrical: "Laboratory electrical installation",
+    inventoryExcelTab: "PC parts · Excel", inventoryExcelTitle: "PC components · Excel", inventoryExcelDescription: "Summary of the technical specifications in the original Excel file.", inventoryExcelDownload: "Download Excel", inventoryExcelSummary: "Main PC specifications", inventoryExcelTableLabel: "Components from the Excel file", excelStorage: "Total storage", excelMemory: "RAM", excelPower: "Power supply", excelNumber: "No.", excelComponent: "Component / Category", excelManufacturer: "Manufacturer / Brand", excelModel: "Model / Specification", excelCapacity: "Capacity / Power", excelNotes: "Technical notes", excelMotherboard: "Motherboard", excelMotherboardNote: "Standard Intel desktop socket", excelGraphics: "Graphics card", excelGraphicsNote: "Entry-level / office use", excelHardDriveOne: "Hard drive 1", excelHardDriveTwo: "Hard drive 2", excelRam: "RAM memory", excelGeneric: "Generic / Various", excelRamNote: "2 GB DDR3 module", excelPowerSupply: "Power supply", excelCase: "Case / Chassis", excelMidTower: "Mid Tower", excelCaseNote: "Black ATX/MicroATX case", excelOpticalDrive: "Optical drive / DVD reader", excelDvdModel: "DVD 24x (reader and writer)", excelDvdNote: "SATA DVD/CD reader and writer", excelRecommendationTitle: "Excel recommendation", excelRecommendationText: "The workbook recommends expanding the RAM to 8 GB and adding a SATA SSD.",
     invalidLogin: "The username or password is incorrect.", storageError: "The record is only available on this screen.", accessSaved: "Access registered in demo mode.",
     recordCount: (count) => `${count} ${count === 1 ? "RECORD" : "RECORDS"}`, dateLocale: "en-GB", darkTheme: "Dark mode", lightTheme: "Light mode", pageTitle: "Access control | CIFP Txurdinaga LHII",
     viewParking: "View parking", parkingTitle: "Parking", parkingDescription: "Parking spaces, capacity and movement.", parkingLegendLabel: "Parking space status legend", parkingPlanLabel: "Top-down parking layout", spacesFree: "Free", spacesOccupied: "Occupied", filterAll: "All", parkingFiltersLabel: "Filter parking zones",
@@ -133,17 +158,19 @@ const translations = {
 let toastTimeout;
 let currentLanguage = "eu";
 let activeAccount = null;
-const demoUsers = [
-  { id: 1, izena: "Aitor", abizena: "Iturbe", emaila: "aitor.admin@tartanga.eu", rol_id: 1, zentroa_id: 1 },
-  { id: 2, izena: "Miren", abizena: "Goikoetxea", emaila: "miren.ikasle@tartanga.eu", rol_id: 2, zentroa_id: 1 },
-  { id: 3, izena: "Unai", abizena: "Etxebarria", emaila: "unai.ikasle@tartanga.eu", rol_id: 2, zentroa_id: 1 },
-  { id: 4, izena: "Jon", abizena: "Urrutia", emaila: "jon.irakasle@tartanga.eu", rol_id: 3, zentroa_id: 1 },
-  { id: 5, izena: "Ane", abizena: "Zubizarreta", emaila: "ane.irakasle@tartanga.eu", rol_id: 3, zentroa_id: 1 },
-  { id: 6, izena: "Koldo", abizena: "Garcia", emaila: "koldo.inbentario@elorrieta.eu", rol_id: 4, zentroa_id: 2 },
-  { id: 7, izena: "Amaia", abizena: "Larrañaga", emaila: "amaia.irakasle@elorrieta.eu", rol_id: 3, zentroa_id: 2 },
-  { id: 8, izena: "Iker", abizena: "Bilbao", emaila: "iker.ikasle@elorrieta.eu", rol_id: 2, zentroa_id: 2 },
-  { id: 9, izena: "Nerea", abizena: "Agirre", emaila: "nerea.admin@txurdinaga.eu", rol_id: 1, zentroa_id: 3 },
-  { id: 10, izena: "Gorka", abizena: "Mendoza", emaila: "gorka.irakasle@txurdinaga.eu", rol_id: 3, zentroa_id: 3 }
+let demoUsers = [];
+let usersLoadState = "idle";
+let usersLoadPromise = null;
+let usersLoadErrorKey = "usersLoadError";
+let inventoryItems = [];
+let inventoryLoadState = "idle";
+let inventoryLoadPromise = null;
+let inventoryMode = "database";
+const budgetLimit = 10000;
+const budgetPlan = [
+  { priority: "low", items: [{ label: "budgetLowLaptop", amount: 1100 }, { label: "budgetLowMice", amount: 400 }] },
+  { priority: "medium", items: [{ label: "budgetMediumWifi", amount: 1800 }, { label: "budgetMediumProjector", amount: 1200 }] },
+  { priority: "high", items: [{ label: "budgetHighServer", amount: 3000 }, { label: "budgetHighElectrical", amount: 1400 }] }
 ];
 const demoAccounts = {
   admin: { password: "1234", role: "Admin", userId: 9 },
@@ -174,17 +201,34 @@ function updateSessionIdentity() {
   profileTitle.textContent = translate(`title${activeAccount.role}`);
 }
 
+let pageTransitionTimeout;
+
+function playPageTransition() {
+  window.clearTimeout(pageTransitionTimeout);
+  pageTransition.classList.remove("is-active");
+  void pageTransition.offsetWidth;
+  pageTransition.classList.add("is-active");
+  pageTransitionTimeout = window.setTimeout(() => {
+    pageTransition.classList.remove("is-active");
+  }, 1100);
+}
+
 function setDashboardView(viewName) {
-  const selectedView = viewName === "users" ? "users" : "overview";
+  const selectedView = ["users", "inventory"].includes(viewName) ? viewName : "overview";
+  const previousView = dashboardScreen.dataset.view;
   dashboardScreen.dataset.view = selectedView;
   usersView.hidden = selectedView !== "users";
+  inventoryView.hidden = selectedView !== "inventory";
   overviewViewButton.hidden = activeAccount?.role !== "Admin";
+  inventoryViewButton.hidden = !["Admin", "Inventory"].includes(activeAccount?.role);
   viewButtons.forEach((button) => {
     const isSelected = button.dataset.appView === selectedView;
     button.classList.toggle("is-active", isSelected);
     button.setAttribute("aria-pressed", String(isSelected));
   });
-  if (selectedView === "users") renderAttendanceUsers();
+  if (previousView && previousView !== selectedView) playPageTransition();
+  if (selectedView === "users") loadUsers();
+  if (selectedView === "inventory") loadInventory();
 }
 
 function applyLanguage(language) {
@@ -209,6 +253,8 @@ function applyLanguage(language) {
   renderDashboard();
   renderParking();
   renderAttendanceUsers();
+  renderInventory();
+  renderBudgetPlan();
 }
 
 try {
@@ -569,6 +615,49 @@ function renderDashboard() {
   recentEntries.forEach((entry) => recordsBody.append(createRecordRow(entry)));
 }
 
+async function loadUsers() {
+  if (usersLoadState === "loaded") {
+    renderAttendanceUsers();
+    return;
+  }
+  if (usersLoadPromise) return usersLoadPromise;
+
+  usersLoadState = "loading";
+  usersLoadErrorKey = "usersLoadError";
+  renderAttendanceUsers();
+  usersLoadPromise = (async () => {
+    try {
+      const response = await fetch("PHP/select.php", {
+        headers: { Accept: "application/json" }
+      });
+      let result;
+      try {
+        result = await response.json();
+      } catch (error) {
+        usersLoadErrorKey = "invalidUsersResponse";
+        throw error;
+      }
+      if (!response.ok) {
+        usersLoadErrorKey = translations[currentLanguage][result.errorCode] ? result.errorCode : "usersLoadError";
+        throw new Error(`HTTP ${response.status}: ${result.errorCode || "Unknown error"}`);
+      }
+      if (!Array.isArray(result.users)) {
+        usersLoadErrorKey = "invalidUsersResponse";
+        throw new Error("Invalid users response");
+      }
+      demoUsers = result.users;
+      usersLoadState = "loaded";
+    } catch (error) {
+      console.error("No se pudieron cargar los usuarios:", error);
+      usersLoadState = "error";
+    } finally {
+      usersLoadPromise = null;
+      renderAttendanceUsers();
+    }
+  })();
+  return usersLoadPromise;
+}
+
 function latestUserAttendance(userId) {
   return entries
     .filter((entry) => entry.user_id === userId)
@@ -595,6 +684,17 @@ function renderAttendanceUsers() {
   attendanceOutsideCount.textContent = String(attendanceUsers.length - insideCount);
   usersList.replaceChildren();
 
+  if (usersLoadState === "loading" || usersLoadState === "error") {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    row.className = "empty-row";
+    cell.colSpan = 8;
+    cell.textContent = translate(usersLoadState === "loading" ? "loadingUsers" : usersLoadErrorKey);
+    row.append(cell);
+    usersList.append(row);
+    return;
+  }
+
   if (visibleUsers.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
@@ -612,13 +712,17 @@ function renderAttendanceUsers() {
     const canAttend = [1, 2, 3, 4].includes(user.rol_id);
     const isInside = attendance?.access_type === "entrada";
     const roleKey = { 1: "roleAdmin", 2: "roleStudent", 3: "roleTeacher", 4: "roleInventory" }[user.rol_id];
+    const roleName = roleKey ? translate(roleKey) : user.rol_izena || "-";
+    const centerName = user.zentroa_id === null
+      ? "-"
+      : `${user.zentroa_izena || ""}${user.zentroa_izena ? " · " : ""}${user.zentroa_id}`;
     const cells = [
       String(user.id),
       user.izena,
       user.abizena,
       user.emaila,
-      `${user.rol_id} · ${translate(roleKey)}`,
-      String(user.zentroa_id)
+      user.rol_id === null ? roleName : `${user.rol_id} · ${roleName}`,
+      centerName
     ];
 
     cells.forEach((value) => {
@@ -649,6 +753,158 @@ function renderAttendanceUsers() {
     }
     row.append(actionCell);
     usersList.append(row);
+  });
+}
+
+function formatEuro(amount) {
+  const locale = currentLanguage === "eu" ? "es-ES" : translate("dateLocale");
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+function setInventoryMode(mode) {
+  const selectedMode = ["excel", "budget"].includes(mode) ? mode : "database";
+  const modeChanged = inventoryMode !== selectedMode;
+  inventoryMode = selectedMode;
+  inventoryDatabaseView.hidden = inventoryMode !== "database";
+  inventoryExcelView.hidden = inventoryMode !== "excel";
+  inventoryBudgetView.hidden = inventoryMode !== "budget";
+  inventoryModeButtons.forEach((button) => {
+    const isSelected = button.dataset.inventoryMode === inventoryMode;
+    button.classList.toggle("is-active", isSelected);
+    button.setAttribute("aria-pressed", String(isSelected));
+  });
+  if (modeChanged) playPageTransition();
+  if (inventoryMode === "database") loadInventory();
+}
+
+async function loadInventory() {
+  if (inventoryLoadState === "loaded") {
+    renderInventory();
+    return;
+  }
+  if (inventoryLoadPromise) return inventoryLoadPromise;
+
+  inventoryLoadState = "loading";
+  renderInventory();
+  inventoryLoadPromise = (async () => {
+    try {
+      const response = await fetch("PHP/inbentarioa.php", {
+        headers: { Accept: "application/json" }
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${result.error || "No se pudo cargar"}`);
+      if (!Array.isArray(result.items)) throw new Error("La respuesta de inventario no contiene una lista válida");
+      inventoryItems = result.items;
+      inventoryLoadState = "loaded";
+    } catch (error) {
+      console.error("No se pudo cargar el inventario:", error);
+      inventoryLoadState = "error";
+    } finally {
+      inventoryLoadPromise = null;
+      renderInventory();
+    }
+  })();
+  return inventoryLoadPromise;
+}
+
+function renderInventory() {
+  if (!inventoryList) return;
+  const unitCount = inventoryItems.reduce((total, item) => total + item.kopurua, 0);
+  const attentionCount = inventoryItems.filter((item) => item.egoera !== "ONDO").length;
+  inventoryItemCount.textContent = String(inventoryItems.length);
+  inventoryUnitCount.textContent = String(unitCount);
+  inventoryAttentionCount.textContent = String(attentionCount);
+  inventoryList.replaceChildren();
+
+  if (inventoryLoadState === "loading" || inventoryLoadState === "error") {
+    inventoryLoadMessage.textContent = translate(inventoryLoadState === "loading" ? "inventoryLoading" : "inventoryError");
+    inventoryLoadMessage.hidden = false;
+    return;
+  }
+  inventoryLoadMessage.hidden = true;
+
+  if (inventoryItems.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    row.className = "empty-row";
+    cell.colSpan = 6;
+    cell.textContent = translate("inventoryEmpty");
+    row.append(cell);
+    inventoryList.append(row);
+    return;
+  }
+
+  const statusKeys = {
+    ONDO: "inventoryStatusGood",
+    ERABILI_EZINIK: "inventoryStatusUnusable",
+    MANTENIMENDUAN: "inventoryStatusMaintenance",
+    GALDUTAKO: "inventoryStatusLost"
+  };
+  inventoryItems.forEach((item) => {
+    const row = document.createElement("tr");
+    const statusKey = statusKeys[item.egoera];
+    const status = document.createElement("span");
+    status.className = `inventory-status ${statusKey ? statusKey.replace("inventoryStatus", "").toLowerCase() : "unknown"}`;
+    status.textContent = statusKey ? translate(statusKey) : item.egoera;
+    const reviewDate = item.azken_berrikuspena
+      ? new Intl.DateTimeFormat(translate("dateLocale"), { dateStyle: "medium" }).format(new Date(item.azken_berrikuspena.replace(" ", "T")))
+      : translate("inventoryNoReview");
+    const values = [String(item.id), item.izena, String(item.kopurua), status, item.zentroa_izena || String(item.zentroa_id), reviewDate];
+    values.forEach((value) => {
+      const cell = document.createElement("td");
+      if (value instanceof HTMLElement) cell.append(value);
+      else cell.textContent = value;
+      row.append(cell);
+    });
+    inventoryList.append(row);
+  });
+}
+
+function renderBudgetPlan() {
+  const plannedTotal = budgetPlan.reduce((total, group) => total + group.items.reduce((subtotal, item) => subtotal + item.amount, 0), 0);
+  const remaining = budgetLimit - plannedTotal;
+  const groupTotals = Object.fromEntries(budgetPlan.map((group) => [
+    group.priority,
+    group.items.reduce((total, item) => total + item.amount, 0)
+  ]));
+  document.querySelector("#budget-total-value").textContent = formatEuro(budgetLimit);
+  document.querySelector("#budget-planned-value").textContent = formatEuro(plannedTotal);
+  document.querySelector("#budget-remaining-value").textContent = formatEuro(remaining);
+  document.querySelector("#budget-use-value").textContent = `${Math.round(plannedTotal / budgetLimit * 100)}%`;
+  document.querySelector("#budget-chart-total").textContent = formatEuro(plannedTotal);
+  document.querySelector("#budget-low-value").textContent = formatEuro(groupTotals.low);
+  document.querySelector("#budget-medium-value").textContent = formatEuro(groupTotals.medium);
+  document.querySelector("#budget-high-value").textContent = formatEuro(groupTotals.high);
+  budgetPlan.forEach((group) => {
+    document.querySelector(`#budget-bar-${group.priority}`).style.flexBasis = `${groupTotals[group.priority] / budgetLimit * 100}%`;
+  });
+
+  const groupsContainer = document.querySelector("#budget-priority-groups");
+  groupsContainer.replaceChildren();
+  budgetPlan.forEach((group) => {
+    const section = document.createElement("section");
+    section.className = `budget-priority-group priority-${group.priority}`;
+    const heading = document.createElement("h4");
+    heading.textContent = translate(`priority${group.priority[0].toUpperCase()}${group.priority.slice(1)}`);
+    const list = document.createElement("ul");
+    group.items.forEach((item) => {
+      const row = document.createElement("li");
+      const description = document.createElement("span");
+      description.textContent = translate(item.label);
+      const amount = document.createElement("strong");
+      amount.textContent = formatEuro(item.amount);
+      row.append(description, amount);
+      list.append(row);
+    });
+    const total = document.createElement("p");
+    total.className = "budget-priority-total";
+    total.textContent = `${translate("budgetPriorityTotal")}: ${formatEuro(groupTotals[group.priority])}`;
+    section.append(heading, list, total);
+    groupsContainer.append(section);
   });
 }
 
@@ -705,7 +961,7 @@ loginForm.addEventListener("submit", (event) => {
   activeAccount = { username, role: account.role, userId: account.userId };
   updateSessionIdentity();
   loginPassword.value = "";
-  setDashboardView(activeAccount.role === "Admin" ? "overview" : "users");
+  setDashboardView(activeAccount.role === "Admin" ? "overview" : activeAccount.role === "Inventory" ? "inventory" : "users");
   showDashboard();
 });
 
@@ -715,6 +971,11 @@ loginForm.addEventListener("input", () => {
 });
 
 viewButtons.forEach((button) => button.addEventListener("click", () => setDashboardView(button.dataset.appView)));
+inventoryModeButtons.forEach((button) => button.addEventListener("click", () => setInventoryMode(button.dataset.inventoryMode)));
+inventoryRefreshButton.addEventListener("click", () => {
+  inventoryLoadState = "idle";
+  loadInventory();
+});
 userSearchInput.addEventListener("input", renderAttendanceUsers);
 userRoleFilter.addEventListener("change", renderAttendanceUsers);
 usersList.addEventListener("click", (event) => {
