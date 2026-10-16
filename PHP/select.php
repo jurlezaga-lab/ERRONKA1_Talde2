@@ -1,6 +1,14 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
+require_once __DIR__ . '/session.php';
+if (!startAppSession()) {
+    http_response_code(500);
+    echo json_encode(['errorCode' => 'session_start_failed']);
+    exit;
+}
+requireAppRole(['Admin']);
+
 try {
     require_once 'db.konexioa.php';
     if (!$conn->set_charset('utf8mb4')) {

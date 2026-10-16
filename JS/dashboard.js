@@ -5,6 +5,7 @@ const loginForm = document.querySelector("#login-form");
 const loginUsername = document.querySelector("#login-username");
 const loginPassword = document.querySelector("#login-password");
 const loginError = document.querySelector("#login-error");
+const logoutButton = document.querySelector("#logout-button");
 const clock = document.querySelector("#clock");
 const todayDate = document.querySelector("#today-date");
 const recordsBody = document.querySelector("#access-records");
@@ -15,6 +16,7 @@ const recordCount = document.querySelector("#record-count");
 const toast = document.querySelector("#toast");
 const languageSelect = document.querySelector("#language-select");
 const viewButtons = document.querySelectorAll("[data-app-view]");
+const viewSwitcher = document.querySelector(".view-switcher");
 const overviewViewButton = document.querySelector("#overview-view-button");
 const usersView = document.querySelector("#users-view");
 const inventoryViewButton = document.querySelector("#inventory-view-button");
@@ -23,6 +25,12 @@ const inventoryDatabaseView = document.querySelector("#inventory-database-view")
 const inventoryExcelView = document.querySelector("#inventory-excel-view");
 const inventoryBudgetView = document.querySelector("#inventory-budget-view");
 const inventoryModeButtons = document.querySelectorAll("[data-inventory-mode]");
+const overviewOnlySections = [
+  document.querySelector(".intro"),
+  document.querySelector(".dashboard-grid"),
+  document.querySelector("#parking-section"),
+  document.querySelector(".records-section")
+];
 const inventoryList = document.querySelector("#inventory-list");
 const inventoryLoadMessage = document.querySelector("#inventory-load-message");
 const inventoryRefreshButton = document.querySelector("#inventory-refresh");
@@ -91,7 +99,7 @@ const translations = {
     inventoryView: "Inbentarioa", inventoryEyebrow: "Txurdinaga · Inbentarioa", inventoryTitle: "Inbentarioa eta aurrekontua", inventoryDescription: "Kontsultatu ekipamendua eta planifikatu etorkizuneko beharrak.", inventoryModesLabel: "Inbentarioaren ikuspegiak", inventoryDatabaseTab: "Uneko inbentarioa · Datu-basea", inventoryBudgetTab: "Etorkizuneko aurrekontua · Demoa", inventoryDatabaseTitle: "Uneko ekipamendua", inventoryDatabaseDescription: "MySQL datu-basetik zuzenean kargatua.", inventoryRefresh: "Berritu", inventoryKinds: "Artikulu mota", inventoryUnits: "Guztizko unitateak", inventoryNeedsAttention: "Arreta behar dute", inventoryTableLabel: "Datu-baseko inbentario-zerrenda", inventoryIdLabel: "ID", inventoryNameLabel: "Artikulua", inventoryQuantityLabel: "Kopurua", inventoryStatusLabel: "Egoera", inventoryCenterLabel: "Zentroa", inventoryReviewLabel: "Azken berrikuspena", inventoryLoading: "Inbentarioa kargatzen...", inventoryError: "Ezin izan da inbentarioa kargatu. Egiaztatu PHP zerbitzaria, datu-basea eta inbentario-taula.", inventoryEmpty: "Ez dago inbentario-artikulurik datu-basean.", inventoryStatusGood: "Ondo", inventoryStatusUnusable: "Erabili ezinik", inventoryStatusMaintenance: "Mantentze-lanetan", inventoryStatusLost: "Galduta", inventoryNoReview: "Berrikuspen-datarik ez",
     budgetPlanningEyebrow: "Etorkizuneko plangintza · Demoa", budgetPlanningTitle: "10.000 €-ko aurrekontua planifikatzea", budgetPlanningDescription: "Kalkulu orientagarriak dira; ez daude datu-basera konektatuta eta ez dira benetako gastuak.", budgetAvailableLabel: "Urteko aurrekontua", budgetPlannedLabel: "Aurreikusitako beharrak", budgetRemainingLabel: "Erreserba geratzen da", budgetUseLabel: "Aurrekontuaren zatia", budgetDistributionTitle: "Beharren banaketa lehentasunaren arabera", budgetDistributionDescription: "Kolore bakoitzak etorkizunerako aurreikusitako gastua erakusten du.", budgetChartLabel: "Aurrekontuaren banaketa: lehentasun baxua berdez, ertaina laranjaz eta altua gorriz.", priorityLow: "Baxua · Berdea", priorityMedium: "Ertaina · Laranja", priorityHigh: "Altua · Gorria", budgetItemsTitle: "Etorkizuneko behar posibleak", budgetItemsDescription: "Aurrekontuaren adibide ilustratiboa, lehentasunaren arabera.", budgetPriorityTotal: "Guztira", budgetLowLaptop: "Ordenagailu eramangarrietarako RAM memoria", budgetLowMice: "Sagu eta teklatu sorta", budgetMediumWifi: "Ikasgelako Wi-Fi sarbide-puntuak", budgetMediumProjector: "Proiektoreen mantentzea eta piezak", budgetHighServer: "Laborategiko zerbitzari berritzea", budgetHighElectrical: "Laborategiko instalazio elektrikoak",
     inventoryExcelTab: "PC osagaiak · Excel", inventoryExcelTitle: "PCaren osagaiak · Excel", inventoryExcelDescription: "Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.", inventoryExcelDownload: "Excel deskargatu", inventoryExcelSummary: "PCaren zehaztapen nagusiak", inventoryExcelTableLabel: "Excel fitxategiko osagaien zerrenda", excelStorage: "Biltegiratzea guztira", excelMemory: "RAM memoria", excelPower: "Energia-iturria", excelNumber: "Zk.", excelComponent: "Osagaia / Kategoria", excelManufacturer: "Fabrikatzailea / Marka", excelModel: "Modeloa / Zehaztapena", excelCapacity: "Edukiera / Potentzia", excelNotes: "Ohar teknikoak", excelMotherboard: "Plaka nagusia", excelMotherboardNote: "Intel mahai gaineko socket estandarra", excelGraphics: "Txartel grafikoa", excelGraphicsNote: "Oinarrizko gama eta bulegotika", excelHardDriveOne: "1. disko gogorra", excelHardDriveTwo: "2. disko gogorra", excelRam: "RAM memoria", excelGeneric: "Generikoa / Hainbat", excelRamNote: "2 GB-ko DDR3 modulua", excelPowerSupply: "Energia-iturria", excelCase: "Kaxa / Txasisa", excelMidTower: "Mid Tower", excelCaseNote: "ATX/MicroATX kaxa beltza", excelOpticalDrive: "Unitate optikoa / DVD irakurgailua", excelDvdModel: "DVD 24x (irakurri eta grabatu)", excelDvdNote: "SATA DVD/CD irakurgailu eta grabagailua", excelRecommendationTitle: "Excel fitxategiko gomendioa", excelRecommendationText: "RAM memoria 8 GB-ra zabaltzea eta SATA SSD disko bat gehitzea proposatzen da.",
-    invalidLogin: "Erabiltzailea edo pasahitza ez da zuzena.", storageError: "Erregistroa pantaila honetan bakarrik dago eskuragarri.", accessSaved: "Sarbidea demo moduan erregistratu da.",
+    invalidLogin: "Erabiltzailea edo pasahitza ez da zuzena.", sessionUnavailable: "Ezin izan da saioa egiaztatu. Egiaztatu PHP zerbitzaria.", logout: "Saioa itxi", logoutFailed: "Ezin izan da saioa itxi. Saiatu berriro.", storageError: "Erregistroa pantaila honetan bakarrik dago eskuragarri.", accessSaved: "Sarbidea demo moduan erregistratu da.",
     recordCount: (count) => `${count} ERREGISTRO`, dateLocale: "eu-ES", darkTheme: "Modu iluna", lightTheme: "Modu argia", pageTitle: "Sarbide-kontrola | CIFP Txurdinaga LHII",
     viewParking: "Aparkalekua ikusi", parkingTitle: "Aparkalekua", parkingDescription: "Plazak, aforoa eta mugimenduak denbora errealean.", parkingLegendLabel: "Aparkalekuko egoeren legenda", parkingPlanLabel: "Aparkalekuko planoa goitik ikusita", spacesFree: "Libre", spacesOccupied: "Okupatuta", filterAll: "Denak", parkingFiltersLabel: "Aparkalekuko eremuak iragazi",
     spaceFree: "Plaza librea", spaceOccupied: "Plaza okupatuta", zoneVisits: "Bisitariak", zoneOthers: "Besteak", zoneTeachers: "Irakasleak", zoneStudents: "Ikasleak", zoneCodeVisits: "B", zoneCodeOthers: "BE", zoneCodeTeachers: "IR", zoneCodeStudents: "IK", otherSpacesLegendLabel: "Plaza motak", otherCapacityMotorcycles: "5 moto", otherCapacityElectric: "3 elektriko", otherCapacityAccessible: "2 mugikortasun urriko", otherTypeMotorcycle: "Motoa", otherTypeElectric: "Ibilgailu elektrikoa", otherTypeAccessible: "Mugikortasun urrikoentzako", parkingAisle: "Zirkulazio-eremua", buildingLabel: "Eraikin nagusia", schoolBuilding: "CIFP Txurdinaga LHII", parkingOccupancy: "Aparkalekuko okupazioa", parkingEntrance: "Sarrera", parkingExit: "Irteera", parkingRoad: "Zirkulazio-bidea",
@@ -119,7 +127,7 @@ const translations = {
     inventoryView: "Inventario", inventoryEyebrow: "Txurdinaga · Inventario", inventoryTitle: "Inventario y presupuesto", inventoryDescription: "Consulta el equipamiento y planifica necesidades futuras.", inventoryModesLabel: "Vistas del inventario", inventoryDatabaseTab: "Inventario actual · Base de datos", inventoryBudgetTab: "Presupuesto futuro · Demo", inventoryDatabaseTitle: "Equipamiento actual", inventoryDatabaseDescription: "Cargado directamente desde la base de datos MySQL.", inventoryRefresh: "Actualizar", inventoryKinds: "Tipos de artículos", inventoryUnits: "Unidades totales", inventoryNeedsAttention: "Necesitan atención", inventoryTableLabel: "Lista de inventario de la base de datos", inventoryIdLabel: "ID", inventoryNameLabel: "Artículo", inventoryQuantityLabel: "Cantidad", inventoryStatusLabel: "Estado", inventoryCenterLabel: "Centro", inventoryReviewLabel: "Última revisión", inventoryLoading: "Cargando inventario...", inventoryError: "No se pudo cargar el inventario. Comprueba PHP, la base de datos y la tabla de inventario.", inventoryEmpty: "No hay artículos de inventario en la base de datos.", inventoryStatusGood: "Correcto", inventoryStatusUnusable: "Inutilizable", inventoryStatusMaintenance: "En mantenimiento", inventoryStatusLost: "Perdido", inventoryNoReview: "Sin fecha de revisión",
     budgetPlanningEyebrow: "Planificación futura · Demo", budgetPlanningTitle: "Planificación de un presupuesto de 10.000 €", budgetPlanningDescription: "Son estimaciones orientativas; no están conectadas a la base de datos ni representan gastos reales.", budgetAvailableLabel: "Presupuesto anual", budgetPlannedLabel: "Necesidades previstas", budgetRemainingLabel: "Reserva restante", budgetUseLabel: "Parte del presupuesto", budgetDistributionTitle: "Distribución de necesidades por prioridad", budgetDistributionDescription: "Cada color muestra el gasto previsto para necesidades futuras.", budgetChartLabel: "Distribución del presupuesto: prioridad baja en verde, media en naranja y alta en rojo.", priorityLow: "Baja · Verde", priorityMedium: "Media · Naranja", priorityHigh: "Alta · Rojo", budgetItemsTitle: "Posibles necesidades futuras", budgetItemsDescription: "Ejemplo ilustrativo de presupuesto, ordenado por prioridad.", budgetPriorityTotal: "Total", budgetLowLaptop: "Memoria RAM para portátiles", budgetLowMice: "Lote de ratones y teclados", budgetMediumWifi: "Puntos de acceso Wi-Fi para aulas", budgetMediumProjector: "Mantenimiento y piezas para proyectores", budgetHighServer: "Renovación del servidor del laboratorio", budgetHighElectrical: "Instalación eléctrica del laboratorio",
     inventoryExcelTab: "Componentes PC · Excel", inventoryExcelTitle: "Componentes del PC · Excel", inventoryExcelDescription: "Resumen de las especificaciones técnicas del archivo Excel original.", inventoryExcelDownload: "Descargar Excel", inventoryExcelSummary: "Especificaciones principales del PC", inventoryExcelTableLabel: "Lista de componentes del archivo Excel", excelStorage: "Almacenamiento total", excelMemory: "Memoria RAM", excelPower: "Fuente de alimentación", excelNumber: "N.º", excelComponent: "Componente / Categoría", excelManufacturer: "Fabricante / Marca", excelModel: "Modelo / Especificación", excelCapacity: "Capacidad / Potencia", excelNotes: "Notas técnicas", excelMotherboard: "Placa base", excelMotherboardNote: "Socket de sobremesa Intel estándar", excelGraphics: "Tarjeta gráfica", excelGraphicsNote: "Gama básica y ofimática", excelHardDriveOne: "Disco duro 1", excelHardDriveTwo: "Disco duro 2", excelRam: "Memoria RAM", excelGeneric: "Genérico / Varios", excelRamNote: "Módulo DDR3 de 2 GB", excelPowerSupply: "Fuente de alimentación", excelCase: "Caja / Chasis", excelMidTower: "Semitorre", excelCaseNote: "Caja negra ATX/MicroATX", excelOpticalDrive: "Unidad óptica / Lector DVD", excelDvdModel: "DVD 24x (lectura y grabación)", excelDvdNote: "Lector y grabador SATA DVD/CD", excelRecommendationTitle: "Recomendación del Excel", excelRecommendationText: "Se recomienda ampliar la RAM a 8 GB y añadir una unidad SSD SATA.",
-    invalidLogin: "El usuario o la contraseña no son correctos.", storageError: "El registro solo está disponible en esta pantalla.", accessSaved: "Acceso registrado en modo demo.",
+    invalidLogin: "El usuario o la contraseña no son correctos.", sessionUnavailable: "No se pudo comprobar la sesión. Comprueba el servidor PHP.", logout: "Cerrar sesión", logoutFailed: "No se pudo cerrar la sesión. Inténtalo de nuevo.", storageError: "El registro solo está disponible en esta pantalla.", accessSaved: "Acceso registrado en modo demo.",
     recordCount: (count) => `${count} ${count === 1 ? "REGISTRO" : "REGISTROS"}`, dateLocale: "es-ES", darkTheme: "Modo oscuro", lightTheme: "Modo claro", pageTitle: "Control de acceso | CIFP Txurdinaga LHII",
     viewParking: "Ver parking", parkingTitle: "Parking", parkingDescription: "Plazas, aforo y movimientos del aparcamiento.", parkingLegendLabel: "Leyenda del estado de las plazas", parkingPlanLabel: "Plano del parking visto desde arriba", spacesFree: "Libres", spacesOccupied: "Ocupadas", filterAll: "Todas", parkingFiltersLabel: "Filtrar zonas del parking",
     spaceFree: "Plaza libre", spaceOccupied: "Plaza ocupada", zoneVisits: "Visitas", zoneOthers: "Otros", zoneTeachers: "Profesorado", zoneStudents: "Alumnado", zoneCodeVisits: "VI", zoneCodeOthers: "OT", zoneCodeTeachers: "PR", zoneCodeStudents: "AL", otherSpacesLegendLabel: "Tipos de plaza", otherCapacityMotorcycles: "5 motos", otherCapacityElectric: "3 eléctricos", otherCapacityAccessible: "2 accesibles", otherTypeMotorcycle: "Moto", otherTypeElectric: "Vehículo eléctrico", otherTypeAccessible: "Movilidad reducida", parkingAisle: "Carril de circulación", buildingLabel: "Edificio principal", schoolBuilding: "CIFP Txurdinaga LHII", parkingOccupancy: "Ocupación del parking", parkingEntrance: "Entrada", parkingExit: "Salida", parkingRoad: "Vial de circulación",
@@ -147,7 +155,7 @@ const translations = {
     inventoryView: "Inventory", inventoryEyebrow: "Txurdinaga · Inventory", inventoryTitle: "Inventory and budget", inventoryDescription: "Review equipment and plan for future needs.", inventoryModesLabel: "Inventory views", inventoryDatabaseTab: "Current inventory · Database", inventoryBudgetTab: "Future budget · Demo", inventoryDatabaseTitle: "Current equipment", inventoryDatabaseDescription: "Loaded directly from the MySQL database.", inventoryRefresh: "Refresh", inventoryKinds: "Item types", inventoryUnits: "Total units", inventoryNeedsAttention: "Need attention", inventoryTableLabel: "Database inventory list", inventoryIdLabel: "ID", inventoryNameLabel: "Item", inventoryQuantityLabel: "Quantity", inventoryStatusLabel: "Status", inventoryCenterLabel: "Center", inventoryReviewLabel: "Last review", inventoryLoading: "Loading inventory...", inventoryError: "Could not load inventory. Check PHP, the database and the inventory table.", inventoryEmpty: "There are no inventory items in the database.", inventoryStatusGood: "Good", inventoryStatusUnusable: "Unusable", inventoryStatusMaintenance: "Under maintenance", inventoryStatusLost: "Lost", inventoryNoReview: "No review date",
     budgetPlanningEyebrow: "Future planning · Demo", budgetPlanningTitle: "Planning a €10,000 budget", budgetPlanningDescription: "These are illustrative estimates, not connected to the database or actual expenses.", budgetAvailableLabel: "Annual budget", budgetPlannedLabel: "Forecast needs", budgetRemainingLabel: "Remaining reserve", budgetUseLabel: "Budget allocated", budgetDistributionTitle: "Forecast needs by priority", budgetDistributionDescription: "Each colour represents forecast spending for future needs.", budgetChartLabel: "Budget allocation: low priority in green, medium in orange and high in red.", priorityLow: "Low · Green", priorityMedium: "Medium · Orange", priorityHigh: "High · Red", budgetItemsTitle: "Possible future needs", budgetItemsDescription: "Illustrative budget example grouped by priority.", budgetPriorityTotal: "Total", budgetLowLaptop: "Laptop RAM upgrades", budgetLowMice: "Mouse and keyboard bundle", budgetMediumWifi: "Classroom Wi-Fi access points", budgetMediumProjector: "Projector maintenance and parts", budgetHighServer: "Laboratory server upgrade", budgetHighElectrical: "Laboratory electrical installation",
     inventoryExcelTab: "PC parts · Excel", inventoryExcelTitle: "PC components · Excel", inventoryExcelDescription: "Summary of the technical specifications in the original Excel file.", inventoryExcelDownload: "Download Excel", inventoryExcelSummary: "Main PC specifications", inventoryExcelTableLabel: "Components from the Excel file", excelStorage: "Total storage", excelMemory: "RAM", excelPower: "Power supply", excelNumber: "No.", excelComponent: "Component / Category", excelManufacturer: "Manufacturer / Brand", excelModel: "Model / Specification", excelCapacity: "Capacity / Power", excelNotes: "Technical notes", excelMotherboard: "Motherboard", excelMotherboardNote: "Standard Intel desktop socket", excelGraphics: "Graphics card", excelGraphicsNote: "Entry-level / office use", excelHardDriveOne: "Hard drive 1", excelHardDriveTwo: "Hard drive 2", excelRam: "RAM memory", excelGeneric: "Generic / Various", excelRamNote: "2 GB DDR3 module", excelPowerSupply: "Power supply", excelCase: "Case / Chassis", excelMidTower: "Mid Tower", excelCaseNote: "Black ATX/MicroATX case", excelOpticalDrive: "Optical drive / DVD reader", excelDvdModel: "DVD 24x (reader and writer)", excelDvdNote: "SATA DVD/CD reader and writer", excelRecommendationTitle: "Excel recommendation", excelRecommendationText: "The workbook recommends expanding the RAM to 8 GB and adding a SATA SSD.",
-    invalidLogin: "The username or password is incorrect.", storageError: "The record is only available on this screen.", accessSaved: "Access registered in demo mode.",
+    invalidLogin: "The username or password is incorrect.", sessionUnavailable: "The session could not be checked. Check the PHP server.", logout: "Sign out", logoutFailed: "The session could not be ended. Please try again.", storageError: "The record is only available on this screen.", accessSaved: "Access registered in demo mode.",
     recordCount: (count) => `${count} ${count === 1 ? "RECORD" : "RECORDS"}`, dateLocale: "en-GB", darkTheme: "Dark mode", lightTheme: "Light mode", pageTitle: "Access control | CIFP Txurdinaga LHII",
     viewParking: "View parking", parkingTitle: "Parking", parkingDescription: "Parking spaces, capacity and movement.", parkingLegendLabel: "Parking space status legend", parkingPlanLabel: "Top-down parking layout", spacesFree: "Free", spacesOccupied: "Occupied", filterAll: "All", parkingFiltersLabel: "Filter parking zones",
     spaceFree: "Free space", spaceOccupied: "Occupied space", zoneVisits: "Visitors", zoneOthers: "Others", zoneTeachers: "Teachers", zoneStudents: "Students", zoneCodeVisits: "VI", zoneCodeOthers: "OT", zoneCodeTeachers: "TE", zoneCodeStudents: "ST", otherSpacesLegendLabel: "Space types", otherCapacityMotorcycles: "5 motorcycles", otherCapacityElectric: "3 electric", otherCapacityAccessible: "2 accessible", otherTypeMotorcycle: "Motorcycle", otherTypeElectric: "Electric vehicle", otherTypeAccessible: "Accessible", parkingAisle: "Driving lane", buildingLabel: "Main building", schoolBuilding: "CIFP Txurdinaga LHII", parkingOccupancy: "Parking occupancy", parkingEntrance: "Entrance", parkingExit: "Exit", parkingRoad: "Circulation lane",
@@ -172,13 +180,6 @@ const budgetPlan = [
   { priority: "medium", items: [{ label: "budgetMediumWifi", amount: 1800 }, { label: "budgetMediumProjector", amount: 1200 }] },
   { priority: "high", items: [{ label: "budgetHighServer", amount: 3000 }, { label: "budgetHighElectrical", amount: 1400 }] }
 ];
-const demoAccounts = {
-  admin: { password: "1234", role: "Admin", userId: 9 },
-  irakasle: { password: "1234", role: "Teacher", userId: 10 },
-  ikasle: { password: "1234", role: "Student", userId: 8 },
-  inventario: { password: "1234", role: "Inventory", userId: 6 }
-};
-
 function translate(key) {
   return translations[currentLanguage][key];
 }
@@ -214,13 +215,23 @@ function playPageTransition() {
 }
 
 function setDashboardView(viewName) {
-  const selectedView = ["users", "inventory"].includes(viewName) ? viewName : "overview";
+  const allowedViews = activeAccount?.role === "Admin"
+    ? ["overview", "users", "inventory"]
+    : activeAccount?.role === "Inventory"
+      ? ["inventory"]
+      : ["overview"];
+  const selectedView = allowedViews.includes(viewName) ? viewName : allowedViews[0];
   const previousView = dashboardScreen.dataset.view;
   dashboardScreen.dataset.view = selectedView;
+  overviewOnlySections.forEach((section) => {
+    section.hidden = selectedView !== "overview";
+  });
   usersView.hidden = selectedView !== "users";
   inventoryView.hidden = selectedView !== "inventory";
-  overviewViewButton.hidden = activeAccount?.role !== "Admin";
-  inventoryViewButton.hidden = !["Admin", "Inventory"].includes(activeAccount?.role);
+  overviewViewButton.hidden = !allowedViews.includes("overview");
+  document.querySelector("#users-view-button").hidden = !allowedViews.includes("users");
+  inventoryViewButton.hidden = !allowedViews.includes("inventory");
+  viewSwitcher.hidden = activeAccount?.role === "Inventory";
   viewButtons.forEach((button) => {
     const isSelected = button.dataset.appView === selectedView;
     button.classList.toggle("is-active", isSelected);
@@ -944,25 +955,92 @@ function showDashboard() {
   }, 360);
 }
 
-loginForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const username = loginUsername.value.trim().toLowerCase();
-  const account = demoAccounts[username];
-  if (!account || loginPassword.value !== account.password) {
-    loginError.textContent = translate("invalidLogin");
-    loginError.hidden = false;
-    loginPassword.setAttribute("aria-invalid", "true");
-    loginPassword.focus();
-    return;
+async function requestSession(method, payload) {
+  const response = await fetch("PHP/saioa.php", {
+    method,
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
+    body: payload ? JSON.stringify(payload) : undefined
+  });
+  let result;
+  try {
+    result = await response.json();
+  } catch (error) {
+    throw new Error("The session endpoint returned an invalid response.", { cause: error });
   }
+  return { response, result };
+}
 
+function openAuthenticatedDashboard(account) {
+  activeAccount = account;
+  updateSessionIdentity();
+  setDashboardView(activeAccount.role === "Inventory" ? "inventory" : "overview");
+  showDashboard();
+}
+
+async function restoreSession() {
+  try {
+    const { response, result } = await requestSession("GET");
+    if (!response.ok) throw new Error(`Session check failed with status ${response.status}.`);
+    if (result.authenticated) openAuthenticatedDashboard(result.account);
+  } catch (error) {
+    console.error("Could not restore the session:", error);
+    loginError.textContent = translate("sessionUnavailable");
+    loginError.hidden = false;
+  }
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const submitButton = loginForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
   loginError.hidden = true;
   loginPassword.removeAttribute("aria-invalid");
-  activeAccount = { username, role: account.role, userId: account.userId };
-  updateSessionIdentity();
-  loginPassword.value = "";
-  setDashboardView(activeAccount.role === "Admin" ? "overview" : activeAccount.role === "Inventory" ? "inventory" : "users");
-  showDashboard();
+  try {
+    const { response, result } = await requestSession("POST", {
+      username: loginUsername.value.trim(),
+      password: loginPassword.value
+    });
+    if (response.status === 401) {
+      loginError.textContent = translate("invalidLogin");
+      loginError.hidden = false;
+      loginPassword.setAttribute("aria-invalid", "true");
+      loginPassword.focus();
+      return;
+    }
+    if (!response.ok || !result.account) throw new Error(`Login failed with status ${response.status}.`);
+
+    loginPassword.value = "";
+    openAuthenticatedDashboard(result.account);
+  } catch (error) {
+    console.error("Could not sign in:", error);
+    loginError.textContent = translate("sessionUnavailable");
+    loginError.hidden = false;
+  } finally {
+    submitButton.disabled = false;
+  }
+});
+
+logoutButton.addEventListener("click", async () => {
+  logoutButton.disabled = true;
+  try {
+    const { response } = await requestSession("DELETE");
+    if (!response.ok) throw new Error(`Logout failed with status ${response.status}.`);
+
+    activeAccount = null;
+    dashboardScreen.hidden = true;
+    dashboardScreen.classList.remove("dashboard-entering");
+    coverScreen.hidden = false;
+    coverScreen.classList.remove("cover-exiting");
+    loginForm.reset();
+    loginError.hidden = true;
+    loginUsername.focus();
+  } catch (error) {
+    console.error("Could not sign out:", error);
+    showToast(translate("logoutFailed"));
+  } finally {
+    logoutButton.disabled = false;
+  }
 });
 
 loginForm.addEventListener("input", () => {
@@ -1030,3 +1108,4 @@ applyParkingFilter("all");
 applyLanguage(currentLanguage);
 window.setInterval(updateDateTime, 1000);
 window.setInterval(refreshParkingFromStorage, 3000);
+restoreSession();
