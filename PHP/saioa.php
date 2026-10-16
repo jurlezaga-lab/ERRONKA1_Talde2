@@ -40,6 +40,7 @@ if ($method === 'POST') {
     $password = $payload['password'];
     $accounts = [
         'admin' => ['password' => '1234', 'role' => 'Admin', 'userId' => 9],
+        'gugul' => ['password' => '67', 'role' => 'Admin', 'userId' => null],
         'irakasle' => ['password' => '1234', 'role' => 'Teacher', 'userId' => 10],
         'ikasle' => ['password' => '1234', 'role' => 'Student', 'userId' => 8],
         'inventario' => ['password' => '1234', 'role' => 'Inventory', 'userId' => 6]

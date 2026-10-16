@@ -27,7 +27,7 @@ La vista de inventario incluye **Inventario actual**, cargado de `inbentario`; *
 
 ## Acceso por rol
 
-- `admin`: puede acceder a **Orokorra**, **Erabiltzaileak** e **Inbentarioa**.
+- `admin` y `gugul`: pueden acceder a **Orokorra**, **Erabiltzaileak** e **Inbentarioa**.
 - `ikasle` e `irakasle`: solo acceden a **Orokorra**.
 - `inventario`: solo accede a **Inbentarioa**.
 
