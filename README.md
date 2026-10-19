@@ -32,3 +32,5 @@ La vista de inventario incluye **Inventario actual**, cargado de `inbentario`; *
 - `inventario`: solo accede a **Inbentarioa**.
 
 La interfaz limita las vistas y los endpoints PHP también comprueban la sesión y el rol antes de devolver usuarios o inventario.
+
+La cuenta `gugul` (`67`) funciona también en el despliegue estático de Vercel: crea una sesión temporal en `sessionStorage` y muestra datos de ejemplo para las vistas de Usuarios e Inventario sin usar PHP ni MySQL. Es exclusivamente una demostración, no una autenticación segura: las credenciales y los datos están en el JavaScript público y cualquier visitante puede inspeccionarlos o cambiar el estado del navegador. Las demás cuentas siguen necesitando el backend PHP. En un sitio estático, la comprobación inicial de sesión PHP puede fallar; el formulario sigue disponible para el acceso de demostración.

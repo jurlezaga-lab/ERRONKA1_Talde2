@@ -671,6 +671,9 @@ h1 span { color: var(--acid); }
 .view-tab.is-active { border-color: var(--accent-border); color: var(--mint); background: var(--accent-fill); }
 .view-tab[hidden] { display: none !important; }
 .view-switcher[hidden], .intro[hidden], .dashboard-grid[hidden], .parking-section[hidden], .records-section[hidden] { display: none !important; }
+.demo-mode-notice { margin: -34px 0 12px; padding: 11px 14px; border: 1px solid var(--accent-border); border-radius: 8px; color: var(--muted); background: var(--accent-fill); font-size: 12px; line-height: 1.5; }
+.demo-mode-notice[hidden] { display: none !important; }
+#demo-mode-notice:not([hidden]) + .view-switcher { margin-top: 0; }
 #dashboard-screen[data-view="users"] > .intro,
 #dashboard-screen[data-view="users"] > .dashboard-grid,
 #dashboard-screen[data-view="users"] > #parking-section,
