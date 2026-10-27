@@ -52,25 +52,20 @@ CREATE TABLE `inbentario` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `izena` VARCHAR(100) NOT NULL,
   `kopurua` INT NOT NULL DEFAULT 1,
-  `egoera` ENUM('ONDO', 'ERABILI_EZINIK', 'MANTENIMENDUAN', 'GALDUTAKO') DEFAULT 'ONDO',
-  `azken_berrikuspena` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `arduraduna_id` INT DEFAULT NULL,
-  CONSTRAINT `fk_inbentario_usuario` 
-    FOREIGN KEY (`arduraduna_id`) REFERENCES `usuarios` (`id`) 
-    ON DELETE SET NULL ON UPDATE CASCADE
+  `egoera` ENUM('ONDO', 'ERABILI_EZINIK', 'MANTENIMENDUAN', 'GALDUTAKO') DEFAULT 'ONDO'
 ) ENGINE=InnoDB;
 
-INSERT INTO `inbentario` (`id`, `izena`, `kopurua`, `egoera`, `azken_berrikuspena`, `arduraduna_id`) VALUES
-(1, 'Proiektorea Epson EB-685Wi', 5, 'ONDO', '2026-10-02 10:00:00', 6),
-(2, 'Ordenagailu eramangarria HP ProBook', 20, 'MANTENIMENDUAN', '2026-10-02 10:00:00', 6),
-(3, 'Imprimagailu 3D Creality Ender 3', 3, 'ONDO', '2026-10-02 10:00:00', 6),
-(4, 'Monitor Dell 24 P2419H', 12, 'ONDO', '2026-10-02 10:00:00', 6),
-(5, 'Switch Cisco Catalyst 2960', 4, 'ONDO', '2026-10-02 10:00:00', 6),
-(6, 'Proiektorea BenQ MH535', 2, 'ERABILI_EZINIK', '2026-10-02 10:00:00', 6),
-(7, 'Kamera Web Logitech C920', 8, 'ONDO', '2026-10-02 10:00:00', 6),
-(8, 'Osciloscopio Digital Hantek', 6, 'MANTENIMENDUAN', '2026-10-02 10:00:00', 6),
-(9, 'Kit Arduino Uno Rev3', 15, 'GALDUTAKO', '2026-10-02 10:00:00', 6),
-(10, 'Servidor Rack HP ProLiant', 1, 'ONDO', '2026-10-02 10:00:00', 6);
+INSERT INTO `inbentario` (`id`, `izena`, `kopurua`, `egoera`) VALUES
+(1, 'Proiektorea Epson EB-685Wi', 5, 'ONDO'),
+(2, 'Ordenagailu eramangarria HP ProBook', 20, 'MANTENIMENDUAN'),
+(3, 'Imprimagailu 3D Creality Ender 3', 3, 'ONDO'),
+(4, 'Monitor Dell 24 P2419H', 12, 'ONDO'),
+(5, 'Switch Cisco Catalyst 2960', 4, 'ONDO'),
+(6, 'Proiektorea BenQ MH535', 2, 'ERABILI_EZINIK'),
+(7, 'Kamera Web Logitech C920', 8, 'ONDO'),
+(8, 'Osciloscopio Digital Hantek', 6, 'MANTENIMENDUAN'),
+(9, 'Kit Arduino Uno Rev3', 15, 'GALDUTAKO'),
+(10, 'Servidor Rack HP ProLiant', 1, 'ONDO');
 
 -- 4. ESTRUKTURA ETA DATUAK: PARKING
 CREATE TABLE `parking` (
@@ -131,17 +126,15 @@ WHERE p.rol_mota_id = 3
   AND u.emaila = SUBSTRING_INDEX(CURRENT_USER(), '@', 1);
 
 CREATE OR REPLACE VIEW `v_inbentario_kudeaketa` AS
-SELECT i.id, i.izena AS artikulua, i.kopurua, i.egoera, i.azken_berrikuspena, u.izena AS arduraduna
-FROM inbentario i
-LEFT JOIN usuarios u ON i.arduraduna_id = u.id;
+SELECT id, izena AS artikulua, kopurua, egoera
+FROM inbentario;
 
 CREATE OR REPLACE VIEW `v_admin_parking_eta_inbentario` AS
 SELECT 
   'PARKING' AS jatorria,
   p.id AS id_elementoa,
   CONCAT('Plaza: ', p.plaza_numero, ' (Mota: ', IFNULL(r.izena, 'BISITARI'), ')') AS izena_edo_deskribapena,
-  p.egoera AS egoera,
-  p.sarrera_data AS azken_eguneratzea
+  p.egoera AS egoera
 FROM parking p
 LEFT JOIN rol r ON p.rol_mota_id = r.id
 
@@ -151,8 +144,7 @@ SELECT
   'INBENTARIO' AS jatorria,
   id AS id_elementoa,
   CONCAT('Materiala: ', izena, ' (Kopurua: ', kopurua, ')') AS izena_edo_deskribapena,
-  egoera AS egoera,
-  azken_berrikuspena AS azken_eguneratzea
+  egoera AS egoera
 FROM inbentario;
 
 -- =============================================================================
@@ -322,38 +314,6 @@ BEGIN
     END IF;
 END //
 
-
-CREATE TRIGGER `trg_inbentario_check_rol_insert`
-BEFORE INSERT ON `inbentario`
-FOR EACH ROW
-BEGIN
-    DECLARE user_rol INT;
-    
-    IF NEW.arduraduna_id IS NOT NULL THEN
-        SELECT rol_id INTO user_rol FROM usuarios WHERE id = NEW.arduraduna_id;
-        
-        IF user_rol IS NULL OR user_rol != 4 THEN
-            SET NEW.arduraduna_id = NULL;
-        END IF;
-    END IF;
-END //
-
-
-CREATE TRIGGER `trg_inbentario_check_rol_update`
-BEFORE UPDATE ON `inbentario`
-FOR EACH ROW
-BEGIN
-    DECLARE user_rol INT;
-    
-    IF NEW.arduraduna_id IS NOT NULL AND NEW.arduraduna_id <> OLD.arduraduna_id THEN
-        SELECT rol_id INTO user_rol FROM usuarios WHERE id = NEW.arduraduna_id;
-        
-        IF user_rol IS NULL OR user_rol != 4 THEN
-            SET NEW.arduraduna_id = OLD.arduraduna_id;
-        END IF;
-    END IF;
-END //
-
 DELIMITER ;
 
 -- =============================================================================
@@ -363,31 +323,29 @@ DELIMITER ;
 DROP ROLE IF EXISTS 'rol_admin', 'rol_irakasle', 'rol_ikasle', 'rol_bisitari', 'rol_inbentario', 'rol_chatbot';
 CREATE ROLE 'rol_admin', 'rol_irakasle', 'rol_ikasle', 'rol_bisitari', 'rol_inbentario', 'rol_chatbot';
 
+-- Admin baimenak
 GRANT ALL PRIVILEGES ON kudeaketa_7.* TO 'rol_admin';
 
+-- Irakasle baimenak
 GRANT SELECT ON kudeaketa_7.v_irakasle_bere_parking TO 'rol_irakasle';
 GRANT SELECT ON kudeaketa_7.v_inbentario_kudeaketa TO 'rol_irakasle';
 GRANT EXECUTE ON PROCEDURE kudeaketa_7.sp_erreserba_egin TO 'rol_irakasle';
 
+-- Ikasle baimenak
 GRANT SELECT ON kudeaketa_7.v_ikasle_bere_parking TO 'rol_ikasle';
 GRANT EXECUTE ON PROCEDURE kudeaketa_7.sp_erreserba_egin TO 'rol_ikasle';
 
+-- Inbentario baimenak
 GRANT SELECT, INSERT, UPDATE ON kudeaketa_7.inbentario TO 'rol_inbentario';
 GRANT SELECT ON kudeaketa_7.v_inbentario_kudeaketa TO 'rol_inbentario';
 
+-- Bisitari baimenak
 GRANT SELECT ON kudeaketa_7.v_bisitari_parking TO 'rol_bisitari';
 
-GRANT SELECT ON kudeaketa_7.parking TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.inbentario TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.usuarios TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.rol TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.v_bisitari_parking TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.v_inbentario_kudeaketa TO 'rol_chatbot';
-GRANT SELECT ON kudeaketa_7.v_admin_parking_eta_inbentario TO 'rol_chatbot';
-GRANT EXECUTE ON FUNCTION kudeaketa_7.fn_plaza_libreak TO 'rol_chatbot';
-GRANT EXECUTE ON FUNCTION kudeaketa_7.fn_minutu_osotara_parking TO 'rol_chatbot';
-GRANT EXECUTE ON FUNCTION kudeaketa_7.fn_porzentajea_hondatuta TO 'rol_chatbot';
+-- CHATBOT baimena: inbentario taulan SELECT eta INSERT
+GRANT SELECT, INSERT ON kudeaketa_7.inbentario TO 'rol_chatbot';
 
+-- Erabiltzaileak sortu
 DROP USER IF EXISTS 'usr_admin'@'localhost', 'usr_irakasle'@'localhost', 'usr_ikasle'@'localhost', 'usr_bisitari'@'localhost', 'usr_inbentario'@'localhost', 'usr_chatbot'@'localhost';
 
 CREATE USER 'usr_admin'@'localhost' IDENTIFIED BY 'AdminPass123!' WITH MAX_QUERIES_PER_HOUR 1000;
@@ -397,6 +355,7 @@ CREATE USER 'usr_inbentario'@'localhost' IDENTIFIED BY 'InbentarioPass123!' WITH
 CREATE USER 'usr_bisitari'@'localhost' IDENTIFIED BY 'BisitariPass123!' WITH MAX_QUERIES_PER_HOUR 20;
 CREATE USER 'usr_chatbot'@'localhost' IDENTIFIED BY 'ChatbotPass123!' WITH MAX_QUERIES_PER_HOUR 5000;
 
+-- Rolak esleitu
 GRANT 'rol_admin' TO 'usr_admin'@'localhost';
 GRANT 'rol_irakasle' TO 'usr_irakasle'@'localhost';
 GRANT 'rol_ikasle' TO 'usr_ikasle'@'localhost';
