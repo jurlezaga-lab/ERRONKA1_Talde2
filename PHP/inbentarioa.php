@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store, private');
 
 require_once __DIR__ . '/session.php';
 if (!startAppSession()) {
@@ -15,18 +16,31 @@ try {
         throw new RuntimeException($conn->error, $conn->errno);
     }
 
+    $columnsResult = $conn->query('SHOW COLUMNS FROM inbentario');
+    if (!$columnsResult) {
+        throw new RuntimeException($conn->error, $conn->errno);
+    }
+
+    $columns = [];
+    while ($column = $columnsResult->fetch_assoc()) {
+        $columns[$column['Field']] = true;
+    }
+
+    foreach (['id', 'izena', 'kopurua', 'egoera', 'azken_berrikuspena'] as $requiredColumn) {
+        if (!isset($columns[$requiredColumn])) {
+            throw new RuntimeException('Falta la columna requerida en inbentario: ' . $requiredColumn);
+        }
+    }
+
     $sql = "
         SELECT
             i.id,
             i.izena,
             i.kopurua,
             i.egoera,
-            i.zentroa_id,
-            z.izena AS zentroa_izena,
             i.azken_berrikuspena
         FROM inbentario i
-        LEFT JOIN zentroa z ON z.id = i.zentroa_id
-        ORDER BY z.izena, i.izena, i.id
+        ORDER BY i.izena, i.id
     ";
     $result = $conn->query($sql);
 
@@ -41,8 +55,6 @@ try {
             'izena' => $row['izena'],
             'kopurua' => (int) $row['kopurua'],
             'egoera' => $row['egoera'],
-            'zentroa_id' => (int) $row['zentroa_id'],
-            'zentroa_izena' => $row['zentroa_izena'],
             'azken_berrikuspena' => $row['azken_berrikuspena']
         ];
     }

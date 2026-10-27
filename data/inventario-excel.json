@@ -1,0 +1,276 @@
+{
+    "source":  "InbentorioaE1T2.xlsx",
+    "groups":  [
+                   {
+                       "title":  "PC T2",
+                       "items":  [
+                                     {
+                                         "number":  "1",
+                                         "component":  "Plaka Nagusia (Xafla)",
+                                         "manufacturer":  "Intel",
+                                         "model":  "Desktop Board 01",
+                                         "capacity":  "N/A",
+                                         "notes":  "Intel mahaigaineko socket estandarra",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "2",
+                                         "component":  "Txartel Grafikoa (Grafika)",
+                                         "manufacturer":  "NVIDIA",
+                                         "model":  "GeForce GT 218",
+                                         "capacity":  "1 GB VRAM",
+                                         "notes":  "Oinarrizko gama / Bulegotika",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "3",
+                                         "component":  "Disko Gogorra 1",
+                                         "manufacturer":  "Western Digital",
+                                         "model":  "WD Blue SATA (WD5000AAKX)",
+                                         "capacity":  "500 GB",
+                                         "notes":  "3.5\" SATA 6Gb/s 7200 RPM",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "4",
+                                         "component":  "Disko Gogorra 2",
+                                         "manufacturer":  "Seagate",
+                                         "model":  "Barracuda 7200.12 (ST3500418AS)",
+                                         "capacity":  "500 GB",
+                                         "notes":  "3.5\" SATA 3Gb/s 7200 RPM",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "5",
+                                         "component":  "RAM Memoria",
+                                         "manufacturer":  "Generikoa / Hainbat",
+                                         "model":  "DDR3 SDRAM",
+                                         "capacity":  "2 GB",
+                                         "notes":  "2GB-ko DDR3 modulua",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "6",
+                                         "component":  "Energi-iturria",
+                                         "manufacturer":  "PC CASE",
+                                         "model":  "PC CASE 600 (PC ATX 2.2 P4)",
+                                         "capacity":  "600 W",
+                                         "notes":  "ATX 2.2 formatua",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "7",
+                                         "component":  "Kaxa / Txasisa",
+                                         "manufacturer":  "Antec",
+                                         "model":  "NSK4482B",
+                                         "capacity":  "Mid Tower",
+                                         "notes":  "ATX/MicroATX kaxa beltza",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "8",
+                                         "component":  "Unitate Optikoa / DVD Irakurgailua",
+                                         "manufacturer":  "LG",
+                                         "model":  "DVD 24x (Irakurgailu eta grabagailua)",
+                                         "capacity":  "24x Abiadura",
+                                         "notes":  "SATA DVD/CD irakurgailu eta grabagailu optikoa",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "9",
+                                         "component":  "Prozesadorea",
+                                         "manufacturer":  "Intel",
+                                         "model":  "Intel Core I3 540",
+                                         "capacity":  "3.06 GHz / 73 W",
+                                         "notes":  "LGA 1156 socket-a, 2 nukleo / 4 hari, 4 MB Cache",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "10",
+                                         "component":  "Disipadorea CPU",
+                                         "manufacturer":  "CYRMZAY",
+                                         "model":  "Stock LGA1155",
+                                         "capacity":  "12 V",
+                                         "notes":  "",
+                                         "quantity":  1
+                                     }
+                                 ]
+                   },
+                   {
+                       "title":  "PC T3",
+                       "items":  [
+                                     {
+                                         "number":  "1",
+                                         "component":  "Prozesadorea",
+                                         "manufacturer":  "Intel",
+                                         "model":  "Core i7-3770 3.4 GHz",
+                                         "capacity":  "3.4 GHz",
+                                         "notes":  "4 nukleo eta 8 hari ditu",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "2",
+                                         "component":  "Disipadorea CPU",
+                                         "manufacturer":  "CYRMZAY",
+                                         "model":  "Stock LGA1155",
+                                         "capacity":  "12 Voltios",
+                                         "notes":  "",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "3",
+                                         "component":  "Plaka Nagusia (Xafla)",
+                                         "manufacturer":  "ASUS",
+                                         "model":  "P8H61-MX USB3",
+                                         "capacity":  "N/A",
+                                         "notes":  "Intel mahaigaineko socket estandarra",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "4",
+                                         "component":  "Txartel Grafikoa (Grafika)",
+                                         "manufacturer":  "AMD",
+                                         "model":  "Radeon HD 3650 - 512 MB DDR2",
+                                         "capacity":  "512MB VRAM",
+                                         "notes":  "Oinarrizko gama / Bulegotika",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "5",
+                                         "component":  "Disko Gogorra 1",
+                                         "manufacturer":  "Western Digital",
+                                         "model":  "WD Blue 500GB SATA",
+                                         "capacity":  "500 GB",
+                                         "notes":  "3.5\" SATA 6Gb/s 7200 RPM",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "6",
+                                         "component":  "RAM Memoria 1",
+                                         "manufacturer":  "Kingston",
+                                         "model":  "KVR16N11/8 - 8 GB DDR3 - 1600",
+                                         "capacity":  "8 GB",
+                                         "notes":  "8GB-ko DDR3 modulua - 1600 MHz",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "7",
+                                         "component":  "RAM Memoria 2",
+                                         "manufacturer":  "Kingston",
+                                         "model":  "KVR1333D3N9/4 - 4 GB DDR3 - 1333",
+                                         "capacity":  "4 GB ",
+                                         "notes":  "4GB-ko DDR3 modulua - 1333 MHz",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "8",
+                                         "component":  "Energi-iturria",
+                                         "manufacturer":  "FSP Group",
+                                         "model":  "FSP300-60EP(2) - 300W",
+                                         "capacity":  "300 W",
+                                         "notes":  "ATX 2.2 formatua",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "9",
+                                         "component":  "Kaxa / Txasisa",
+                                         "manufacturer":  "APITECG",
+                                         "model":  "ATX",
+                                         "capacity":  "Mid Tower",
+                                         "notes":  "ATX/MicroATX kaxa beltza",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "10",
+                                         "component":  "Unitate Optikoa / DVD Irakurgailua",
+                                         "manufacturer":  "LG",
+                                         "model":  "GH24NSB0 (DVD + RW, Super multi)",
+                                         "capacity":  "24x Abiadura",
+                                         "notes":  "SATA DVD/CD irakurgailu eta grabagailu optikoa",
+                                         "quantity":  1
+                                     }
+                                 ]
+                   },
+                   {
+                       "title":  "Beste osagai batzuk",
+                       "items":  [
+                                     {
+                                         "number":  "1",
+                                         "component":  "Prozesadorea (CPU)",
+                                         "manufacturer":  "Intel",
+                                         "model":  "Core i7-3770",
+                                         "capacity":  "3.40 GHz",
+                                         "notes":  "Socket LGA1155",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "2",
+                                         "component":  "RAM Memoria",
+                                         "manufacturer":  "Corsair",
+                                         "model":  "ValueSelect (VS512MB400C3)",
+                                         "capacity":  "512 MB DDR",
+                                         "notes":  "400 MHz",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "3",
+                                         "component":  "Plaka Nagusia",
+                                         "manufacturer":  "Gigabyte",
+                                         "model":  "GA-945P-S3",
+                                         "capacity":  "N/A",
+                                         "notes":  "Socket LGA775",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "4",
+                                         "component":  "Disko Gogorra (IDE/ATA)",
+                                         "manufacturer":  "Seagate",
+                                         "model":  "Barracuda ATA IV (ST340016A)",
+                                         "capacity":  "40 GB",
+                                         "notes":  "IDE / ATA",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "5",
+                                         "component":  "Disko Gogorra (SATA)",
+                                         "manufacturer":  "Hitachi",
+                                         "model":  "Deskstar (HDS725050KLA360)",
+                                         "capacity":  "500 GB",
+                                         "notes":  "SATA 7200 RPM",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "number":  "6",
+                                         "component":  "Txartel Grafikoa (GPU)",
+                                         "manufacturer":  "ASUS",
+                                         "model":  "GeForce EN210 Silent (EN210 SILENT/DI/1GD3/V2(LP))",
+                                         "capacity":  "1 GB DDR3",
+                                         "notes":  "Low Profile",
+                                         "quantity":  1
+                                     }
+                                 ]
+                   }
+               ],
+    "summary":  [
+                    {
+                        "label":  "Biltegiratze ahalmen osoa",
+                        "value":  "1.000 GB (1 TB, 500 GB-ko 2 HDD diskotan banatuta)"
+                    },
+                    {
+                        "label":  "RAM memoriaren edukiera",
+                        "value":  "2 GB DDR3 (Oinarrizko zereginetarako edo sistema arinetarako)"
+                    },
+                    {
+                        "label":  "Prozesamendu grafikoa",
+                        "value":  "NVIDIA GT 218 1GB VRAM-ekin (Oinarrizko bideo irteera, multimedia)"
+                    },
+                    {
+                        "label":  "Unitate optikoa",
+                        "value":  "LG DVD 24x irakurgailu/grabagailu optikoa gehituta"
+                    },
+                    {
+                        "label":  "Eguneratzeko gomendioa",
+                        "value":  "RAM memoria 8GB-ra zabaltzea eta SSD SATA disko bat gehitzea gomendatzen da"
+                    }
+                ]
+}
