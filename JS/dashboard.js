@@ -38,6 +38,14 @@ const inventoryItemCount = document.querySelector("#inventory-item-count");
 const inventoryUnitCount = document.querySelector("#inventory-unit-count");
 const inventoryAttentionCount = document.querySelector("#inventory-attention-count");
 const inventoryDatabaseDescription = document.querySelector("#inventory-database-view [data-i18n='inventoryDatabaseDescription']");
+const inventoryExcelList = document.querySelector("#inventory-excel-list");
+const inventoryExcelSummary = document.querySelector("#inventory-excel-summary");
+const inventoryExcelHeader = document.querySelector("#inventory-excel-header");
+const inventoryExcelLoadMessage = document.querySelector("#inventory-excel-load-message");
+let inventoryExcelData = null;
+let inventoryExcelLoadPromise = null;
+let inventoryExcelLoadState = "idle";
+let inventoryExcelLoadError = null;
 const demoModeNotice = document.querySelector("#demo-mode-notice");
 const usersList = document.querySelector("#users-list");
 const userSearchInput = document.querySelector("#user-search");
@@ -103,7 +111,7 @@ const translations = {
     inventoryView: "Inbentarioa", inventoryEyebrow: "Txurdinaga · Inbentarioa", inventoryTitle: "Inbentarioa eta aurrekontua", inventoryDescription: "Kontsultatu ekipamendua eta planifikatu etorkizuneko beharrak.", inventoryModesLabel: "Inbentarioaren ikuspegiak", inventoryDatabaseTab: "Uneko inbentarioa · Datu-basea", inventoryBudgetTab: "Etorkizuneko aurrekontua · Demoa", inventoryDatabaseTitle: "Uneko ekipamendua", inventoryDatabaseDescription: "MySQL datu-basetik zuzenean kargatua.", inventoryRefresh: "Berritu", inventoryKinds: "Artikulu mota", inventoryUnits: "Guztizko unitateak", inventoryNeedsAttention: "Arreta behar dute", inventoryTableLabel: "Datu-baseko inbentario-zerrenda", inventoryIdLabel: "ID", inventoryNameLabel: "Artikulua", inventoryQuantityLabel: "Kopurua", inventoryStatusLabel: "Egoera", inventoryCenterLabel: "Zentroa", inventoryReviewLabel: "Azken berrikuspena", inventoryLoading: "Inbentarioa kargatzen...", inventoryError: "Ezin izan da inbentarioa kargatu. Egiaztatu PHP zerbitzaria, datu-basea eta inbentario-taula.", inventoryEmpty: "Ez dago inbentario-artikulurik datu-basean.", inventoryStatusGood: "Ondo", inventoryStatusUnusable: "Erabili ezinik", inventoryStatusMaintenance: "Mantentze-lanetan", inventoryStatusLost: "Galduta", inventoryNoReview: "Berrikuspen-datarik ez",
     budgetPlanningEyebrow: "Etorkizuneko plangintza · Demoa", budgetPlanningTitle: "10.000 €-ko aurrekontua planifikatzea", budgetPlanningDescription: "Kalkulu orientagarriak dira; ez daude datu-basera konektatuta eta ez dira benetako gastuak.", budgetAvailableLabel: "Urteko aurrekontua", budgetPlannedLabel: "Aurreikusitako beharrak", budgetRemainingLabel: "Erreserba geratzen da", budgetUseLabel: "Aurrekontuaren zatia", budgetDistributionTitle: "Beharren banaketa lehentasunaren arabera", budgetDistributionDescription: "Kolore bakoitzak etorkizunerako aurreikusitako gastua erakusten du.", budgetChartLabel: "Aurrekontuaren banaketa: lehentasun baxua berdez, ertaina laranjaz eta altua gorriz.", priorityLow: "Baxua · Berdea", priorityMedium: "Ertaina · Laranja", priorityHigh: "Altua · Gorria", budgetItemsTitle: "Etorkizuneko behar posibleak", budgetItemsDescription: "Aurrekontuaren adibide ilustratiboa, lehentasunaren arabera.", budgetPriorityTotal: "Guztira", budgetLowLaptop: "Ordenagailu eramangarrietarako RAM memoria", budgetLowMice: "Sagu eta teklatu sorta", budgetMediumWifi: "Ikasgelako Wi-Fi sarbide-puntuak", budgetMediumProjector: "Proiektoreen mantentzea eta piezak", budgetHighServer: "Laborategiko zerbitzari berritzea", budgetHighElectrical: "Laborategiko instalazio elektrikoak",
     inventoryExcelTab: "PC osagaiak · Excel", inventoryExcelTitle: "PCaren osagaiak · Excel", inventoryExcelDescription: "Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.", inventoryExcelDownload: "Excel deskargatu", inventoryExcelSummary: "PCaren zehaztapen nagusiak", inventoryExcelTableLabel: "Excel fitxategiko osagaien zerrenda", excelStorage: "Biltegiratzea guztira", excelMemory: "RAM memoria", excelPower: "Energia-iturria", excelNumber: "Zk.", excelComponent: "Osagaia / Kategoria", excelManufacturer: "Fabrikatzailea / Marka", excelModel: "Modeloa / Zehaztapena", excelCapacity: "Edukiera / Potentzia", excelNotes: "Ohar teknikoak", excelMotherboard: "Plaka nagusia", excelMotherboardNote: "Intel mahai gaineko socket estandarra", excelGraphics: "Txartel grafikoa", excelGraphicsNote: "Oinarrizko gama eta bulegotika", excelHardDriveOne: "1. disko gogorra", excelHardDriveTwo: "2. disko gogorra", excelRam: "RAM memoria", excelGeneric: "Generikoa / Hainbat", excelRamNote: "2 GB-ko DDR3 modulua", excelPowerSupply: "Energia-iturria", excelCase: "Kaxa / Txasisa", excelMidTower: "Mid Tower", excelCaseNote: "ATX/MicroATX kaxa beltza", excelOpticalDrive: "Unitate optikoa / DVD irakurgailua", excelDvdModel: "DVD 24x (irakurri eta grabatu)", excelDvdNote: "SATA DVD/CD irakurgailu eta grabagailua", excelRecommendationTitle: "Excel fitxategiko gomendioa", excelRecommendationText: "RAM memoria 8 GB-ra zabaltzea eta SATA SSD disko bat gehitzea proposatzen da.",
-    inventoryDemoDescription: "Demoko adibide-datuak dira; ez dira MySQLetik kargatu.", demoModeNotice: "Demostrazio modua: zerrendak adibideak dira eta ez da PHP zerbitzari edo datu-basera konektatzen.", demoSessionError: "Ezin izan da demoko saioa nabigatzailean gorde.",
+    inventoryDemoDescription: "Demoko adibide-datuak dira; ez dira MySQLetik kargatu.", demoModeNotice: "DEMOSTRAZIO MODUA: zerrendak adibideak dira eta ez da PHP zerbitzari edo datu-basera konektatzen.", demoSessionError: "Ezin izan da demoko saioa nabigatzailean gorde.",
     invalidLogin: "Erabiltzailea edo pasahitza ez da zuzena.", sessionUnavailable: "Ezin izan da saioa egiaztatu. Egiaztatu PHP zerbitzaria.", logout: "Saioa itxi", logoutFailed: "Ezin izan da saioa itxi. Saiatu berriro.", storageError: "Erregistroa pantaila honetan bakarrik dago eskuragarri.", accessSaved: "Sarbidea demo moduan erregistratu da.",
     recordCount: (count) => `${count} ERREGISTRO`, dateLocale: "eu-ES", darkTheme: "Modu iluna", lightTheme: "Modu argia", pageTitle: "Sarbide-kontrola | CIFP Txurdinaga LHII",
     viewParking: "Aparkalekua ikusi", parkingTitle: "Aparkalekua", parkingDescription: "Plazak, aforoa eta mugimenduak denbora errealean.", parkingLegendLabel: "Aparkalekuko egoeren legenda", parkingPlanLabel: "Aparkalekuko planoa goitik ikusita", spacesFree: "Libre", spacesOccupied: "Okupatuta", filterAll: "Denak", parkingFiltersLabel: "Aparkalekuko eremuak iragazi",
@@ -170,6 +178,35 @@ const translations = {
     parkingSpaceLabel: (zone, number, status) => `${zone}, space ${number}, ${status}`, parkingCount: (free, occupied) => `${free} free · ${occupied} occupied`
   }
 };
+const inventoryExcelTranslations = {
+  eu: {
+    inventoryExcelLoading: "Excel datuak kargatzen...",
+    inventoryExcelError: "Ezin izan da Excel fitxategia irakurri. Egiaztatu zerbitzaria eta InbentorioaE1T2.xlsx fitxategia.",
+    inventoryExcelDescription: "InbentorioaE1T2.xlsx fitxategiko osagai eta zehaztapen guztiak.",
+    excelOtherParts: "Beste osagai batzuk",
+    excelGroupCount: "Taldeak",
+    excelComponentCount: "Osagaiak",
+    excelUnitCount: "Unitateak guztira"
+  },
+  es: {
+    inventoryExcelLoading: "Cargando los datos del Excel...",
+    inventoryExcelError: "No se pudo leer el Excel. Comprueba el servidor y el archivo InbentorioaE1T2.xlsx.",
+    inventoryExcelDescription: "Todos los componentes y especificaciones del archivo InbentorioaE1T2.xlsx.",
+    excelOtherParts: "Otros componentes",
+    excelGroupCount: "Grupos",
+    excelComponentCount: "Componentes",
+    excelUnitCount: "Unidades en total"
+  },
+  en: {
+    inventoryExcelLoading: "Loading Excel data...",
+    inventoryExcelError: "Could not read the Excel file. Check the server and InbentorioaE1T2.xlsx.",
+    inventoryExcelDescription: "All components and specifications from InbentorioaE1T2.xlsx.",
+    excelOtherParts: "Other components",
+    excelGroupCount: "Groups",
+    excelComponentCount: "Components",
+    excelUnitCount: "Total units"
+  }
+};
 let toastTimeout;
 let currentLanguage = "eu";
 let activeAccount = null;
@@ -202,7 +239,7 @@ const demoInventoryFixture = [
   { id: 5, izena: "Sareko switch-a", kopurua: 6, egoera: "ONDO", zentroa_id: 1, zentroa_izena: "CIFP Txurdinaga LHII", azken_berrikuspena: "2026-09-16 12:00:00" }
 ];
 function translate(key) {
-  return translations[currentLanguage][key];
+  return inventoryExcelTranslations[currentLanguage]?.[key] ?? translations[currentLanguage][key];
 }
 
 function updateParkingPlateFormat() {
@@ -289,6 +326,7 @@ function applyLanguage(language) {
   renderParking();
   renderAttendanceUsers();
   renderInventory();
+  renderInventoryExcel();
   renderBudgetPlan();
 }
 
@@ -820,6 +858,270 @@ function setInventoryMode(mode) {
   });
   if (modeChanged) playPageTransition();
   if (inventoryMode === "database") loadInventory();
+  if (inventoryMode === "excel") loadInventoryExcel();
+}
+
+function parseExcelXml(xmlText, source) {
+  const document = new DOMParser().parseFromString(xmlText, "application/xml");
+  if (document.getElementsByTagName("parsererror").length) {
+    throw new Error(`Invalid XML in ${source}`);
+  }
+  return document;
+}
+
+function zipEntries(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const view = new DataView(buffer);
+  const directoryEndSignature = 0x06054b50;
+  const directoryEntrySignature = 0x02014b50;
+  const searchStart = Math.max(0, bytes.length - 0xffff - 22);
+  let endOffset = -1;
+
+  for (let offset = bytes.length - 22; offset >= searchStart; offset--) {
+    if (view.getUint32(offset, true) === directoryEndSignature) {
+      endOffset = offset;
+      break;
+    }
+  }
+  if (endOffset < 0) throw new Error("The Excel file has no ZIP directory");
+
+  const entryCount = view.getUint16(endOffset + 10, true);
+  let offset = view.getUint32(endOffset + 16, true);
+  const entries = new Map();
+  const decoder = new TextDecoder();
+  for (let index = 0; index < entryCount; index++) {
+    if (view.getUint32(offset, true) !== directoryEntrySignature) {
+      throw new Error("The Excel file has an invalid ZIP directory");
+    }
+    const compression = view.getUint16(offset + 10, true);
+    const compressedSize = view.getUint32(offset + 20, true);
+    const nameLength = view.getUint16(offset + 28, true);
+    const extraLength = view.getUint16(offset + 30, true);
+    const commentLength = view.getUint16(offset + 32, true);
+    const localOffset = view.getUint32(offset + 42, true);
+    const name = decoder.decode(bytes.subarray(offset + 46, offset + 46 + nameLength));
+    entries.set(name, { compression, compressedSize, localOffset });
+    offset += 46 + nameLength + extraLength + commentLength;
+  }
+
+  return entries;
+}
+
+async function readExcelZipEntry(buffer, entries, path) {
+  const entry = entries.get(path);
+  if (!entry) throw new Error(`The Excel file is missing ${path}`);
+
+  const view = new DataView(buffer);
+  const nameLength = view.getUint16(entry.localOffset + 26, true);
+  const extraLength = view.getUint16(entry.localOffset + 28, true);
+  const dataOffset = entry.localOffset + 30 + nameLength + extraLength;
+  const compressed = new Uint8Array(buffer, dataOffset, entry.compressedSize);
+  let content;
+  if (entry.compression === 0) {
+    content = compressed;
+  } else if (entry.compression === 8) {
+    const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    content = new Uint8Array(await new Response(stream).arrayBuffer());
+  } else {
+    throw new Error(`Unsupported Excel ZIP compression: ${entry.compression}`);
+  }
+
+  return new TextDecoder("utf-8").decode(content);
+}
+
+async function parseExcelWorkbook(buffer) {
+  const entries = zipEntries(buffer);
+  const workbookXml = parseExcelXml(await readExcelZipEntry(buffer, entries, "xl/workbook.xml"), "xl/workbook.xml");
+  const sheet = workbookXml.getElementsByTagNameNS("*", "sheet")[0];
+  if (!sheet) throw new Error("The Excel workbook has no sheets");
+
+  const relationshipId = sheet.getAttributeNS(
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    "id"
+  );
+  const relationshipsXml = parseExcelXml(
+    await readExcelZipEntry(buffer, entries, "xl/_rels/workbook.xml.rels"),
+    "xl/_rels/workbook.xml.rels"
+  );
+  const relationship = [...relationshipsXml.getElementsByTagNameNS("*", "Relationship")]
+    .find((item) => item.getAttribute("Id") === relationshipId);
+  if (!relationship) throw new Error("The Excel worksheet relationship is missing");
+
+  const target = relationship.getAttribute("Target").replaceAll("\\", "/");
+  const sheetPathParts = target.startsWith("/") ? [] : ["xl"];
+  target.split("/").forEach((part) => {
+    if (!part || part === ".") return;
+    if (part === "..") sheetPathParts.pop();
+    else sheetPathParts.push(part);
+  });
+  const sheetPath = sheetPathParts.join("/");
+  let sharedStrings = [];
+  if (entries.has("xl/sharedStrings.xml")) {
+    const sharedXml = parseExcelXml(
+      await readExcelZipEntry(buffer, entries, "xl/sharedStrings.xml"),
+      "xl/sharedStrings.xml"
+    );
+    sharedStrings = [...sharedXml.getElementsByTagNameNS("*", "si")]
+      .map((item) => item.textContent || "");
+  }
+
+  const sheetXml = parseExcelXml(await readExcelZipEntry(buffer, entries, sheetPath), sheetPath);
+  const rows = [...sheetXml.getElementsByTagNameNS("*", "row")].map((row) => {
+    const cells = new Map();
+    [...row.children].filter((cell) => cell.localName === "c").forEach((cell) => {
+      const reference = cell.getAttribute("r").match(/^([A-Z]+)/);
+      if (!reference) throw new Error("The Excel file contains an invalid cell reference");
+      const column = [...reference[1]].reduce((index, letter) => index * 26 + letter.charCodeAt(0) - 64, 0);
+      const value = cell.getElementsByTagNameNS("*", "v")[0]?.textContent || "";
+      const cellText = cell.getAttribute("t") === "s"
+        ? sharedStrings[Number(value)] || ""
+        : cell.getAttribute("t") === "inlineStr"
+          ? cell.getElementsByTagNameNS("*", "is")[0]?.textContent || ""
+          : value;
+      cells.set(column, cellText.replace(/\s+/g, " ").trim());
+    });
+    return cells;
+  });
+
+  const groups = [];
+  let columns = [];
+  let firstHeaderColumn = 3;
+  let activeGroup = null;
+  let quantityColumn = null;
+  rows.forEach((cells) => {
+    const hasComponentHeader = [...cells.values()].some((value) =>
+      /osagaia|componente/i.test(value)
+    );
+    if (hasComponentHeader) {
+      const populatedColumns = [...cells.entries()]
+        .filter(([column, value]) => column >= 3 && value !== "")
+        .map(([column]) => column);
+      if (!populatedColumns.length) throw new Error("The Excel table has no column headers");
+      const firstColumn = Math.min(...populatedColumns);
+      const lastColumn = Math.max(...populatedColumns);
+      firstHeaderColumn = firstColumn;
+      columns = Array.from({ length: lastColumn - firstColumn + 1 }, (_, index) =>
+        cells.get(firstColumn + index) || `Column ${firstColumn + index}`
+      );
+      groups.push({ title: (cells.get(2) || "Inventario").replace(/\s+/g, " ").trim(), items: [] });
+      activeGroup = groups.length - 1;
+      quantityColumn = columns.findIndex((column) => /kantitatea|cantidad|quantity/i.test(column));
+      if (quantityColumn < 0) quantityColumn = null;
+      return;
+    }
+    if (activeGroup === null || !columns.length) return;
+
+    const values = columns.map((_, index) => cells.get(firstHeaderColumn + index) || "");
+    if (values.some(Boolean)) groups[activeGroup].items.push(values);
+  });
+
+  if (!groups.length || !columns.length) throw new Error("No component tables were found in the Excel file");
+  return { source: "InbentorioaE1T2.xlsx", columns, quantityColumn, groups };
+}
+
+async function loadInventoryExcel() {
+  if (inventoryExcelLoadState === "loaded" || inventoryExcelLoadPromise) return inventoryExcelLoadPromise;
+
+  inventoryExcelLoadState = "loading";
+  inventoryExcelLoadError = null;
+  renderInventoryExcel();
+  inventoryExcelLoadPromise = fetch("PHP/inventario-excel.php", { cache: "no-store" })
+    .then(async (response) => {
+      if (response.status === 404) {
+        const workbookResponse = await fetch("InbentorioaE1T2.xlsx", { cache: "no-store" });
+        if (workbookResponse.status === 404) {
+          const staticResponse = await fetch("data/inventario-excel.json", { cache: "no-store" });
+          if (!staticResponse.ok) throw new Error(`HTTP ${staticResponse.status}`);
+          return staticResponse.json();
+        }
+        if (!workbookResponse.ok) throw new Error(`HTTP ${workbookResponse.status}`);
+        return parseExcelWorkbook(await workbookResponse.arrayBuffer());
+      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((data) => {
+      if (!Array.isArray(data.columns) || !Array.isArray(data.groups)) {
+        throw new Error("Invalid Excel inventory JSON structure");
+      }
+      inventoryExcelData = data;
+      inventoryExcelLoadState = "loaded";
+    })
+    .catch((error) => {
+      inventoryExcelLoadState = "error";
+      inventoryExcelLoadError = error;
+      console.error("Could not load Excel inventory data.", error);
+    })
+    .finally(() => {
+      inventoryExcelLoadPromise = null;
+      renderInventoryExcel();
+    });
+  return inventoryExcelLoadPromise;
+}
+
+function renderInventoryExcel() {
+  inventoryExcelLoadMessage.hidden = inventoryExcelLoadState === "loaded";
+  inventoryExcelLoadMessage.textContent = translate(
+    inventoryExcelLoadState === "error" ? "inventoryExcelError" : "inventoryExcelLoading"
+  );
+  inventoryExcelList.replaceChildren();
+  inventoryExcelSummary.replaceChildren();
+  inventoryExcelHeader.replaceChildren();
+
+  if (inventoryExcelLoadState !== "loaded" || !inventoryExcelData) return;
+
+  const items = inventoryExcelData.groups.flatMap((group) => group.items);
+  const quantityIndex = Number.isInteger(inventoryExcelData.quantityColumn)
+    ? inventoryExcelData.quantityColumn
+    : -1;
+  const totalUnits = items.reduce((total, item) => {
+    const quantity = quantityIndex < 0 ? 1 : Number(String(item[quantityIndex] ?? "").replace(",", "."));
+    return total + (Number.isFinite(quantity) ? quantity : 0);
+  }, 0);
+  [
+    ["excelGroupCount", inventoryExcelData.groups.length],
+    ["excelComponentCount", items.length],
+    ["excelUnitCount", totalUnits.toLocaleString(currentLanguage)]
+  ].forEach(([labelKey, valueText]) => {
+    const card = document.createElement("article");
+    const label = document.createElement("span");
+    const value = document.createElement("strong");
+    card.className = "glass-panel inventory-summary-card";
+    label.textContent = translate(labelKey);
+    value.textContent = valueText;
+    card.append(label, value);
+    inventoryExcelSummary.append(card);
+  });
+
+  inventoryExcelData.columns.forEach((column) => {
+    const cell = document.createElement("th");
+    cell.scope = "col";
+    cell.textContent = column;
+    inventoryExcelHeader.append(cell);
+  });
+
+  inventoryExcelData.groups.forEach((group) => {
+    const groupRow = document.createElement("tr");
+    const groupCell = document.createElement("th");
+    groupRow.className = "excel-group-row";
+    groupCell.scope = "rowgroup";
+    groupCell.colSpan = inventoryExcelData.columns.length;
+    groupCell.textContent = group.title.trim() === "Beste osagai batzuk"
+      ? translate("excelOtherParts")
+      : group.title;
+    groupRow.append(groupCell);
+    inventoryExcelList.append(groupRow);
+
+    group.items.forEach((item) => {
+      const row = document.createElement("tr");
+      item.forEach((value) => {
+        const cell = document.createElement("td");
+        cell.textContent = value || "—";
+        row.append(cell);
+      });
+      inventoryExcelList.append(row);
+    });
+  });
 }
 
 async function loadInventory() {
@@ -1202,6 +1504,7 @@ languageSelect.addEventListener("change", () => {
 createParkingPlan();
 applyParkingFilter("all");
 applyLanguage(currentLanguage);
+loadInventoryExcel();
 window.setInterval(updateDateTime, 1000);
 window.setInterval(refreshParkingFromStorage, 3000);
 restoreSession();

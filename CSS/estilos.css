@@ -708,7 +708,12 @@ h1 span { color: var(--acid); }
 .inventory-load-message[hidden] { display: none; }
 .inventory-panel { padding: 5px 12px; }
 .inventory-table { min-width: 760px; }
-.excel-table { min-width: 1050px; }
+.excel-table { min-width: 1250px; }
+.excel-group-row th { color: var(--mint); background: color-mix(in srgb, var(--mint) 8%, var(--surface)); font-size: 10px; letter-spacing: .5px; text-align: left; text-transform: uppercase; }
+.excel-summary .inventory-summary-card { min-height: 105px; }
+.excel-summary .inventory-summary-card span { line-height: 1.5; }
+.excel-summary .inventory-summary-card strong { font-size: 16px; line-height: 1.4; }
+.excel-load-message { margin-top: 2px; }
 .inventory-table td:nth-child(1), .inventory-table td:nth-child(3) { color: var(--muted); font-family: var(--mono); }
 .inventory-excel-download { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .excel-summary .inventory-summary-card strong { font-size: 21px; }

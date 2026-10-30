@@ -1,0 +1,443 @@
+{
+  "source": "InbentorioaE1T2.xlsx",
+  "columns": [
+    "Zk.",
+    "Osagaia / Kategoria",
+    "Fabrikatzailea / Marka",
+    "Modeloa / Zehaztapena",
+    "Edukiera / Potentzia",
+    "Ohar Teknikoak",
+    "Kantitatea"
+  ],
+  "quantityColumn": 6,
+  "groups": [
+    {
+      "title": "PC T2",
+      "items": [
+        [
+          "1.0",
+          "Plaka Nagusia (Xafla)",
+          "Intel",
+          "Desktop Board 01",
+          "N/A",
+          "Intel mahaigaineko socket estandarra",
+          "1.0"
+        ],
+        [
+          "2.0",
+          "Txartel Grafikoa (Grafika)",
+          "NVIDIA",
+          "GeForce GT 218",
+          "1 GB VRAM",
+          "Oinarrizko gama / Bulegotika",
+          "1.0"
+        ],
+        [
+          "3.0",
+          "Disko Gogorra 1",
+          "Western Digital",
+          "WD Blue SATA (WD5000AAKX)",
+          "500 GB",
+          "3.5\" SATA 6Gb/s 7200 RPM",
+          "1.0"
+        ],
+        [
+          "4.0",
+          "Disko Gogorra 2",
+          "Seagate",
+          "Barracuda 7200.12 (ST3500418AS)",
+          "500 GB",
+          "3.5\" SATA 3Gb/s 7200 RPM",
+          "1.0"
+        ],
+        [
+          "5.0",
+          "RAM Memoria",
+          "Generikoa / Hainbat",
+          "DDR3 SDRAM",
+          "2 GB",
+          "2GB-ko DDR3 modulua",
+          "1.0"
+        ],
+        [
+          "6.0",
+          "Energi-iturria",
+          "PC CASE",
+          "PC CASE 600 (PC ATX 2.2 P4)",
+          "600 W",
+          "ATX 2.2 formatua",
+          "1.0"
+        ],
+        [
+          "7.0",
+          "Kaxa / Txasisa",
+          "Antec",
+          "NSK4482B",
+          "Mid Tower",
+          "ATX/MicroATX kaxa beltza",
+          "1.0"
+        ],
+        [
+          "8.0",
+          "Unitate Optikoa / DVD Irakurgailua",
+          "LG",
+          "DVD 24x (Irakurgailu eta grabagailua)",
+          "24x Abiadura",
+          "SATA DVD/CD irakurgailu eta grabagailu optikoa",
+          "1.0"
+        ],
+        [
+          "9.0",
+          "Prozesadorea",
+          "Intel",
+          "Intel Core I3 540",
+          "3.06 GHz / 73 W",
+          "LGA 1156 socket-a, 2 nukleo / 4 hari, 4 MB Cache",
+          ""
+        ],
+        [
+          "10.0",
+          "Disipadorea CPU",
+          "Intel",
+          "E97379-001 (Stock Cooler)",
+          "N/A",
+          "LGA 1155/1156 socket-ak, aluminiosko disipadorea (kobrezko nukleoa), 4-pin PWM konektorea",
+          ""
+        ]
+      ]
+    },
+    {
+      "title": "PC T3",
+      "items": [
+        [
+          "1.0",
+          "Prozesadorea",
+          "Intel",
+          "Core i7-3770 3.4 GHz",
+          "3.4 GHz",
+          "4 nukleo eta 8 hari ditu",
+          "1.0"
+        ],
+        [
+          "2.0",
+          "Disipadorea CPU",
+          "CYRMZAY",
+          "Stock LGA1155",
+          "12 Voltios",
+          "",
+          "1.0"
+        ],
+        [
+          "3.0",
+          "Plaka Nagusia (Xafla)",
+          "ASUS",
+          "P8H61-MX USB3",
+          "N/A",
+          "Intel mahaigaineko socket estandarra",
+          "1.0"
+        ],
+        [
+          "4.0",
+          "Txartel Grafikoa (Grafika)",
+          "AMD",
+          "Radeon HD 3650 - 512 MB DDR2",
+          "512MB VRAM",
+          "Oinarrizko gama / Bulegotika",
+          "1.0"
+        ],
+        [
+          "5.0",
+          "Disko Gogorra 1",
+          "Western Digital",
+          "WD Blue 500GB SATA",
+          "500 GB",
+          "3.5\" SATA 6Gb/s 7200 RPM",
+          "1.0"
+        ],
+        [
+          "6.0",
+          "RAM Memoria 1",
+          "Kingston",
+          "KVR16N11/8 - 8 GB DDR3 - 1600",
+          "8 GB",
+          "8GB-ko DDR3 modulua - 1600 MHz",
+          "1.0"
+        ],
+        [
+          "7.0",
+          "RAM Memoria 2",
+          "Kingston",
+          "KVR1333D3N9/4 - 4 GB DDR3 - 1333",
+          "4 GB",
+          "4GB-ko DDR3 modulua - 1333 MHz",
+          "1.0"
+        ],
+        [
+          "8.0",
+          "Energi-iturria",
+          "FSP Group",
+          "FSP300-60EP(2) - 300W",
+          "300 W",
+          "ATX 2.2 formatua",
+          "1.0"
+        ],
+        [
+          "9.0",
+          "Kaxa / Txasisa",
+          "APITECG",
+          "ATX",
+          "Mid Tower",
+          "ATX/MicroATX kaxa beltza",
+          "1.0"
+        ],
+        [
+          "10.0",
+          "Unitate Optikoa / DVD Irakurgailua",
+          "LG",
+          "GH24NSB0 (DVD + RW, Super multi)",
+          "24x Abiadura",
+          "SATA DVD/CD irakurgailu eta grabagailu optikoa",
+          "1.0"
+        ]
+      ]
+    },
+    {
+      "title": "PC T1",
+      "items": []
+    },
+    {
+      "title": "PC T4",
+      "items": []
+    },
+    {
+      "title": "Beste osagai batzuk",
+      "items": [
+        [
+          "1.0",
+          "Energia-Iturria",
+          "Anima",
+          "APSI500",
+          "500W",
+          "",
+          "1.0"
+        ],
+        [
+          "2.0",
+          "Energia-Iturria",
+          "ASUS",
+          "A-30F",
+          "300W",
+          "",
+          "1.0"
+        ],
+        [
+          "3.0",
+          "Energia-Iturria",
+          "Hiditec",
+          "Seo 500W",
+          "500W",
+          "",
+          "1.0"
+        ],
+        [
+          "4.0",
+          "Energia-Iturria",
+          "HuntKey",
+          "HK350-12PP",
+          "250W",
+          "80 PLUS Bronze / Lenovo FRU 54Y8934",
+          "1.0"
+        ],
+        [
+          "5.0",
+          "Prozesadorea (CPU)",
+          "Intel",
+          "Core i7-3770",
+          "3.40 GHz",
+          "Socket LGA1155",
+          "6.0"
+        ],
+        [
+          "6.0",
+          "Plaka Nagusia",
+          "Gigabyte",
+          "GA-945P-S3",
+          "N/A",
+          "Socket LGA775",
+          "2.0"
+        ],
+        [
+          "7.0",
+          "Disko Gogorra (IDE/ATA)",
+          "Seagate",
+          "Barracuda ATA IV (ST340016A)",
+          "40 GB",
+          "IDE / ATA",
+          "1.0"
+        ],
+        [
+          "8.0",
+          "Disko Gogorra (SATA)",
+          "Hitachi",
+          "Deskstar (HDS725050KLA360)",
+          "500 GB",
+          "SATA 7200 RPM",
+          "1.0"
+        ],
+        [
+          "9.0",
+          "Txartel grafikoa",
+          "Acer",
+          "AT Radeon HD 3650",
+          "512Mb DDR2",
+          "",
+          "1.0"
+        ],
+        [
+          "10.0",
+          "Txartel Grafikoa (GPU)",
+          "ASUS",
+          "GeForce EN210 Silent (EN210 SILENT/DI/1GD3/V2(LP))",
+          "1 GB DDR3",
+          "Low Profile",
+          "2.0"
+        ],
+        [
+          "11.0",
+          "Txartel Grafikoa",
+          "ASUS",
+          "EN210 SILENT/DI/1GD3/V2(LP)",
+          "1 GB DDR3",
+          "",
+          "1.0"
+        ],
+        [
+          "12.0",
+          "Txartel Grafikoa",
+          "Palit",
+          "GeForce GT 210",
+          "512MB SDDR3 32 bit",
+          "",
+          "1.0"
+        ],
+        [
+          "13.0",
+          "Disipadorea",
+          "AVC",
+          "Standard Fan",
+          "80mm / 12V 0.41A",
+          "Haizagailu pasiboa/arrunta",
+          "1.0"
+        ],
+        [
+          "14.0",
+          "Disipadorea",
+          "Intel",
+          "E97378-001",
+          "LGA1150 / 1151 / 1155 / 1156",
+          "Foxconn DC12V 0.17A",
+          "2.0"
+        ],
+        [
+          "15.0",
+          "Disipadorea",
+          "AVC / Lenovo",
+          "(FRU) 03T9513.",
+          "LGA115x / LGA1200",
+          "Lenovo ThinkCentre OEM",
+          "1.0"
+        ],
+        [
+          "16.0",
+          "Bozgoragailua",
+          "Generikoa / OEM",
+          "Barneko PC Hizlaria",
+          "2-pin Header / 5V",
+          "BIOS akatsen soinuak entzuteko barne-bozgoragailua",
+          "1.0"
+        ],
+        [
+          "17.0",
+          "Grabagailu/Irakurgailu Optikoa",
+          "Lite-On",
+          "DH-16AFSH",
+          "DVD±RW / CD-RW SATA",
+          "Lenovo FRU 71Y5545",
+          "1.0"
+        ],
+        [
+          "18.0",
+          "RAM 1",
+          "Corsair",
+          "V8512MB400C·",
+          "512 MB",
+          "400 MHz (PC3200)",
+          "1.0"
+        ],
+        [
+          "19.0",
+          "RAM 2",
+          "Elixir",
+          "M2U51264DS8HAOG",
+          "512 MB",
+          "400 MHz (PC3200)",
+          "1.0"
+        ],
+        [
+          "20.0",
+          "RAM 3",
+          "Trascend",
+          "113416-1988",
+          "512 MB",
+          "400 MHz (PC3200)",
+          "1.0"
+        ],
+        [
+          "21.0",
+          "RAM 4",
+          "Infineon",
+          "HYS64D32300GU-5-C",
+          "256 MB",
+          "400 MHz (PC3200)",
+          "1.0"
+        ],
+        [
+          "22.0",
+          "RAM 5",
+          "Samsung",
+          "M368L6423DTL",
+          "512 MB",
+          "333 MHz (PC2700)",
+          "1.0"
+        ],
+        [
+          "23.0",
+          "RAM 6",
+          "E-Bridge",
+          "256DDR PC266",
+          "256 MB",
+          "266 MHz (PC2100)",
+          "1.0"
+        ],
+        [
+          "24.0",
+          "RAM 7",
+          "Kingston",
+          "KVR13N9S6/2",
+          "2 GB",
+          "1333 MHz (PC3-10600)",
+          "1.0"
+        ],
+        [
+          "25.0",
+          "RAM 8",
+          "Corsair",
+          "ValueSelect (VS512MB400C3)",
+          "512 MB DDR",
+          "400 MHz",
+          "1.0"
+        ]
+      ]
+    }
+  ]
+}

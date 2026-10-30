@@ -247,46 +247,20 @@
             <span class="section-icon" aria-hidden="true">XL</span>
             <div>
               <h3 data-i18n="inventoryExcelTitle">PCaren osagaiak · Excel</h3>
-              <p data-i18n="inventoryExcelDescription">Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.</p>
+              <p data-i18n="inventoryExcelDescription">InbentorioaE1T2.xlsx fitxategiko osagai eta zehaztapen guztiak.</p>
             </div>
           </div>
-          <a class="inventory-refresh inventory-excel-download" href="Especificaciones_PC_Hardware-v2.xlsx" download data-i18n="inventoryExcelDownload">Excel deskargatu</a>
         </div>
-        <div class="inventory-summary excel-summary" aria-label="PCaren zehaztapen nagusiak" data-i18n-aria-label="inventoryExcelSummary">
-          <article class="glass-panel inventory-summary-card"><span data-i18n="excelStorage">Biltegiratzea</span><strong>1 TB</strong></article>
-          <article class="glass-panel inventory-summary-card"><span data-i18n="excelMemory">RAM memoria</span><strong>2 GB DDR3</strong></article>
-          <article class="glass-panel inventory-summary-card"><span data-i18n="excelPower">Energia-iturria</span><strong>600 W</strong></article>
-        </div>
+        <p class="inventory-load-message excel-load-message" id="inventory-excel-load-message" aria-live="polite" data-i18n="inventoryExcelLoading">Excel datuak kargatzen...</p>
+        <div class="inventory-summary excel-summary" id="inventory-excel-summary" aria-label="PCaren zehaztapen nagusiak" data-i18n-aria-label="inventoryExcelSummary"></div>
         <div class="glass-panel users-panel inventory-panel">
           <div class="table-wrap" role="region" tabindex="0" aria-label="Excel fitxategiko osagaien zerrenda" data-i18n-aria-label="inventoryExcelTableLabel">
             <table class="users-table inventory-table excel-table">
-              <thead>
-                <tr>
-                  <th scope="col" data-i18n="excelNumber">Zk.</th>
-                  <th scope="col" data-i18n="excelComponent">Osagaia / Kategoria</th>
-                  <th scope="col" data-i18n="excelManufacturer">Fabrikatzailea / Marka</th>
-                  <th scope="col" data-i18n="excelModel">Modeloa / Zehaztapena</th>
-                  <th scope="col" data-i18n="excelCapacity">Edukiera / Potentzia</th>
-                  <th scope="col" data-i18n="excelNotes">Ohar teknikoak</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>1</td><td data-i18n="excelMotherboard">Plaka nagusia</td><td>Intel</td><td>Desktop Board 01</td><td>—</td><td data-i18n="excelMotherboardNote">Intel mahai gaineko socket estandarra</td></tr>
-                <tr><td>2</td><td data-i18n="excelGraphics">Txartel grafikoa</td><td>NVIDIA</td><td>GeForce GT 218</td><td>1 GB VRAM</td><td data-i18n="excelGraphicsNote">Oinarrizko gama eta bulegotika</td></tr>
-                <tr><td>3</td><td data-i18n="excelHardDriveOne">1. disko gogorra</td><td>Western Digital</td><td>WD Blue SATA (WD5000AAKX)</td><td>500 GB</td><td>3.5″ SATA 6Gb/s · 7200 RPM</td></tr>
-                <tr><td>4</td><td data-i18n="excelHardDriveTwo">2. disko gogorra</td><td>Seagate</td><td>Barracuda 7200.12 (ST3500418AS)</td><td>500 GB</td><td>3.5″ SATA 3Gb/s · 7200 RPM</td></tr>
-                <tr><td>5</td><td data-i18n="excelRam">RAM memoria</td><td data-i18n="excelGeneric">Generikoa / Hainbat</td><td>DDR3 SDRAM</td><td>2 GB</td><td data-i18n="excelRamNote">2 GB-ko DDR3 modulua</td></tr>
-                <tr><td>6</td><td data-i18n="excelPowerSupply">Energia-iturria</td><td>PC CASE</td><td>PC CASE 600 (PC ATX 2.2 P4)</td><td>600 W</td><td>ATX 2.2</td></tr>
-                <tr><td>7</td><td data-i18n="excelCase">Kaxa / Txasisa</td><td>Antec</td><td>NSK4482B</td><td data-i18n="excelMidTower">Mid Tower</td><td data-i18n="excelCaseNote">ATX/MicroATX kaxa beltza</td></tr>
-                <tr><td>8</td><td data-i18n="excelOpticalDrive">Unitate optikoa / DVD irakurgailua</td><td>LG</td><td data-i18n="excelDvdModel">DVD 24x (irakurri eta grabatu)</td><td>24x</td><td data-i18n="excelDvdNote">SATA DVD/CD irakurgailu eta grabagailua</td></tr>
-              </tbody>
+              <thead><tr id="inventory-excel-header"></tr></thead>
+              <tbody id="inventory-excel-list"></tbody>
             </table>
           </div>
         </div>
-        <article class="glass-panel excel-recommendation">
-          <span class="priority-dot priority-medium"></span>
-          <div><h3 data-i18n="excelRecommendationTitle">Excel fitxategiko gomendioa</h3><p data-i18n="excelRecommendationText">RAM memoria 8 GB-ra zabaltzea eta SATA SSD disko bat gehitzea proposatzen da.</p></div>
-        </article>
       </section>
       <section class="inventory-budget-view" id="inventory-budget-view" aria-label="Aurrekontuaren demo-plana" data-i18n-aria-label="inventoryBudgetTab" hidden>
         <div class="budget-intro">
