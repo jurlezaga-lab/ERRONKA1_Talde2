@@ -10,9 +10,40 @@ if (!startAppSession()) {
 requireAppRole(['Admin']);
 
 try {
-    require_once 'db.konexioa.php';
+    require_once __DIR__ . '/db.konexioa.php';
     if (!$conn->set_charset('utf8mb4')) {
         throw new RuntimeException($conn->error, $conn->errno);
+    }
+
+    $userColumnsResult = $conn->query('SHOW COLUMNS FROM usuarios');
+    if (!$userColumnsResult) {
+        throw new RuntimeException($conn->error, $conn->errno);
+    }
+
+    $userColumns = [];
+    while ($column = $userColumnsResult->fetch_assoc()) {
+        $userColumns[$column['Field']] = true;
+    }
+
+    foreach (['id', 'izena', 'abizena', 'emaila'] as $requiredColumn) {
+        if (!isset($userColumns[$requiredColumn])) {
+            throw new RuntimeException('Falta la columna requerida en usuarios: ' . $requiredColumn);
+        }
+    }
+
+    $roleSelect = 'NULL AS rol_id, NULL AS rol_izena';
+    $roleJoin = '';
+    if (isset($userColumns['rol_id'])) {
+        $roleSelect = 'u.rol_id, NULL AS rol_izena';
+        $roleTableResult = $conn->query("SHOW TABLES LIKE 'rol'");
+        if (!$roleTableResult) {
+            throw new RuntimeException($conn->error, $conn->errno);
+        }
+
+        if ($roleTableResult->num_rows > 0) {
+            $roleSelect = 'u.rol_id, r.izena AS rol_izena';
+            $roleJoin = 'LEFT JOIN rol r ON r.id = u.rol_id';
+        }
     }
 
     $sql = "
@@ -21,13 +52,9 @@ try {
             u.izena,
             u.abizena,
             u.emaila,
-            u.rol_id,
-            r.izena AS rol_izena,
-            u.zentroa_id,
-            z.izena AS zentroa_izena
+            $roleSelect
         FROM usuarios u
-        LEFT JOIN rol r ON r.id = u.rol_id
-        LEFT JOIN zentroa z ON z.id = u.zentroa_id
+        $roleJoin
         ORDER BY u.abizena, u.izena, u.id
     ";
     $result = $conn->query($sql);
@@ -44,13 +71,29 @@ try {
             'abizena' => $row['abizena'],
             'emaila' => $row['emaila'],
             'rol_id' => $row['rol_id'] === null ? null : (int) $row['rol_id'],
-            'rol_izena' => $row['rol_izena'],
-            'zentroa_id' => $row['zentroa_id'] === null ? null : (int) $row['zentroa_id'],
-            'zentroa_izena' => $row['zentroa_izena']
+            'rol_izena' => $row['rol_izena']
         ];
     }
 
-    echo json_encode(['users' => $users], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    $roles = [];
+    $roleTableResult = $conn->query("SHOW TABLES LIKE 'rol'");
+    if (!$roleTableResult) {
+        throw new RuntimeException($conn->error, $conn->errno);
+    }
+    if ($roleTableResult->num_rows > 0) {
+        $roleResult = $conn->query('SELECT id, izena FROM rol ORDER BY id');
+        if (!$roleResult) {
+            throw new RuntimeException($conn->error, $conn->errno);
+        }
+        while ($role = $roleResult->fetch_assoc()) {
+            $roles[] = ['id' => (int) $role['id'], 'izena' => $role['izena']];
+        }
+    }
+
+    echo json_encode([
+        'users' => $users,
+        'roles' => $roles
+    ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 } catch (Throwable $error) {
     error_log('No se pudieron cargar los usuarios: ' . $error->getMessage());
     http_response_code(500);

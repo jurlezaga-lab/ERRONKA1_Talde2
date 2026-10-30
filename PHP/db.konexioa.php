@@ -2,7 +2,7 @@
 $host = "localhost";
 $usuario = "root";
 $pasahitza = "1234";
-$datuBasea = "kudeaketa_db";
+$datuBasea = "kudeaketa_7";
 
 // mysqli-ren salbuespenak automatikoki jaurtitzea desgaitu
 mysqli_report(MYSQLI_REPORT_OFF);

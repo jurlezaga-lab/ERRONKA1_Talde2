@@ -7,8 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="CSS/estilos.css">
+  <link rel="stylesheet" href="CSS/estilos.css?v=3">
   <script src="JS/theme.js" defer></script>
+  <script src="JS/cookies.js?v=5" defer></script>
   <script src="JS/dashboard.js" defer></script>
 </head>
 <body>
@@ -156,6 +157,21 @@
           <strong id="attendance-outside-count">0</strong>
         </article>
       </div>
+      <form id="users-create-form" class="database-create-form glass-panel" hidden>
+        <div class="database-create-heading">
+          <h3 data-i18n="createUserTitle">Añadir usuario</h3>
+          <p data-i18n="createUserDescription">Los campos con * son obligatorios.</p>
+        </div>
+        <div class="database-create-fields">
+          <label><span data-i18n="firstNameLabel">Nombre</span><input name="izena" maxlength="50" required></label>
+          <label><span data-i18n="lastNameLabel">Apellido</span><input name="abizena" maxlength="50" required></label>
+          <label><span data-i18n="emailLabel">Correo</span><input name="emaila" type="email" maxlength="100" required></label>
+          <label><span data-i18n="roleIdLabel">Rol</span><select name="rol_id" id="user-create-role" required><option value="" data-i18n="selectRole">Selecciona un rol</option></select></label>
+          <label><span data-i18n="newUserPasswordLabel">Contraseña inicial</span><input name="pasahitza" type="password" maxlength="255" required autocomplete="new-password"></label>
+          <button class="database-action-button" type="submit" data-i18n="createRecord">Añadir</button>
+        </div>
+        <p class="database-form-message" id="users-create-message" role="status" aria-live="polite" hidden></p>
+      </form>
       <div class="users-toolbar">
         <label class="user-search-field" for="user-search">
           <span data-i18n="searchUsersLabel">Bilatu erabiltzaileak</span>
@@ -177,14 +193,14 @@
           <table class="users-table">
             <thead>
               <tr>
-                <th scope="col" data-i18n="userIdLabel">ID</th>
-                <th scope="col" data-i18n="firstNameLabel">Izena</th>
-                <th scope="col" data-i18n="lastNameLabel">Abizena</th>
-                <th scope="col" data-i18n="emailLabel">Emaila</th>
-                <th scope="col" data-i18n="roleIdLabel">Rola / ID</th>
-                <th scope="col" data-i18n="centerIdLabel">Zentroa / ID</th>
-                <th scope="col" data-i18n="attendanceStatusLabel">Egoera</th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="0" data-sort-type="number"><span class="table-sort-label" data-i18n="userIdLabel">ID</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="1" data-sort-type="text"><span class="table-sort-label" data-i18n="firstNameLabel">Izena</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="2" data-sort-type="text"><span class="table-sort-label" data-i18n="lastNameLabel">Abizena</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="3" data-sort-type="text"><span class="table-sort-label" data-i18n="emailLabel">Emaila</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="4" data-sort-type="text"><span class="table-sort-label" data-i18n="roleIdLabel">Rola / ID</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                <th scope="col"><button class="table-sort-button" type="button" data-sort-body="users-list" data-sort-column="5" data-sort-type="text"><span class="table-sort-label" data-i18n="attendanceStatusLabel">Egoera</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
                 <th scope="col" data-i18n="attendanceActionLabel">Fichatu</th>
+                <th scope="col" id="users-manage-header" data-i18n="manageHeader" hidden>Gestionar</th>
               </tr>
             </thead>
             <tbody id="users-list"></tbody>
@@ -223,17 +239,35 @@
           <article class="glass-panel inventory-summary-card"><span data-i18n="inventoryNeedsAttention">Arreta behar dute</span><strong id="inventory-attention-count">0</strong></article>
         </div>
         <p class="inventory-load-message" id="inventory-load-message" role="status" aria-live="polite" hidden></p>
+        <form id="inventory-create-form" class="database-create-form glass-panel" hidden>
+          <div class="database-create-heading">
+            <h3 data-i18n="createInventoryTitle">Añadir artículo</h3>
+            <p data-i18n="createInventoryDescription">Registra un artículo en el inventario de MySQL.</p>
+          </div>
+          <div class="database-create-fields">
+            <label class="database-create-wide"><span data-i18n="inventoryNameLabel">Artículo</span><input name="izena" maxlength="100" required></label>
+            <label><span data-i18n="inventoryQuantityLabel">Cantidad</span><input name="kopurua" type="number" min="0" step="1" value="1" required></label>
+            <label><span data-i18n="inventoryStatusLabel">Estado</span><select name="egoera" required>
+              <option value="ONDO" data-i18n="inventoryStatusGood">Correcto</option>
+              <option value="ERABILI_EZINIK" data-i18n="inventoryStatusUnusable">Inutilizable</option>
+              <option value="MANTENIMENDUAN" data-i18n="inventoryStatusMaintenance">En mantenimiento</option>
+              <option value="GALDUTAKO" data-i18n="inventoryStatusLost">Perdido</option>
+            </select></label>
+            <button class="database-action-button" type="submit" data-i18n="createRecord">Añadir</button>
+          </div>
+          <p class="database-form-message" id="inventory-create-message" role="status" aria-live="polite" hidden></p>
+        </form>
         <div class="glass-panel users-panel inventory-panel">
           <div class="table-wrap" role="region" tabindex="0" aria-label="Datu-baseko inbentario-zerrenda" data-i18n-aria-label="inventoryTableLabel">
             <table class="users-table inventory-table">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="inventoryIdLabel">ID</th>
-                  <th scope="col" data-i18n="inventoryNameLabel">Artikulua</th>
-                  <th scope="col" data-i18n="inventoryQuantityLabel">Kopurua</th>
-                  <th scope="col" data-i18n="inventoryStatusLabel">Egoera</th>
-                  <th scope="col" data-i18n="inventoryCenterLabel">Zentroa</th>
-                  <th scope="col" data-i18n="inventoryReviewLabel">Azken berrikuspena</th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-list" data-sort-column="0" data-sort-type="number"><span class="table-sort-label" data-i18n="inventoryIdLabel">ID</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-list" data-sort-column="1" data-sort-type="text"><span class="table-sort-label" data-i18n="inventoryNameLabel">Artikulua</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-list" data-sort-column="2" data-sort-type="number"><span class="table-sort-label" data-i18n="inventoryQuantityLabel">Kopurua</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-list" data-sort-column="3" data-sort-type="text"><span class="table-sort-label" data-i18n="inventoryStatusLabel">Egoera</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-list" data-sort-column="4" data-sort-type="date"><span class="table-sort-label" data-i18n="inventoryReviewLabel">Azken berrikuspena</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                  <th scope="col" id="inventory-manage-header" data-i18n="manageHeader" hidden>Gestionar</th>
                 </tr>
               </thead>
               <tbody id="inventory-list"></tbody>
@@ -247,7 +281,7 @@
             <span class="section-icon" aria-hidden="true">XL</span>
             <div>
               <h3 data-i18n="inventoryExcelTitle">PCaren osagaiak · Excel</h3>
-              <p data-i18n="inventoryExcelDescription">InbentorioaE1T2.xlsx fitxategiko osagai eta zehaztapen guztiak.</p>
+              <p data-i18n="inventoryExcelDescription">Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.</p>
             </div>
           </div>
         </div>
@@ -256,11 +290,25 @@
         <div class="glass-panel users-panel inventory-panel">
           <div class="table-wrap" role="region" tabindex="0" aria-label="Excel fitxategiko osagaien zerrenda" data-i18n-aria-label="inventoryExcelTableLabel">
             <table class="users-table inventory-table excel-table">
-              <thead><tr id="inventory-excel-header"></tr></thead>
+              <thead>
+                <tr>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="0" data-sort-type="number"><span class="table-sort-label" data-i18n="excelNumber">Zk.</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="1" data-sort-type="text"><span class="table-sort-label" data-i18n="excelComponent">Osagaia / Kategoria</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="2" data-sort-type="text"><span class="table-sort-label" data-i18n="excelManufacturer">Fabrikatzailea / Marka</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="3" data-sort-type="text"><span class="table-sort-label" data-i18n="excelModel">Modeloa / Zehaztapena</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="4" data-sort-type="text"><span class="table-sort-label" data-i18n="excelCapacity">Edukiera / Potentzia</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="5" data-sort-type="text"><span class="table-sort-label" data-i18n="excelNotes">Ohar teknikoak</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th>
+                  <th scope="col"><button class="table-sort-button" type="button" data-sort-body="inventory-excel-list" data-sort-column="6" data-sort-type="number"><span class="table-sort-label" data-i18n="inventoryQuantityLabel">Kopurua</span><span class="table-sort-indicator" aria-hidden="true">↑</span></button></th>
+                </tr>
+              </thead>
               <tbody id="inventory-excel-list"></tbody>
             </table>
           </div>
         </div>
+        <article class="glass-panel excel-recommendation">
+          <span class="priority-dot priority-medium"></span>
+          <div><h3 id="inventory-excel-recommendation-title" data-i18n="excelRecommendationTitle">Excel fitxategiko gomendioa</h3><p id="inventory-excel-recommendation"></p></div>
+        </article>
       </section>
       <section class="inventory-budget-view" id="inventory-budget-view" aria-label="Aurrekontuaren demo-plana" data-i18n-aria-label="inventoryBudgetTab" hidden>
         <div class="budget-intro">
@@ -416,7 +464,7 @@
       </div>
       <div class="table-wrap" role="region" tabindex="0" aria-label="Azken sarrerak" data-i18n-aria-label="recentEntries">
         <table>
-          <thead><tr><th scope="col" data-i18n="person">Pertsona</th><th scope="col" data-i18n="identifier">Identifikatzailea</th><th scope="col" data-i18n="time">Ordua</th><th scope="col" data-i18n="type">Mota</th><th scope="col" data-i18n="status">Egoera</th></tr></thead>
+          <thead><tr><th scope="col"><button class="table-sort-button" type="button" data-sort-body="access-records" data-sort-column="0" data-sort-type="text"><span class="table-sort-label" data-i18n="person">Pertsona</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th><th scope="col"><button class="table-sort-button" type="button" data-sort-body="access-records" data-sort-column="1" data-sort-type="text"><span class="table-sort-label" data-i18n="identifier">Identifikatzailea</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th><th scope="col"><button class="table-sort-button" type="button" data-sort-body="access-records" data-sort-column="2" data-sort-type="date"><span class="table-sort-label" data-i18n="time">Ordua</span><span class="table-sort-indicator" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort-button" type="button" data-sort-body="access-records" data-sort-column="3" data-sort-type="text"><span class="table-sort-label" data-i18n="type">Mota</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th><th scope="col"><button class="table-sort-button" type="button" data-sort-body="access-records" data-sort-column="4" data-sort-type="text"><span class="table-sort-label" data-i18n="status">Egoera</span><span class="table-sort-indicator" aria-hidden="true">A-Z</span></button></th></tr></thead>
           <tbody id="access-records"><tr class="empty-row"><td colspan="5" data-i18n="emptyRecords">Oraindik ez dago sarbiderik erregistratuta.</td></tr></tbody>
         </table>
       </div>
@@ -428,6 +476,14 @@
     </footer>
   </main>
 
+  <aside class="cookie-notice" id="cookie-notice" aria-labelledby="cookie-notice-title">
+    <div class="cookie-notice-copy">
+      <h2 id="cookie-notice-title" data-cookie-text="title">Cookie-oharra</h2>
+      <p data-cookie-text="message">Cookie tekniko bat erabiltzen dugu ohar hau ikusi duzula gogoratzeko. Ez dugu jarraipen-cookie-rik erabiltzen.</p>
+      <p class="cookie-notice-error" data-cookie-text="error" role="alert" hidden></p>
+    </div>
+    <button class="cookie-notice-button" type="button" data-cookie-dismiss data-cookie-text="dismiss">Ados</button>
+  </aside>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

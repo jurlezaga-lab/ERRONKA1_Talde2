@@ -18,6 +18,7 @@ Abre `http://localhost:8000`. No abras `index.html` directamente ni uses Live Se
 - `CSS/estilos.css`: diseño adaptable y temas claro/oscuro.
 - `JS/dashboard.js`: navegación, autenticación de interfaz y carga de usuarios; la sesión se restaura desde el servidor cuando se recarga la página.
 - `PHP/saioa.php` y `PHP/session.php`: inicio, consulta y cierre de sesión PHP y comprobación de permisos. La cookie contiene solo el identificador y la identidad se conserva en `$_SESSION`; el login actual sigue siendo de demostración y se valida en el servidor.
+- `JS/cookies.js`: muestra un aviso y guarda durante 180 días en una cookie técnica que el aviso ya se ha visto; no añade cookies de seguimiento.
 - `PHP/select.php`: endpoint de solo lectura que devuelve usuarios, roles y centros en JSON usando la conexión compartida de `PHP/db.konexioa.php`.
 - `PHP/inbentarioa.php`: endpoint de solo lectura para el inventario y los centros en JSON.
 - `JS/theme.js`: cambio de tema persistido en el navegador.

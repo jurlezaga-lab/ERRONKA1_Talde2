@@ -34,20 +34,28 @@ const overviewOnlySections = [
 const inventoryList = document.querySelector("#inventory-list");
 const inventoryLoadMessage = document.querySelector("#inventory-load-message");
 const inventoryRefreshButton = document.querySelector("#inventory-refresh");
+const inventoryCreateForm = document.querySelector("#inventory-create-form");
+const inventoryCreateMessage = document.querySelector("#inventory-create-message");
+const inventoryManageHeader = document.querySelector("#inventory-manage-header");
 const inventoryItemCount = document.querySelector("#inventory-item-count");
 const inventoryUnitCount = document.querySelector("#inventory-unit-count");
 const inventoryAttentionCount = document.querySelector("#inventory-attention-count");
 const inventoryDatabaseDescription = document.querySelector("#inventory-database-view [data-i18n='inventoryDatabaseDescription']");
 const inventoryExcelList = document.querySelector("#inventory-excel-list");
 const inventoryExcelSummary = document.querySelector("#inventory-excel-summary");
-const inventoryExcelHeader = document.querySelector("#inventory-excel-header");
 const inventoryExcelLoadMessage = document.querySelector("#inventory-excel-load-message");
+const inventoryExcelRecommendation = document.querySelector("#inventory-excel-recommendation");
+const inventoryExcelRecommendationTitle = document.querySelector("#inventory-excel-recommendation-title");
 let inventoryExcelData = null;
 let inventoryExcelLoadPromise = null;
 let inventoryExcelLoadState = "idle";
 let inventoryExcelLoadError = null;
 const demoModeNotice = document.querySelector("#demo-mode-notice");
 const usersList = document.querySelector("#users-list");
+const usersCreateForm = document.querySelector("#users-create-form");
+const usersCreateMessage = document.querySelector("#users-create-message");
+const usersManageHeader = document.querySelector("#users-manage-header");
+const userCreateRole = document.querySelector("#user-create-role");
 const userSearchInput = document.querySelector("#user-search");
 const userRoleFilter = document.querySelector("#user-role-filter");
 const attendanceInsideCount = document.querySelector("#attendance-inside-count");
@@ -108,7 +116,7 @@ const translations = {
     titleAdmin: "Administrazioa", titleTeacher: "Irakaslearen panela", titleStudent: "Ikaslearen panela", titleInventory: "Inbentarioa", roleInventory: "Inbentarioa",
     appNavigation: "Nabigazio nagusia", overviewView: "Orokorra", usersView: "Erabiltzaileak", attendanceEyebrow: "Txurdinaga · Erabiltzaileak", usersTitle: "Zentroko fitxaketa", usersDescription: "Ikusi nor dagoen barruan eta erregistratu sarrera edo irteera.", usersTableLabel: "Zentroko erabiltzaileen zerrenda", userIdLabel: "ID", firstNameLabel: "Izena", lastNameLabel: "Abizena", emailLabel: "Emaila", roleIdLabel: "Rola / ID", centerIdLabel: "Zentroa / ID", attendanceStatusLabel: "Egoera", attendanceActionLabel: "Ekintza", attendanceInside: "Barruan", attendanceOutside: "Kanpoan", attendanceNotApplicable: "Ez dagokio", attendanceInAction: "Sarrera erregistratu", attendanceOutAction: "Irteera erregistratu", attendanceEntrySaved: "Sarrera erregistratu da.", attendanceExitSaved: "Irteera erregistratu da.", searchUsersLabel: "Bilatu erabiltzaileak", searchUsersPlaceholder: "Izena edo abizena", filterByRoleLabel: "Iragazi rolaren arabera", allRoles: "Rol guztiak", noUsersFound: "Ez da erabiltzailerik aurkitu.", loadingUsers: "Erabiltzaileak kargatzen...", usersLoadError: "Ezin izan dira erabiltzaileak kargatu. Egiaztatu PHP zerbitzaria eta datu-basearen konexioa.",
     databaseConnectionError: "Ezin da MySQL zerbitzaria atzitu. Egiaztatu martxan dagoela.", databaseAccessDenied: "MySQL-k konexioa ukatu du. Egiaztatu PHP/db.konexioa.php fitxategiko erabiltzailea eta pasahitza.", databaseNotFound: "Ez da kudeaketa_db datu-basea aurkitu. Sortu eta inportatu SQL eskemak.", usersTableMissing: "Ez da usuarios taula aurkitu. Inportatu SQL/kudeaketa_2_estruktura.sql eskema.", invalidUsersResponse: "PHP zerbitzariak ez du JSON erantzun baliozkorik itzuli.",
-    inventoryView: "Inbentarioa", inventoryEyebrow: "Txurdinaga · Inbentarioa", inventoryTitle: "Inbentarioa eta aurrekontua", inventoryDescription: "Kontsultatu ekipamendua eta planifikatu etorkizuneko beharrak.", inventoryModesLabel: "Inbentarioaren ikuspegiak", inventoryDatabaseTab: "Uneko inbentarioa · Datu-basea", inventoryBudgetTab: "Etorkizuneko aurrekontua · Demoa", inventoryDatabaseTitle: "Uneko ekipamendua", inventoryDatabaseDescription: "MySQL datu-basetik zuzenean kargatua.", inventoryRefresh: "Berritu", inventoryKinds: "Artikulu mota", inventoryUnits: "Guztizko unitateak", inventoryNeedsAttention: "Arreta behar dute", inventoryTableLabel: "Datu-baseko inbentario-zerrenda", inventoryIdLabel: "ID", inventoryNameLabel: "Artikulua", inventoryQuantityLabel: "Kopurua", inventoryStatusLabel: "Egoera", inventoryCenterLabel: "Zentroa", inventoryReviewLabel: "Azken berrikuspena", inventoryLoading: "Inbentarioa kargatzen...", inventoryError: "Ezin izan da inbentarioa kargatu. Egiaztatu PHP zerbitzaria, datu-basea eta inbentario-taula.", inventoryEmpty: "Ez dago inbentario-artikulurik datu-basean.", inventoryStatusGood: "Ondo", inventoryStatusUnusable: "Erabili ezinik", inventoryStatusMaintenance: "Mantentze-lanetan", inventoryStatusLost: "Galduta", inventoryNoReview: "Berrikuspen-datarik ez",
+    inventoryView: "Inbentarioa", inventoryEyebrow: "Txurdinaga · Inbentarioa", inventoryTitle: "Inbentarioa eta aurrekontua", inventoryDescription: "Kontsultatu ekipamendua eta planifikatu etorkizuneko beharrak.", inventoryModesLabel: "Inbentarioaren ikuspegiak", inventoryDatabaseTab: "Uneko inbentarioa · Datu-basea", inventoryBudgetTab: "Etorkizuneko aurrekontua · Demoa", inventoryDatabaseTitle: "Uneko ekipamendua", inventoryDatabaseDescription: "MySQL datu-basetik zuzenean kargatua.", inventoryRefresh: "Berritu", inventoryKinds: "Artikulu mota", inventoryUnits: "Guztizko unitateak", inventoryNeedsAttention: "Arreta behar dute", inventoryTableLabel: "Datu-baseko inbentario-zerrenda", inventoryIdLabel: "ID", inventoryNameLabel: "Artikulua", inventoryQuantityLabel: "Kopurua", inventoryStatusLabel: "Egoera", inventoryCenterLabel: "Zentroa / arduraduna", inventoryReviewLabel: "Azken berrikuspena", inventoryLoading: "Inbentarioa kargatzen...", inventoryError: "Ezin izan da inbentarioa kargatu. Egiaztatu PHP zerbitzaria, datu-basea eta inbentario-taula.", inventoryEmpty: "Ez dago inbentario-artikulurik datu-basean.", inventoryStatusGood: "Ondo", inventoryStatusUnusable: "Erabili ezinik", inventoryStatusMaintenance: "Mantentze-lanetan", inventoryStatusLost: "Galduta", inventoryNoReview: "Berrikuspen-datarik ez",
     budgetPlanningEyebrow: "Etorkizuneko plangintza · Demoa", budgetPlanningTitle: "10.000 €-ko aurrekontua planifikatzea", budgetPlanningDescription: "Kalkulu orientagarriak dira; ez daude datu-basera konektatuta eta ez dira benetako gastuak.", budgetAvailableLabel: "Urteko aurrekontua", budgetPlannedLabel: "Aurreikusitako beharrak", budgetRemainingLabel: "Erreserba geratzen da", budgetUseLabel: "Aurrekontuaren zatia", budgetDistributionTitle: "Beharren banaketa lehentasunaren arabera", budgetDistributionDescription: "Kolore bakoitzak etorkizunerako aurreikusitako gastua erakusten du.", budgetChartLabel: "Aurrekontuaren banaketa: lehentasun baxua berdez, ertaina laranjaz eta altua gorriz.", priorityLow: "Baxua · Berdea", priorityMedium: "Ertaina · Laranja", priorityHigh: "Altua · Gorria", budgetItemsTitle: "Etorkizuneko behar posibleak", budgetItemsDescription: "Aurrekontuaren adibide ilustratiboa, lehentasunaren arabera.", budgetPriorityTotal: "Guztira", budgetLowLaptop: "Ordenagailu eramangarrietarako RAM memoria", budgetLowMice: "Sagu eta teklatu sorta", budgetMediumWifi: "Ikasgelako Wi-Fi sarbide-puntuak", budgetMediumProjector: "Proiektoreen mantentzea eta piezak", budgetHighServer: "Laborategiko zerbitzari berritzea", budgetHighElectrical: "Laborategiko instalazio elektrikoak",
     inventoryExcelTab: "PC osagaiak · Excel", inventoryExcelTitle: "PCaren osagaiak · Excel", inventoryExcelDescription: "Jatorrizko Excel fitxategiaren zehaztapen teknikoen laburpena.", inventoryExcelDownload: "Excel deskargatu", inventoryExcelSummary: "PCaren zehaztapen nagusiak", inventoryExcelTableLabel: "Excel fitxategiko osagaien zerrenda", excelStorage: "Biltegiratzea guztira", excelMemory: "RAM memoria", excelPower: "Energia-iturria", excelNumber: "Zk.", excelComponent: "Osagaia / Kategoria", excelManufacturer: "Fabrikatzailea / Marka", excelModel: "Modeloa / Zehaztapena", excelCapacity: "Edukiera / Potentzia", excelNotes: "Ohar teknikoak", excelMotherboard: "Plaka nagusia", excelMotherboardNote: "Intel mahai gaineko socket estandarra", excelGraphics: "Txartel grafikoa", excelGraphicsNote: "Oinarrizko gama eta bulegotika", excelHardDriveOne: "1. disko gogorra", excelHardDriveTwo: "2. disko gogorra", excelRam: "RAM memoria", excelGeneric: "Generikoa / Hainbat", excelRamNote: "2 GB-ko DDR3 modulua", excelPowerSupply: "Energia-iturria", excelCase: "Kaxa / Txasisa", excelMidTower: "Mid Tower", excelCaseNote: "ATX/MicroATX kaxa beltza", excelOpticalDrive: "Unitate optikoa / DVD irakurgailua", excelDvdModel: "DVD 24x (irakurri eta grabatu)", excelDvdNote: "SATA DVD/CD irakurgailu eta grabagailua", excelRecommendationTitle: "Excel fitxategiko gomendioa", excelRecommendationText: "RAM memoria 8 GB-ra zabaltzea eta SATA SSD disko bat gehitzea proposatzen da.",
     inventoryDemoDescription: "Demoko adibide-datuak dira; ez dira MySQLetik kargatu.", demoModeNotice: "DEMOSTRAZIO MODUA: zerrendak adibideak dira eta ez da PHP zerbitzari edo datu-basera konektatzen.", demoSessionError: "Ezin izan da demoko saioa nabigatzailean gorde.",
@@ -137,7 +145,7 @@ const translations = {
     titleAdmin: "Administración", titleTeacher: "Panel del profesorado", titleStudent: "Panel del alumnado", titleInventory: "Panel de inventario", roleInventory: "Inventario",
     appNavigation: "Navegación principal", overviewView: "Resumen", usersView: "Usuarios", attendanceEyebrow: "Txurdinaga · Usuarios", usersTitle: "Fichaje del centro", usersDescription: "Consulta quién está dentro y registra entradas o salidas.", usersTableLabel: "Lista de usuarios del centro", userIdLabel: "ID", firstNameLabel: "Nombre", lastNameLabel: "Apellidos", emailLabel: "Email", roleIdLabel: "Rol / ID", centerIdLabel: "Centro / ID", attendanceStatusLabel: "Estado", attendanceActionLabel: "Acción", attendanceInside: "Dentro", attendanceOutside: "Fuera", attendanceNotApplicable: "No aplica", attendanceInAction: "Registrar entrada", attendanceOutAction: "Registrar salida", attendanceEntrySaved: "Entrada registrada.", attendanceExitSaved: "Salida registrada.", searchUsersLabel: "Buscar usuarios", searchUsersPlaceholder: "Nombre o apellidos", filterByRoleLabel: "Filtrar por rol", allRoles: "Todos los roles", noUsersFound: "No se encontraron usuarios.", loadingUsers: "Cargando usuarios...", usersLoadError: "No se pudieron cargar los usuarios. Comprueba el servidor PHP y la conexión con la base de datos.",
     databaseConnectionError: "No se puede conectar con MySQL. Comprueba que el servidor está iniciado.", databaseAccessDenied: "MySQL ha rechazado la conexión. Revisa el usuario y la contraseña en PHP/db.konexioa.php.", databaseNotFound: "No se encontró la base de datos kudeaketa_db. Créala e importa los esquemas SQL.", usersTableMissing: "No se encontró la tabla usuarios. Importa el esquema SQL/kudeaketa_2_estruktura.sql.", invalidUsersResponse: "El servidor PHP no devolvió una respuesta JSON válida.",
-    inventoryView: "Inventario", inventoryEyebrow: "Txurdinaga · Inventario", inventoryTitle: "Inventario y presupuesto", inventoryDescription: "Consulta el equipamiento y planifica necesidades futuras.", inventoryModesLabel: "Vistas del inventario", inventoryDatabaseTab: "Inventario actual · Base de datos", inventoryBudgetTab: "Presupuesto futuro · Demo", inventoryDatabaseTitle: "Equipamiento actual", inventoryDatabaseDescription: "Cargado directamente desde la base de datos MySQL.", inventoryRefresh: "Actualizar", inventoryKinds: "Tipos de artículos", inventoryUnits: "Unidades totales", inventoryNeedsAttention: "Necesitan atención", inventoryTableLabel: "Lista de inventario de la base de datos", inventoryIdLabel: "ID", inventoryNameLabel: "Artículo", inventoryQuantityLabel: "Cantidad", inventoryStatusLabel: "Estado", inventoryCenterLabel: "Centro", inventoryReviewLabel: "Última revisión", inventoryLoading: "Cargando inventario...", inventoryError: "No se pudo cargar el inventario. Comprueba PHP, la base de datos y la tabla de inventario.", inventoryEmpty: "No hay artículos de inventario en la base de datos.", inventoryStatusGood: "Correcto", inventoryStatusUnusable: "Inutilizable", inventoryStatusMaintenance: "En mantenimiento", inventoryStatusLost: "Perdido", inventoryNoReview: "Sin fecha de revisión",
+    inventoryView: "Inventario", inventoryEyebrow: "Txurdinaga · Inventario", inventoryTitle: "Inventario y presupuesto", inventoryDescription: "Consulta el equipamiento y planifica necesidades futuras.", inventoryModesLabel: "Vistas del inventario", inventoryDatabaseTab: "Inventario actual · Base de datos", inventoryBudgetTab: "Presupuesto futuro · Demo", inventoryDatabaseTitle: "Equipamiento actual", inventoryDatabaseDescription: "Cargado directamente desde la base de datos MySQL.", inventoryRefresh: "Actualizar", inventoryKinds: "Tipos de artículos", inventoryUnits: "Unidades totales", inventoryNeedsAttention: "Necesitan atención", inventoryTableLabel: "Lista de inventario de la base de datos", inventoryIdLabel: "ID", inventoryNameLabel: "Artículo", inventoryQuantityLabel: "Cantidad", inventoryStatusLabel: "Estado", inventoryCenterLabel: "Centro / responsable", inventoryReviewLabel: "Última revisión", inventoryLoading: "Cargando inventario...", inventoryError: "No se pudo cargar el inventario. Comprueba PHP, la base de datos y la tabla de inventario.", inventoryEmpty: "No hay artículos de inventario en la base de datos.", inventoryStatusGood: "Correcto", inventoryStatusUnusable: "Inutilizable", inventoryStatusMaintenance: "En mantenimiento", inventoryStatusLost: "Perdido", inventoryNoReview: "Sin fecha de revisión",
     budgetPlanningEyebrow: "Planificación futura · Demo", budgetPlanningTitle: "Planificación de un presupuesto de 10.000 €", budgetPlanningDescription: "Son estimaciones orientativas; no están conectadas a la base de datos ni representan gastos reales.", budgetAvailableLabel: "Presupuesto anual", budgetPlannedLabel: "Necesidades previstas", budgetRemainingLabel: "Reserva restante", budgetUseLabel: "Parte del presupuesto", budgetDistributionTitle: "Distribución de necesidades por prioridad", budgetDistributionDescription: "Cada color muestra el gasto previsto para necesidades futuras.", budgetChartLabel: "Distribución del presupuesto: prioridad baja en verde, media en naranja y alta en rojo.", priorityLow: "Baja · Verde", priorityMedium: "Media · Naranja", priorityHigh: "Alta · Rojo", budgetItemsTitle: "Posibles necesidades futuras", budgetItemsDescription: "Ejemplo ilustrativo de presupuesto, ordenado por prioridad.", budgetPriorityTotal: "Total", budgetLowLaptop: "Memoria RAM para portátiles", budgetLowMice: "Lote de ratones y teclados", budgetMediumWifi: "Puntos de acceso Wi-Fi para aulas", budgetMediumProjector: "Mantenimiento y piezas para proyectores", budgetHighServer: "Renovación del servidor del laboratorio", budgetHighElectrical: "Instalación eléctrica del laboratorio",
     inventoryExcelTab: "Componentes PC · Excel", inventoryExcelTitle: "Componentes del PC · Excel", inventoryExcelDescription: "Resumen de las especificaciones técnicas del archivo Excel original.", inventoryExcelDownload: "Descargar Excel", inventoryExcelSummary: "Especificaciones principales del PC", inventoryExcelTableLabel: "Lista de componentes del archivo Excel", excelStorage: "Almacenamiento total", excelMemory: "Memoria RAM", excelPower: "Fuente de alimentación", excelNumber: "N.º", excelComponent: "Componente / Categoría", excelManufacturer: "Fabricante / Marca", excelModel: "Modelo / Especificación", excelCapacity: "Capacidad / Potencia", excelNotes: "Notas técnicas", excelMotherboard: "Placa base", excelMotherboardNote: "Socket de sobremesa Intel estándar", excelGraphics: "Tarjeta gráfica", excelGraphicsNote: "Gama básica y ofimática", excelHardDriveOne: "Disco duro 1", excelHardDriveTwo: "Disco duro 2", excelRam: "Memoria RAM", excelGeneric: "Genérico / Varios", excelRamNote: "Módulo DDR3 de 2 GB", excelPowerSupply: "Fuente de alimentación", excelCase: "Caja / Chasis", excelMidTower: "Semitorre", excelCaseNote: "Caja negra ATX/MicroATX", excelOpticalDrive: "Unidad óptica / Lector DVD", excelDvdModel: "DVD 24x (lectura y grabación)", excelDvdNote: "Lector y grabador SATA DVD/CD", excelRecommendationTitle: "Recomendación del Excel", excelRecommendationText: "Se recomienda ampliar la RAM a 8 GB y añadir una unidad SSD SATA.",
     inventoryDemoDescription: "Datos de ejemplo de la demo; no proceden de MySQL.", demoModeNotice: "Modo demostración: las listas son datos de ejemplo y no hay conexión con PHP ni la base de datos.", demoSessionError: "No se pudo guardar la sesión de demo en este navegador.",
@@ -166,7 +174,7 @@ const translations = {
     titleAdmin: "Administration", titleTeacher: "Teacher dashboard", titleStudent: "Student dashboard", titleInventory: "Inventory dashboard", roleInventory: "Inventory",
     appNavigation: "Main navigation", overviewView: "Overview", usersView: "Users", attendanceEyebrow: "Txurdinaga · Users", usersTitle: "Attendance", usersDescription: "See who is inside and record check-ins or check-outs.", usersTableLabel: "School user list", userIdLabel: "ID", firstNameLabel: "First name", lastNameLabel: "Last name", emailLabel: "Email", roleIdLabel: "Role / ID", centerIdLabel: "Center / ID", attendanceStatusLabel: "Status", attendanceActionLabel: "Action", attendanceInside: "Inside", attendanceOutside: "Outside", attendanceNotApplicable: "Not applicable", attendanceInAction: "Check in", attendanceOutAction: "Check out", attendanceEntrySaved: "Check-in recorded.", attendanceExitSaved: "Check-out recorded.", searchUsersLabel: "Search users", searchUsersPlaceholder: "Name or surname", filterByRoleLabel: "Filter by role", allRoles: "All roles", noUsersFound: "No users found.", loadingUsers: "Loading users...", usersLoadError: "Could not load users. Check the PHP server and database connection.",
     databaseConnectionError: "Cannot reach MySQL. Check that the server is running.", databaseAccessDenied: "MySQL rejected the connection. Check the username and password in PHP/db.konexioa.php.", databaseNotFound: "Database kudeaketa_db was not found. Create it and import the SQL schema.", usersTableMissing: "Table usuarios was not found. Import SQL/kudeaketa_2_estruktura.sql.", invalidUsersResponse: "The PHP server did not return a valid JSON response.",
-    inventoryView: "Inventory", inventoryEyebrow: "Txurdinaga · Inventory", inventoryTitle: "Inventory and budget", inventoryDescription: "Review equipment and plan for future needs.", inventoryModesLabel: "Inventory views", inventoryDatabaseTab: "Current inventory · Database", inventoryBudgetTab: "Future budget · Demo", inventoryDatabaseTitle: "Current equipment", inventoryDatabaseDescription: "Loaded directly from the MySQL database.", inventoryRefresh: "Refresh", inventoryKinds: "Item types", inventoryUnits: "Total units", inventoryNeedsAttention: "Need attention", inventoryTableLabel: "Database inventory list", inventoryIdLabel: "ID", inventoryNameLabel: "Item", inventoryQuantityLabel: "Quantity", inventoryStatusLabel: "Status", inventoryCenterLabel: "Center", inventoryReviewLabel: "Last review", inventoryLoading: "Loading inventory...", inventoryError: "Could not load inventory. Check PHP, the database and the inventory table.", inventoryEmpty: "There are no inventory items in the database.", inventoryStatusGood: "Good", inventoryStatusUnusable: "Unusable", inventoryStatusMaintenance: "Under maintenance", inventoryStatusLost: "Lost", inventoryNoReview: "No review date",
+    inventoryView: "Inventory", inventoryEyebrow: "Txurdinaga · Inventory", inventoryTitle: "Inventory and budget", inventoryDescription: "Review equipment and plan for future needs.", inventoryModesLabel: "Inventory views", inventoryDatabaseTab: "Current inventory · Database", inventoryBudgetTab: "Future budget · Demo", inventoryDatabaseTitle: "Current equipment", inventoryDatabaseDescription: "Loaded directly from the MySQL database.", inventoryRefresh: "Refresh", inventoryKinds: "Item types", inventoryUnits: "Total units", inventoryNeedsAttention: "Need attention", inventoryTableLabel: "Database inventory list", inventoryIdLabel: "ID", inventoryNameLabel: "Item", inventoryQuantityLabel: "Quantity", inventoryStatusLabel: "Status", inventoryCenterLabel: "Center / responsible person", inventoryReviewLabel: "Last review", inventoryLoading: "Loading inventory...", inventoryError: "Could not load inventory. Check PHP, the database and the inventory table.", inventoryEmpty: "There are no inventory items in the database.", inventoryStatusGood: "Good", inventoryStatusUnusable: "Unusable", inventoryStatusMaintenance: "Under maintenance", inventoryStatusLost: "Lost", inventoryNoReview: "No review date",
     budgetPlanningEyebrow: "Future planning · Demo", budgetPlanningTitle: "Planning a €10,000 budget", budgetPlanningDescription: "These are illustrative estimates, not connected to the database or actual expenses.", budgetAvailableLabel: "Annual budget", budgetPlannedLabel: "Forecast needs", budgetRemainingLabel: "Remaining reserve", budgetUseLabel: "Budget allocated", budgetDistributionTitle: "Forecast needs by priority", budgetDistributionDescription: "Each colour represents forecast spending for future needs.", budgetChartLabel: "Budget allocation: low priority in green, medium in orange and high in red.", priorityLow: "Low · Green", priorityMedium: "Medium · Orange", priorityHigh: "High · Red", budgetItemsTitle: "Possible future needs", budgetItemsDescription: "Illustrative budget example grouped by priority.", budgetPriorityTotal: "Total", budgetLowLaptop: "Laptop RAM upgrades", budgetLowMice: "Mouse and keyboard bundle", budgetMediumWifi: "Classroom Wi-Fi access points", budgetMediumProjector: "Projector maintenance and parts", budgetHighServer: "Laboratory server upgrade", budgetHighElectrical: "Laboratory electrical installation",
     inventoryExcelTab: "PC parts · Excel", inventoryExcelTitle: "PC components · Excel", inventoryExcelDescription: "Summary of the technical specifications in the original Excel file.", inventoryExcelDownload: "Download Excel", inventoryExcelSummary: "Main PC specifications", inventoryExcelTableLabel: "Components from the Excel file", excelStorage: "Total storage", excelMemory: "RAM", excelPower: "Power supply", excelNumber: "No.", excelComponent: "Component / Category", excelManufacturer: "Manufacturer / Brand", excelModel: "Model / Specification", excelCapacity: "Capacity / Power", excelNotes: "Technical notes", excelMotherboard: "Motherboard", excelMotherboardNote: "Standard Intel desktop socket", excelGraphics: "Graphics card", excelGraphicsNote: "Entry-level / office use", excelHardDriveOne: "Hard drive 1", excelHardDriveTwo: "Hard drive 2", excelRam: "RAM memory", excelGeneric: "Generic / Various", excelRamNote: "2 GB DDR3 module", excelPowerSupply: "Power supply", excelCase: "Case / Chassis", excelMidTower: "Mid Tower", excelCaseNote: "Black ATX/MicroATX case", excelOpticalDrive: "Optical drive / DVD reader", excelDvdModel: "DVD 24x (reader and writer)", excelDvdNote: "SATA DVD/CD reader and writer", excelRecommendationTitle: "Excel recommendation", excelRecommendationText: "The workbook recommends expanding the RAM to 8 GB and adding a SATA SSD.",
     inventoryDemoDescription: "Demo sample data; not loaded from MySQL.", demoModeNotice: "Demo mode: lists contain sample data and are not connected to PHP or the database.", demoSessionError: "Could not save the demo session in this browser.",
@@ -181,30 +189,44 @@ const translations = {
 const inventoryExcelTranslations = {
   eu: {
     inventoryExcelLoading: "Excel datuak kargatzen...",
-    inventoryExcelError: "Ezin izan da Excel fitxategia irakurri. Egiaztatu zerbitzaria eta InbentorioaE1T2.xlsx fitxategia.",
-    inventoryExcelDescription: "InbentorioaE1T2.xlsx fitxategiko osagai eta zehaztapen guztiak.",
+    inventoryExcelError: "Ezin izan dira Excel datuak kargatu. Egiaztatu zerbitzaria eta data/inbentario-excel.json fitxategia.",
     excelOtherParts: "Beste osagai batzuk",
-    excelGroupCount: "Taldeak",
-    excelComponentCount: "Osagaiak",
-    excelUnitCount: "Unitateak guztira"
+    excelStorageSummary: "Biltegiratze ahalmen osoa",
+    excelRamSummary: "RAM memoriaren edukiera",
+    excelGraphicsSummary: "Prozesamendu grafikoa",
+    excelOpticalSummary: "Unitate optikoa",
+    excelRecommendationSummary: "Eguneratzeko gomendioa"
   },
   es: {
     inventoryExcelLoading: "Cargando los datos del Excel...",
-    inventoryExcelError: "No se pudo leer el Excel. Comprueba el servidor y el archivo InbentorioaE1T2.xlsx.",
-    inventoryExcelDescription: "Todos los componentes y especificaciones del archivo InbentorioaE1T2.xlsx.",
+    inventoryExcelError: "No se pudieron cargar los datos del Excel. Comprueba el servidor y el archivo data/inventario-excel.json.",
     excelOtherParts: "Otros componentes",
-    excelGroupCount: "Grupos",
-    excelComponentCount: "Componentes",
-    excelUnitCount: "Unidades en total"
+    excelStorageSummary: "Capacidad total de almacenamiento",
+    excelRamSummary: "Capacidad de memoria RAM",
+    excelGraphicsSummary: "Procesamiento gráfico",
+    excelOpticalSummary: "Unidad óptica",
+    excelRecommendationSummary: "Recomendación de actualización"
   },
   en: {
     inventoryExcelLoading: "Loading Excel data...",
-    inventoryExcelError: "Could not read the Excel file. Check the server and InbentorioaE1T2.xlsx.",
-    inventoryExcelDescription: "All components and specifications from InbentorioaE1T2.xlsx.",
+    inventoryExcelError: "Could not load Excel data. Check the server and data/inventario-excel.json.",
     excelOtherParts: "Other components",
-    excelGroupCount: "Groups",
-    excelComponentCount: "Components",
-    excelUnitCount: "Total units"
+    excelStorageSummary: "Total storage capacity",
+    excelRamSummary: "RAM capacity",
+    excelGraphicsSummary: "Graphics processing",
+    excelOpticalSummary: "Optical drive",
+    excelRecommendationSummary: "Upgrade recommendation"
+  }
+};
+const managementTranslations = {
+  eu: {
+    manageHeader: "Kudeatu", manageRecord: "Kudeatu", sortAscending: "goranzko ordena", sortDescending: "beheranzko ordena", createUserTitle: "Erabiltzailea gehitu", createUserDescription: "Bete erabiltzaile berriaren datuak.", createInventoryTitle: "Artikulua gehitu", createInventoryDescription: "Gehitu artikulu bat MySQL inbentarioan.", selectRole: "Aukeratu rola", newUserPasswordLabel: "Hasierako pasahitza", createRecord: "Gehitu", editRecord: "Aldatu datuak", saveChanges: "Gorde", cancelChanges: "Utzi", deleteRecord: "Ezabatu", optionalPassword: "Utzi hutsik pasahitza aldatu nahi ez baduzu.", confirmDeleteUser: "Ziur erabiltzaile hau ezabatu nahi duzula?", confirmDeleteInventory: "Ziur artikulu hau ezabatu nahi duzula?", createSuccess: "Erregistroa gehitu da.", updateSuccess: "Aldaketak gorde dira.", deleteSuccess: "Erregistroa ezabatu da.", managementFailed: "Ezin izan da eragiketa osatu. Saiatu berriro.", duplicateEntry: "Dagoeneko erabiltzen den email bat edo datu bikoiztu bat dago.", invalidReference: "Aukeratutako rola edo zentroa ez da baliozkoa.", invalidUserData: "Egiaztatu erabiltzailearen izena, abizena eta emaila.", invalidRole: "Aukeratu baliozko rol bat.", passwordRequired: "Erabiltzaile berriarentzat pasahitza behar da.", invalidInventoryData: "Egiaztatu artikuluaren izena, kopurua eta egoera.", centerRequired: "Aukeratu zentro ID baliozko bat.", centerUnavailable: "Datu-baseak artikulua lotzeko zentro bat behar du, baina ez dago erabilgarririk.", inventoryManagerRequired: "Ezin da artikulua sortu saioa erabiltzaile baliodun bati lotuta ez dagoelako.", recordNotFound: "Erregistroa ez da aurkitu. Eguneratu zerrenda eta saiatu berriro.", recordNotFoundForDelete: "Erregistroa ez da aurkitu. Eguneratu zerrenda eta saiatu berriro."
+  },
+  es: {
+    manageHeader: "Gestionar", manageRecord: "Gestionar", sortAscending: "orden ascendente", sortDescending: "orden descendente", createUserTitle: "Añadir usuario", createUserDescription: "Introduce los datos de la nueva cuenta.", createInventoryTitle: "Añadir artículo", createInventoryDescription: "Añade un artículo al inventario de MySQL.", selectRole: "Selecciona un rol", newUserPasswordLabel: "Contraseña inicial", createRecord: "Añadir", editRecord: "Editar datos", saveChanges: "Guardar", cancelChanges: "Cancelar", deleteRecord: "Borrar", optionalPassword: "Déjalo vacío si no quieres cambiar la contraseña.", confirmDeleteUser: "¿Seguro que quieres borrar este usuario?", confirmDeleteInventory: "¿Seguro que quieres borrar este artículo?", createSuccess: "Registro añadido.", updateSuccess: "Cambios guardados.", deleteSuccess: "Registro borrado.", managementFailed: "No se pudo completar la operación. Inténtalo de nuevo.", duplicateEntry: "El correo ya está en uso o hay un registro duplicado.", invalidReference: "El rol o el centro seleccionado no es válido.", invalidUserData: "Revisa el nombre, los apellidos y el correo del usuario.", invalidRole: "Selecciona un rol válido.", passwordRequired: "La contraseña es obligatoria para crear un usuario.", invalidInventoryData: "Revisa el nombre, la cantidad y el estado del artículo.", centerRequired: "Selecciona un ID de centro válido.", centerUnavailable: "La base de datos requiere un centro, pero no hay ninguno disponible.", inventoryManagerRequired: "No se puede crear el artículo porque la sesión no está vinculada a un usuario válido.", recordNotFound: "No se encontró el registro. Actualiza la lista e inténtalo de nuevo.", recordNotFoundForDelete: "No se encontró el registro. Actualiza la lista e inténtalo de nuevo."
+  },
+  en: {
+    manageHeader: "Manage", manageRecord: "Manage", sortAscending: "ascending order", sortDescending: "descending order", createUserTitle: "Add user", createUserDescription: "Enter the new account details.", createInventoryTitle: "Add item", createInventoryDescription: "Add an item to the MySQL inventory.", selectRole: "Select a role", newUserPasswordLabel: "Initial password", createRecord: "Add", editRecord: "Edit details", saveChanges: "Save", cancelChanges: "Cancel", deleteRecord: "Delete", optionalPassword: "Leave blank to keep the current password.", confirmDeleteUser: "Are you sure you want to delete this user?", confirmDeleteInventory: "Are you sure you want to delete this item?", createSuccess: "Record added.", updateSuccess: "Changes saved.", deleteSuccess: "Record deleted.", managementFailed: "The operation failed. Please try again.", duplicateEntry: "The email is already in use or a duplicate record exists.", invalidReference: "The selected role or center is invalid.", invalidUserData: "Check the user's name, surname and email.", invalidRole: "Select a valid role.", passwordRequired: "A password is required to create a user.", invalidInventoryData: "Check the item name, quantity and status.", centerRequired: "Select a valid center ID.", centerUnavailable: "The database requires a center, but none is available.", inventoryManagerRequired: "The item cannot be created because the session is not linked to a valid user.", recordNotFound: "Record not found. Refresh the list and try again.", recordNotFoundForDelete: "Record not found. Refresh the list and try again."
   }
 };
 let toastTimeout;
@@ -218,6 +240,13 @@ let inventoryItems = [];
 let inventoryLoadState = "idle";
 let inventoryLoadPromise = null;
 let inventoryMode = "database";
+let databaseRoles = [];
+const tableSortStates = new Map([
+  ["users-list", { column: 2, direction: 1, type: "text" }],
+  ["inventory-list", { column: 1, direction: 1, type: "text" }],
+  ["inventory-excel-list", { column: 0, direction: 1, type: "number" }],
+  ["access-records", { column: 2, direction: -1, type: "date" }]
+]);
 const budgetLimit = 10000;
 const budgetPlan = [
   { priority: "low", items: [{ label: "budgetLowLaptop", amount: 1100 }, { label: "budgetLowMice", amount: 400 }] },
@@ -239,7 +268,234 @@ const demoInventoryFixture = [
   { id: 5, izena: "Sareko switch-a", kopurua: 6, egoera: "ONDO", zentroa_id: 1, zentroa_izena: "CIFP Txurdinaga LHII", azken_berrikuspena: "2026-09-16 12:00:00" }
 ];
 function translate(key) {
-  return inventoryExcelTranslations[currentLanguage]?.[key] ?? translations[currentLanguage][key];
+  return managementTranslations[currentLanguage]?.[key]
+    ?? inventoryExcelTranslations[currentLanguage]?.[key]
+    ?? translations[currentLanguage][key];
+}
+
+function updateTableSortIndicators() {
+  document.querySelectorAll(".table-sort-button").forEach((button) => {
+    const bodyId = button.dataset.sortBody;
+    const state = tableSortStates.get(bodyId);
+    const isActive = state?.column === Number(button.dataset.sortColumn);
+    const direction = isActive ? state.direction : 1;
+    const indicator = button.querySelector(".table-sort-indicator");
+    const label = button.querySelector(".table-sort-label").textContent;
+    const directionLabel = translate(direction === 1 ? "sortAscending" : "sortDescending");
+    indicator.textContent = button.dataset.sortType === "text"
+      ? direction === 1 ? "A-Z" : "Z-A"
+      : direction === 1 ? "↑" : "↓";
+    button.setAttribute("aria-label", `${label}, ${directionLabel}`);
+    button.title = `${label}: ${directionLabel}`;
+    button.closest("th").setAttribute("aria-sort", isActive ? direction === 1 ? "ascending" : "descending" : "none");
+  });
+}
+
+function sortTableBody(bodyId) {
+  const body = document.getElementById(bodyId);
+  const state = tableSortStates.get(bodyId);
+  if (!body || !state) return;
+
+  const rows = [...body.children].filter((row) => !row.classList.contains("excel-group-row") && !row.classList.contains("empty-row"));
+  const collator = new Intl.Collator(currentLanguage, { numeric: true, sensitivity: "base" });
+  const valueFor = (row) => {
+    const cell = row.cells[state.column];
+    const value = cell?.dataset.sortValue ?? cell?.textContent ?? "";
+    return state.type === "text" ? value.replace(/\s+/g, " ").trim() : value.trim();
+  };
+  const compare = (first, second) => {
+    const firstValue = valueFor(first.row);
+    const secondValue = valueFor(second.row);
+    if (firstValue === "" || secondValue === "") {
+      if (firstValue === secondValue) return first.index - second.index;
+      return firstValue === "" ? 1 : -1;
+    }
+
+    let comparison;
+    if (state.type === "number") {
+      comparison = Number(firstValue) - Number(secondValue);
+      if (Number.isNaN(comparison)) comparison = collator.compare(firstValue, secondValue);
+    } else if (state.type === "date") {
+      comparison = Date.parse(firstValue) - Date.parse(secondValue);
+      if (Number.isNaN(comparison)) comparison = collator.compare(firstValue, secondValue);
+    } else {
+      comparison = collator.compare(firstValue, secondValue);
+    }
+    return comparison === 0 ? first.index - second.index : comparison * state.direction;
+  };
+
+  const orderedRows = rows
+    .map((row, index) => ({ row, index }))
+    .sort(compare)
+    .map(({ row }) => row);
+
+  if (bodyId === "inventory-excel-list") {
+    const groupHeaders = new Map(
+      [...body.querySelectorAll(".excel-group-row")].map((row) => [row.dataset.groupKey, row])
+    );
+    let currentGroup = null;
+    const fragment = document.createDocumentFragment();
+    orderedRows.forEach((row) => {
+      const group = row.dataset.sortGroup;
+      if (group !== currentGroup) {
+        const groupHeader = groupHeaders.get(group);
+        if (groupHeader) fragment.append(groupHeader.cloneNode(true));
+        currentGroup = group;
+      }
+      fragment.append(row);
+    });
+    body.replaceChildren(fragment);
+  } else {
+    const blocks = [];
+    [...body.children].forEach((row) => {
+      if (row.classList.contains("empty-row")) return;
+      if (row.dataset.editorRow && blocks.length > 0) {
+        blocks[blocks.length - 1].rows.push(row);
+      } else {
+        blocks.push({ row, rows: [row] });
+      }
+    });
+    const orderedBlocks = blocks
+      .map((block, index) => ({ ...block, index }))
+      .sort((first, second) => {
+        const comparison = compare(
+          { row: first.row, index: first.index },
+          { row: second.row, index: second.index }
+        );
+        return comparison;
+      });
+    const fragment = document.createDocumentFragment();
+    orderedBlocks.forEach((block) => block.rows.forEach((row) => fragment.append(row)));
+    body.replaceChildren(fragment);
+  }
+
+  updateTableSortIndicators();
+}
+
+function isDatabaseAdmin() {
+  return activeAccount?.role === "Admin" && activeAccount.isDemo !== true;
+}
+
+function updateManagementVisibility() {
+  const canManage = isDatabaseAdmin();
+  usersCreateForm.hidden = !canManage;
+  inventoryCreateForm.hidden = !canManage;
+  usersManageHeader.hidden = !canManage;
+  inventoryManageHeader.hidden = !canManage;
+}
+
+function populateRoleSelect(select, selectedRoleId = "") {
+  select.replaceChildren();
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = translate("selectRole");
+  select.append(placeholder);
+  databaseRoles.forEach((role) => {
+    const option = document.createElement("option");
+    option.value = String(role.id);
+    option.textContent = `${role.id} · ${role.izena || ""}`.trim();
+    option.selected = String(role.id) === String(selectedRoleId);
+    select.append(option);
+  });
+  select.disabled = databaseRoles.length === 0;
+  select.required = databaseRoles.length > 0;
+}
+
+function createManagementField(name, labelKey, type, value, options = null) {
+  const label = document.createElement("label");
+  const caption = document.createElement("span");
+  caption.textContent = translate(labelKey);
+  const control = options
+    ? document.createElement("select")
+    : document.createElement("input");
+  control.name = name;
+  if (options) {
+    control.required = true;
+    options.forEach((optionData) => {
+      const option = document.createElement("option");
+      option.value = optionData.value;
+      option.textContent = optionData.label;
+      option.selected = optionData.value === String(value ?? "");
+      control.append(option);
+    });
+  } else {
+    control.type = type;
+    control.required = ["izena", "abizena", "emaila", "kopurua"].includes(name);
+    if (type !== "password") control.value = value ?? "";
+    if (type === "password") control.autocomplete = "new-password";
+    if (type === "email") control.maxLength = 100;
+    if (name === "izena" || name === "abizena") control.maxLength = 50;
+    if (name === "kopurua") {
+      control.min = "0";
+      control.step = "1";
+    }
+  }
+  label.append(caption, control);
+  return label;
+}
+
+function createInlineEditor(entity, record) {
+  const row = document.createElement("tr");
+  row.className = "inline-management-row";
+  row.dataset.editorRow = "true";
+  const cell = document.createElement("td");
+  cell.colSpan = entity === "users" ? 8 : 6;
+  const form = document.createElement("form");
+  form.className = "inline-management-form";
+  form.dataset.entity = entity;
+  form.dataset.recordId = String(record.id);
+  const fields = document.createElement("div");
+  fields.className = "database-create-fields";
+  if (entity === "users") {
+    fields.append(
+      createManagementField("izena", "firstNameLabel", "text", record.izena),
+      createManagementField("abizena", "lastNameLabel", "text", record.abizena),
+      createManagementField("emaila", "emailLabel", "email", record.emaila)
+    );
+    const roleField = createManagementField("rol_id", "roleIdLabel", "select", record.rol_id,
+      databaseRoles.map((role) => ({ value: String(role.id), label: `${role.id} · ${role.izena || ""}`.trim() })));
+    fields.append(roleField);
+    const passwordField = createManagementField("pasahitza", "newUserPasswordLabel", "password", "");
+    passwordField.querySelector("input").placeholder = translate("optionalPassword");
+    fields.append(passwordField);
+  } else {
+    const statusOptions = [
+      ["ONDO", "inventoryStatusGood"],
+      ["ERABILI_EZINIK", "inventoryStatusUnusable"],
+      ["MANTENIMENDUAN", "inventoryStatusMaintenance"],
+      ["GALDUTAKO", "inventoryStatusLost"]
+    ].map(([status, key]) => ({ value: status, label: translate(key) }));
+    const inventoryNameField = createManagementField("izena", "inventoryNameLabel", "text", record.izena);
+    inventoryNameField.querySelector("input").maxLength = 100;
+    fields.append(
+      inventoryNameField,
+      createManagementField("kopurua", "inventoryQuantityLabel", "number", record.kopurua),
+      createManagementField("egoera", "inventoryStatusLabel", "select", record.egoera, statusOptions)
+    );
+  }
+
+  const controls = document.createElement("div");
+  controls.className = "inline-management-actions";
+  const saveButton = document.createElement("button");
+  saveButton.type = "submit";
+  saveButton.className = "database-action-button";
+  saveButton.textContent = translate("saveChanges");
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "database-secondary-button";
+  cancelButton.dataset.cancelEditor = "true";
+  cancelButton.textContent = translate("cancelChanges");
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "database-delete-button";
+  deleteButton.dataset.deleteEntity = entity;
+  deleteButton.dataset.deleteId = String(record.id);
+  deleteButton.textContent = translate("deleteRecord");
+  controls.append(saveButton, cancelButton, deleteButton);
+  form.append(fields, controls);
+  cell.append(form);
+  row.append(cell);
+  return row;
 }
 
 function updateParkingPlateFormat() {
@@ -261,6 +517,7 @@ function updateSessionIdentity() {
   }
   demoModeNotice.hidden = activeAccount?.isDemo !== true;
   inventoryDatabaseDescription.textContent = translate(activeAccount?.isDemo ? "inventoryDemoDescription" : "inventoryDatabaseDescription");
+  updateManagementVisibility();
 }
 
 let pageTransitionTimeout;
@@ -328,6 +585,7 @@ function applyLanguage(language) {
   renderInventory();
   renderInventoryExcel();
   renderBudgetPlan();
+  updateTableSortIndicators();
 }
 
 try {
@@ -656,6 +914,7 @@ function createRecordRow(record) {
   identifierCell.textContent = record.identifier;
   timeCell.className = "time-cell";
   timeCell.textContent = formatTime(record.created_at);
+  timeCell.dataset.sortValue = record.created_at;
   badge.className = `access-badge${record.access_type === "salida" ? " exit" : ""}`;
   dot.className = "status-dot";
   badge.append(dot, document.createTextNode(translate(record.access_type === "salida" ? "exit" : "entry")));
@@ -686,6 +945,7 @@ function renderDashboard() {
   }
 
   recentEntries.forEach((entry) => recordsBody.append(createRecordRow(entry)));
+  sortTableBody("access-records");
 }
 
 async function loadUsers() {
@@ -725,6 +985,8 @@ async function loadUsers() {
         throw new Error("Invalid users response");
       }
       demoUsers = result.users;
+      databaseRoles = Array.isArray(result.roles) ? result.roles : [];
+      populateRoleSelect(userCreateRole);
       usersLoadState = "loaded";
     } catch (error) {
       console.error("No se pudieron cargar los usuarios:", error);
@@ -767,7 +1029,7 @@ function renderAttendanceUsers() {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
     row.className = "empty-row";
-    cell.colSpan = 8;
+    cell.colSpan = isDatabaseAdmin() ? 8 : 7;
     cell.textContent = translate(usersLoadState === "loading" ? "loadingUsers" : usersLoadErrorKey);
     row.append(cell);
     usersList.append(row);
@@ -778,7 +1040,7 @@ function renderAttendanceUsers() {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
     row.className = "empty-row";
-    cell.colSpan = 8;
+    cell.colSpan = isDatabaseAdmin() ? 8 : 7;
     cell.textContent = translate("noUsersFound");
     row.append(cell);
     usersList.append(row);
@@ -792,16 +1054,12 @@ function renderAttendanceUsers() {
     const isInside = attendance?.access_type === "entrada";
     const roleKey = { 1: "roleAdmin", 2: "roleStudent", 3: "roleTeacher", 4: "roleInventory" }[user.rol_id];
     const roleName = roleKey ? translate(roleKey) : user.rol_izena || "-";
-    const centerName = user.zentroa_id === null
-      ? "-"
-      : `${user.zentroa_izena || ""}${user.zentroa_izena ? " · " : ""}${user.zentroa_id}`;
     const cells = [
       String(user.id),
       user.izena,
       user.abizena,
       user.emaila,
-      user.rol_id === null ? roleName : `${user.rol_id} · ${roleName}`,
-      centerName
+      user.rol_id === null ? roleName : `${user.rol_id} · ${roleName}`
     ];
 
     cells.forEach((value) => {
@@ -831,8 +1089,20 @@ function renderAttendanceUsers() {
       actionCell.textContent = "-";
     }
     row.append(actionCell);
+    if (isDatabaseAdmin()) {
+      const manageCell = document.createElement("td");
+      const manageButton = document.createElement("button");
+      manageButton.type = "button";
+      manageButton.className = "database-action-button";
+      manageButton.dataset.manageEntity = "users";
+      manageButton.dataset.manageId = String(user.id);
+      manageButton.textContent = translate("manageRecord");
+      manageCell.append(manageButton);
+      row.append(manageCell);
+    }
     usersList.append(row);
   });
+  sortTableBody("users-list");
 }
 
 function formatEuro(amount) {
@@ -861,187 +1131,19 @@ function setInventoryMode(mode) {
   if (inventoryMode === "excel") loadInventoryExcel();
 }
 
-function parseExcelXml(xmlText, source) {
-  const document = new DOMParser().parseFromString(xmlText, "application/xml");
-  if (document.getElementsByTagName("parsererror").length) {
-    throw new Error(`Invalid XML in ${source}`);
-  }
-  return document;
-}
-
-function zipEntries(buffer) {
-  const bytes = new Uint8Array(buffer);
-  const view = new DataView(buffer);
-  const directoryEndSignature = 0x06054b50;
-  const directoryEntrySignature = 0x02014b50;
-  const searchStart = Math.max(0, bytes.length - 0xffff - 22);
-  let endOffset = -1;
-
-  for (let offset = bytes.length - 22; offset >= searchStart; offset--) {
-    if (view.getUint32(offset, true) === directoryEndSignature) {
-      endOffset = offset;
-      break;
-    }
-  }
-  if (endOffset < 0) throw new Error("The Excel file has no ZIP directory");
-
-  const entryCount = view.getUint16(endOffset + 10, true);
-  let offset = view.getUint32(endOffset + 16, true);
-  const entries = new Map();
-  const decoder = new TextDecoder();
-  for (let index = 0; index < entryCount; index++) {
-    if (view.getUint32(offset, true) !== directoryEntrySignature) {
-      throw new Error("The Excel file has an invalid ZIP directory");
-    }
-    const compression = view.getUint16(offset + 10, true);
-    const compressedSize = view.getUint32(offset + 20, true);
-    const nameLength = view.getUint16(offset + 28, true);
-    const extraLength = view.getUint16(offset + 30, true);
-    const commentLength = view.getUint16(offset + 32, true);
-    const localOffset = view.getUint32(offset + 42, true);
-    const name = decoder.decode(bytes.subarray(offset + 46, offset + 46 + nameLength));
-    entries.set(name, { compression, compressedSize, localOffset });
-    offset += 46 + nameLength + extraLength + commentLength;
-  }
-
-  return entries;
-}
-
-async function readExcelZipEntry(buffer, entries, path) {
-  const entry = entries.get(path);
-  if (!entry) throw new Error(`The Excel file is missing ${path}`);
-
-  const view = new DataView(buffer);
-  const nameLength = view.getUint16(entry.localOffset + 26, true);
-  const extraLength = view.getUint16(entry.localOffset + 28, true);
-  const dataOffset = entry.localOffset + 30 + nameLength + extraLength;
-  const compressed = new Uint8Array(buffer, dataOffset, entry.compressedSize);
-  let content;
-  if (entry.compression === 0) {
-    content = compressed;
-  } else if (entry.compression === 8) {
-    const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
-    content = new Uint8Array(await new Response(stream).arrayBuffer());
-  } else {
-    throw new Error(`Unsupported Excel ZIP compression: ${entry.compression}`);
-  }
-
-  return new TextDecoder("utf-8").decode(content);
-}
-
-async function parseExcelWorkbook(buffer) {
-  const entries = zipEntries(buffer);
-  const workbookXml = parseExcelXml(await readExcelZipEntry(buffer, entries, "xl/workbook.xml"), "xl/workbook.xml");
-  const sheet = workbookXml.getElementsByTagNameNS("*", "sheet")[0];
-  if (!sheet) throw new Error("The Excel workbook has no sheets");
-
-  const relationshipId = sheet.getAttributeNS(
-    "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
-    "id"
-  );
-  const relationshipsXml = parseExcelXml(
-    await readExcelZipEntry(buffer, entries, "xl/_rels/workbook.xml.rels"),
-    "xl/_rels/workbook.xml.rels"
-  );
-  const relationship = [...relationshipsXml.getElementsByTagNameNS("*", "Relationship")]
-    .find((item) => item.getAttribute("Id") === relationshipId);
-  if (!relationship) throw new Error("The Excel worksheet relationship is missing");
-
-  const target = relationship.getAttribute("Target").replaceAll("\\", "/");
-  const sheetPathParts = target.startsWith("/") ? [] : ["xl"];
-  target.split("/").forEach((part) => {
-    if (!part || part === ".") return;
-    if (part === "..") sheetPathParts.pop();
-    else sheetPathParts.push(part);
-  });
-  const sheetPath = sheetPathParts.join("/");
-  let sharedStrings = [];
-  if (entries.has("xl/sharedStrings.xml")) {
-    const sharedXml = parseExcelXml(
-      await readExcelZipEntry(buffer, entries, "xl/sharedStrings.xml"),
-      "xl/sharedStrings.xml"
-    );
-    sharedStrings = [...sharedXml.getElementsByTagNameNS("*", "si")]
-      .map((item) => item.textContent || "");
-  }
-
-  const sheetXml = parseExcelXml(await readExcelZipEntry(buffer, entries, sheetPath), sheetPath);
-  const rows = [...sheetXml.getElementsByTagNameNS("*", "row")].map((row) => {
-    const cells = new Map();
-    [...row.children].filter((cell) => cell.localName === "c").forEach((cell) => {
-      const reference = cell.getAttribute("r").match(/^([A-Z]+)/);
-      if (!reference) throw new Error("The Excel file contains an invalid cell reference");
-      const column = [...reference[1]].reduce((index, letter) => index * 26 + letter.charCodeAt(0) - 64, 0);
-      const value = cell.getElementsByTagNameNS("*", "v")[0]?.textContent || "";
-      const cellText = cell.getAttribute("t") === "s"
-        ? sharedStrings[Number(value)] || ""
-        : cell.getAttribute("t") === "inlineStr"
-          ? cell.getElementsByTagNameNS("*", "is")[0]?.textContent || ""
-          : value;
-      cells.set(column, cellText.replace(/\s+/g, " ").trim());
-    });
-    return cells;
-  });
-
-  const groups = [];
-  let columns = [];
-  let firstHeaderColumn = 3;
-  let activeGroup = null;
-  let quantityColumn = null;
-  rows.forEach((cells) => {
-    const hasComponentHeader = [...cells.values()].some((value) =>
-      /osagaia|componente/i.test(value)
-    );
-    if (hasComponentHeader) {
-      const populatedColumns = [...cells.entries()]
-        .filter(([column, value]) => column >= 3 && value !== "")
-        .map(([column]) => column);
-      if (!populatedColumns.length) throw new Error("The Excel table has no column headers");
-      const firstColumn = Math.min(...populatedColumns);
-      const lastColumn = Math.max(...populatedColumns);
-      firstHeaderColumn = firstColumn;
-      columns = Array.from({ length: lastColumn - firstColumn + 1 }, (_, index) =>
-        cells.get(firstColumn + index) || `Column ${firstColumn + index}`
-      );
-      groups.push({ title: (cells.get(2) || "Inventario").replace(/\s+/g, " ").trim(), items: [] });
-      activeGroup = groups.length - 1;
-      quantityColumn = columns.findIndex((column) => /kantitatea|cantidad|quantity/i.test(column));
-      if (quantityColumn < 0) quantityColumn = null;
-      return;
-    }
-    if (activeGroup === null || !columns.length) return;
-
-    const values = columns.map((_, index) => cells.get(firstHeaderColumn + index) || "");
-    if (values.some(Boolean)) groups[activeGroup].items.push(values);
-  });
-
-  if (!groups.length || !columns.length) throw new Error("No component tables were found in the Excel file");
-  return { source: "InbentorioaE1T2.xlsx", columns, quantityColumn, groups };
-}
-
 async function loadInventoryExcel() {
   if (inventoryExcelLoadState === "loaded" || inventoryExcelLoadPromise) return inventoryExcelLoadPromise;
 
   inventoryExcelLoadState = "loading";
   inventoryExcelLoadError = null;
   renderInventoryExcel();
-  inventoryExcelLoadPromise = fetch("PHP/inventario-excel.php", { cache: "no-store" })
-    .then(async (response) => {
-      if (response.status === 404) {
-        const workbookResponse = await fetch("InbentorioaE1T2.xlsx", { cache: "no-store" });
-        if (workbookResponse.status === 404) {
-          const staticResponse = await fetch("data/inventario-excel.json", { cache: "no-store" });
-          if (!staticResponse.ok) throw new Error(`HTTP ${staticResponse.status}`);
-          return staticResponse.json();
-        }
-        if (!workbookResponse.ok) throw new Error(`HTTP ${workbookResponse.status}`);
-        return parseExcelWorkbook(await workbookResponse.arrayBuffer());
-      }
+  inventoryExcelLoadPromise = fetch("data/inventario-excel.json")
+    .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
     })
     .then((data) => {
-      if (!Array.isArray(data.columns) || !Array.isArray(data.groups)) {
+      if (!Array.isArray(data.groups) || !Array.isArray(data.summary)) {
         throw new Error("Invalid Excel inventory JSON structure");
       }
       inventoryExcelData = data;
@@ -1066,46 +1168,42 @@ function renderInventoryExcel() {
   );
   inventoryExcelList.replaceChildren();
   inventoryExcelSummary.replaceChildren();
-  inventoryExcelHeader.replaceChildren();
+  inventoryExcelRecommendation.textContent = "";
 
   if (inventoryExcelLoadState !== "loaded" || !inventoryExcelData) return;
 
-  const items = inventoryExcelData.groups.flatMap((group) => group.items);
-  const quantityIndex = Number.isInteger(inventoryExcelData.quantityColumn)
-    ? inventoryExcelData.quantityColumn
-    : -1;
-  const totalUnits = items.reduce((total, item) => {
-    const quantity = quantityIndex < 0 ? 1 : Number(String(item[quantityIndex] ?? "").replace(",", "."));
-    return total + (Number.isFinite(quantity) ? quantity : 0);
-  }, 0);
-  [
-    ["excelGroupCount", inventoryExcelData.groups.length],
-    ["excelComponentCount", items.length],
-    ["excelUnitCount", totalUnits.toLocaleString(currentLanguage)]
-  ].forEach(([labelKey, valueText]) => {
+  const summaryRows = inventoryExcelData.summary;
+  const recommendation = summaryRows[summaryRows.length - 1];
+  const summaryCards = summaryRows.slice(0, -1);
+  const summaryLabels = {
+    "Biltegiratze ahalmen osoa": "excelStorageSummary",
+    "RAM memoriaren edukiera": "excelRamSummary",
+    "Prozesamendu grafikoa": "excelGraphicsSummary",
+    "Unitate optikoa": "excelOpticalSummary"
+  };
+
+  summaryCards.forEach((item) => {
     const card = document.createElement("article");
     const label = document.createElement("span");
     const value = document.createElement("strong");
     card.className = "glass-panel inventory-summary-card";
-    label.textContent = translate(labelKey);
-    value.textContent = valueText;
+    label.textContent = translate(summaryLabels[item.label]) || item.label;
+    value.textContent = item.value;
     card.append(label, value);
     inventoryExcelSummary.append(card);
   });
-
-  inventoryExcelData.columns.forEach((column) => {
-    const cell = document.createElement("th");
-    cell.scope = "col";
-    cell.textContent = column;
-    inventoryExcelHeader.append(cell);
-  });
+  if (recommendation) {
+    inventoryExcelRecommendationTitle.textContent = translate("excelRecommendationTitle");
+    inventoryExcelRecommendation.textContent = recommendation.value;
+  }
 
   inventoryExcelData.groups.forEach((group) => {
     const groupRow = document.createElement("tr");
     const groupCell = document.createElement("th");
     groupRow.className = "excel-group-row";
+    groupRow.dataset.groupKey = group.title;
     groupCell.scope = "rowgroup";
-    groupCell.colSpan = inventoryExcelData.columns.length;
+    groupCell.colSpan = 7;
     groupCell.textContent = group.title.trim() === "Beste osagai batzuk"
       ? translate("excelOtherParts")
       : group.title;
@@ -1114,22 +1212,29 @@ function renderInventoryExcel() {
 
     group.items.forEach((item) => {
       const row = document.createElement("tr");
-      item.forEach((value) => {
+      [
+        item.number,
+        item.component,
+        item.manufacturer,
+        item.model,
+        item.capacity,
+        item.notes,
+        String(item.quantity)
+      ].forEach((value) => {
         const cell = document.createElement("td");
         cell.textContent = value || "—";
         row.append(cell);
       });
+      row.dataset.sortGroup = group.title;
       inventoryExcelList.append(row);
     });
   });
+  sortTableBody("inventory-excel-list");
 }
 
 async function loadInventory() {
   if (activeAccount?.isDemo) {
-    inventoryItems = demoInventoryFixture;
-    inventoryLoadState = "loaded";
-    renderInventory();
-    return;
+    return loadDemoInventory();
   }
   if (inventoryLoadState === "loaded") {
     renderInventory();
@@ -1142,6 +1247,8 @@ async function loadInventory() {
   inventoryLoadPromise = (async () => {
     try {
       const response = await fetch("PHP/inbentarioa.php", {
+        credentials: "same-origin",
+        cache: "no-store",
         headers: { Accept: "application/json" }
       });
       const result = await response.json();
@@ -1158,6 +1265,43 @@ async function loadInventory() {
     }
   })();
   return inventoryLoadPromise;
+}
+
+async function loadDemoInventory() {
+  try {
+    let { response, result } = await requestSession("GET");
+    if (response.ok && !result.authenticated) {
+      ({ response, result } = await requestSession("POST", {
+        username: "gugul",
+        password: "67"
+      }));
+    }
+    if (response.ok && result.authenticated && result.account) {
+      activeAccount = result.account;
+      sessionStorage.removeItem(demoSessionStorageKey);
+      sessionStorage.setItem(serverSessionStorageKey, "1");
+      updateSessionIdentity();
+      return loadInventory();
+    }
+    if (response.status !== 404 && response.status !== 405) {
+      throw new Error(`No se pudo iniciar la sesión PHP: HTTP ${response.status}`);
+    }
+  } catch (error) {
+    const unavailablePhp = error instanceof TypeError
+      || error.status === 404
+      || error.status === 405
+      || (error.status === 200 && error.cause instanceof SyntaxError);
+    if (!unavailablePhp) {
+      console.error("No se pudo comprobar la sesión PHP:", error);
+      inventoryLoadState = "error";
+      renderInventory();
+      return;
+    }
+  }
+
+  inventoryItems = demoInventoryFixture;
+  inventoryLoadState = "loaded";
+  renderInventory();
 }
 
 function renderInventory() {
@@ -1180,7 +1324,7 @@ function renderInventory() {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
     row.className = "empty-row";
-    cell.colSpan = 6;
+    cell.colSpan = isDatabaseAdmin() ? 6 : 5;
     cell.textContent = translate("inventoryEmpty");
     row.append(cell);
     inventoryList.append(row);
@@ -1202,15 +1346,158 @@ function renderInventory() {
     const reviewDate = item.azken_berrikuspena
       ? new Intl.DateTimeFormat(translate("dateLocale"), { dateStyle: "medium" }).format(new Date(item.azken_berrikuspena.replace(" ", "T")))
       : translate("inventoryNoReview");
-    const values = [String(item.id), item.izena, String(item.kopurua), status, item.zentroa_izena || String(item.zentroa_id), reviewDate];
+    const values = [String(item.id), item.izena, String(item.kopurua), status, reviewDate];
     values.forEach((value) => {
       const cell = document.createElement("td");
       if (value instanceof HTMLElement) cell.append(value);
       else cell.textContent = value;
       row.append(cell);
     });
+    if (item.azken_berrikuspena) row.cells[4].dataset.sortValue = item.azken_berrikuspena;
+    if (isDatabaseAdmin()) {
+      const manageCell = document.createElement("td");
+      const manageButton = document.createElement("button");
+      manageButton.type = "button";
+      manageButton.className = "database-action-button";
+      manageButton.dataset.manageEntity = "inventory";
+      manageButton.dataset.manageId = String(item.id);
+      manageButton.textContent = translate("manageRecord");
+      manageCell.append(manageButton);
+      row.append(manageCell);
+    }
     inventoryList.append(row);
   });
+  sortTableBody("inventory-list");
+}
+
+const managementErrorKeys = {
+  duplicate_entry: "duplicateEntry",
+  invalid_reference: "invalidReference",
+  invalid_user_data: "invalidUserData",
+  invalid_role: "invalidRole",
+  password_required: "passwordRequired",
+  invalid_inventory_data: "invalidInventoryData",
+  center_required: "centerRequired",
+  center_unavailable: "centerUnavailable",
+  inventory_manager_required: "inventoryManagerRequired",
+  record_not_found: "recordNotFound",
+  database_access_denied: "managementFailed",
+  database_not_found: "managementFailed",
+  table_not_found: "managementFailed",
+  database_connection_failed: "managementFailed"
+};
+
+async function sendManagementRequest(entity, action, data, id = null) {
+  const response = await fetch("PHP/manage.php", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ entity, action, id, data })
+  });
+  let result;
+  try {
+    result = await response.json();
+  } catch (error) {
+    throw new Error("The management endpoint returned invalid JSON.", { cause: error });
+  }
+  if (!response.ok) {
+    const error = new Error(`Management request failed with status ${response.status}.`);
+    error.errorCode = result.errorCode;
+    throw error;
+  }
+  return result;
+}
+
+function formManagementData(form) {
+  const data = Object.fromEntries(new FormData(form));
+  ["rol_id", "kopurua"].forEach((key) => {
+    if (data[key] !== undefined && data[key] !== "") data[key] = Number(data[key]);
+  });
+  return data;
+}
+
+function managementErrorKey(error) {
+  return managementErrorKeys[error.errorCode] || "managementFailed";
+}
+
+async function refreshManagedData(entity) {
+  if (entity === "users") {
+    usersLoadState = "idle";
+    await loadUsers();
+  } else {
+    inventoryLoadState = "idle";
+    await loadInventory();
+  }
+}
+
+async function submitManagementForm(form) {
+  if (!isDatabaseAdmin()) return;
+  const entity = form.dataset.entity || (form === usersCreateForm ? "users" : "inventory");
+  const action = form.dataset.recordId ? "update" : "create";
+  const submitButton = form.querySelector('button[type="submit"]');
+  const message = form === usersCreateForm
+    ? usersCreateMessage
+    : form === inventoryCreateForm
+      ? inventoryCreateMessage
+      : null;
+  if (message) message.hidden = true;
+  submitButton.disabled = true;
+
+  try {
+    await sendManagementRequest(entity, action, formManagementData(form), form.dataset.recordId ? Number(form.dataset.recordId) : null);
+    if (message) {
+      message.textContent = translate("createSuccess");
+      message.hidden = false;
+    } else {
+      showToast(translate("updateSuccess"));
+    }
+    if (action === "create") {
+      form.reset();
+      populateRoleSelect(userCreateRole);
+      const quantityInput = inventoryCreateForm.querySelector('[name="kopurua"]');
+      if (quantityInput) quantityInput.value = "1";
+    }
+    await refreshManagedData(entity);
+  } catch (error) {
+    console.error(`No se pudo ${action === "create" ? "crear" : "actualizar"} el registro:`, error);
+    const key = managementErrorKey(error);
+    if (message) {
+      message.textContent = translate(key);
+      message.hidden = false;
+    } else {
+      showToast(translate(key));
+    }
+  } finally {
+    submitButton.disabled = false;
+  }
+}
+
+async function deleteManagedRecord(entity, id) {
+  if (!isDatabaseAdmin()) return;
+  const confirmationKey = entity === "users" ? "confirmDeleteUser" : "confirmDeleteInventory";
+  if (!window.confirm(translate(confirmationKey))) return;
+  try {
+    await sendManagementRequest(entity, "delete", null, id);
+    showToast(translate("deleteSuccess"));
+    await refreshManagedData(entity);
+  } catch (error) {
+    console.error("No se pudo borrar el registro:", error);
+    showToast(translate(managementErrorKey(error)));
+  }
+}
+
+function toggleInlineEditor(entity, id) {
+  const list = entity === "users" ? usersList : inventoryList;
+  const record = (entity === "users" ? demoUsers : inventoryItems).find((item) => item.id === id);
+  if (!record) return;
+  list.querySelectorAll("[data-editor-row]").forEach((row) => row.remove());
+  const row = [...list.querySelectorAll("[data-manage-id]")]
+    .find((button) => Number(button.dataset.manageId) === id)
+    ?.closest("tr");
+  if (row) row.after(createInlineEditor(entity, record));
 }
 
 function renderBudgetPlan() {
@@ -1368,14 +1655,40 @@ loginForm.addEventListener("submit", async (event) => {
       return;
     }
 
-    const demoAccount = { username: "gugul", role: "Admin", userId: null, isDemo: true };
     try {
-      sessionStorage.setItem(demoSessionStorageKey, JSON.stringify(demoAccount));
+      let serverAccount = null;
+      try {
+        const { response, result } = await requestSession("POST", {
+          username,
+          password: loginPassword.value
+        });
+        if (response.ok && result.account) {
+          serverAccount = result.account;
+        } else if (response.status !== 404 && response.status !== 405) {
+          throw new Error(`Login failed with status ${response.status}.`);
+        }
+      } catch (error) {
+        const unavailablePhp = error instanceof TypeError
+          || error.status === 404
+          || error.status === 405
+          || (error.status === 200 && error.cause instanceof SyntaxError);
+        if (!unavailablePhp) throw error;
+      }
+
       loginPassword.value = "";
-      openAuthenticatedDashboard(demoAccount);
+      if (serverAccount) {
+        sessionStorage.removeItem(demoSessionStorageKey);
+        sessionStorage.setItem(serverSessionStorageKey, "1");
+        openAuthenticatedDashboard(serverAccount);
+      } else {
+        const demoAccount = { username: "gugul", role: "Admin", userId: null, isDemo: true };
+        sessionStorage.removeItem(serverSessionStorageKey);
+        sessionStorage.setItem(demoSessionStorageKey, JSON.stringify(demoAccount));
+        openAuthenticatedDashboard(demoAccount);
+      }
     } catch (error) {
-      console.error("Could not save the browser demo session:", error);
-      loginError.textContent = translate("demoSessionError");
+      console.error("Could not sign in with the demo account:", error);
+      loginError.textContent = translate("sessionUnavailable");
       loginError.hidden = false;
     } finally {
       submitButton.disabled = false;
@@ -1447,6 +1760,16 @@ loginForm.addEventListener("input", () => {
 });
 
 viewButtons.forEach((button) => button.addEventListener("click", () => setDashboardView(button.dataset.appView)));
+document.querySelectorAll(".table-sort-button").forEach((button) => {
+  button.addEventListener("click", () => {
+    const bodyId = button.dataset.sortBody;
+    const column = Number(button.dataset.sortColumn);
+    const current = tableSortStates.get(bodyId);
+    const direction = current?.column === column ? -current.direction : 1;
+    tableSortStates.set(bodyId, { column, direction, type: button.dataset.sortType });
+    sortTableBody(bodyId);
+  });
+});
 inventoryModeButtons.forEach((button) => button.addEventListener("click", () => setInventoryMode(button.dataset.inventoryMode)));
 inventoryRefreshButton.addEventListener("click", () => {
   inventoryLoadState = "idle";
@@ -1454,9 +1777,49 @@ inventoryRefreshButton.addEventListener("click", () => {
 });
 userSearchInput.addEventListener("input", renderAttendanceUsers);
 userRoleFilter.addEventListener("change", renderAttendanceUsers);
+usersCreateForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  submitManagementForm(usersCreateForm);
+});
+inventoryCreateForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  submitManagementForm(inventoryCreateForm);
+});
 usersList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-attendance-user-id]");
-  if (button) toggleUserAttendance(Number(button.dataset.attendanceUserId));
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.manageEntity) {
+    toggleInlineEditor(button.dataset.manageEntity, Number(button.dataset.manageId));
+  } else if (button.dataset.deleteEntity) {
+    deleteManagedRecord(button.dataset.deleteEntity, Number(button.dataset.deleteId));
+  } else if (button.dataset.cancelEditor) {
+    button.closest("[data-editor-row]")?.remove();
+  } else if (button.dataset.attendanceUserId) {
+    toggleUserAttendance(Number(button.dataset.attendanceUserId));
+  }
+});
+inventoryList.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.manageEntity) {
+    toggleInlineEditor(button.dataset.manageEntity, Number(button.dataset.manageId));
+  } else if (button.dataset.deleteEntity) {
+    deleteManagedRecord(button.dataset.deleteEntity, Number(button.dataset.deleteId));
+  } else if (button.dataset.cancelEditor) {
+    button.closest("[data-editor-row]")?.remove();
+  }
+});
+usersList.addEventListener("submit", (event) => {
+  const form = event.target.closest("form[data-entity]");
+  if (!form) return;
+  event.preventDefault();
+  submitManagementForm(form);
+});
+inventoryList.addEventListener("submit", (event) => {
+  const form = event.target.closest("form[data-entity]");
+  if (!form) return;
+  event.preventDefault();
+  submitManagementForm(form);
 });
 
 parkingDialogClose.addEventListener("click", () => parkingDialog.close());
