@@ -25,7 +25,12 @@ function readEntryFromArchive($archive, string $path): string
             throw new RuntimeException('No existe la entrada ' . $path);
         }
 
-        return $archive[$path]->getContent();
+        $content = file_get_contents($archive[$path]->getPathname());
+        if ($content === false) {
+            throw new RuntimeException('No se pudo leer la entrada ' . $path);
+        }
+
+        return $content;
     }
 
     if ($archive instanceof ZipArchive) {
