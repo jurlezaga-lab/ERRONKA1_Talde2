@@ -1,3 +1,6 @@
+// ERRUBRIKA: IKUSPEGIEN LOGIKA ETA SAIO-KONTROLA BEZEROALDEAN
+// Hemen dashboardeko elementuak eta saioa hasteko, nabigatzeko eta datuak
+// autentifikatutako erabiltzailearen rolaren arabera kargatzeko logika hasieratzen dira.
 const coverScreen = document.querySelector("#cover-screen");
 const dashboardScreen = document.querySelector("#dashboard-screen");
 const pageTransition = document.querySelector("#page-transition");
@@ -97,6 +100,7 @@ const partialPlatePatterns = {
   current: new RegExp(`^(?:[0-9]{0,4}|[0-9]{4}[${validPlateLetters}]{0,3})$`),
   old: new RegExp(`^(?:|${spanishProvincePrefixes.join("|")}|(?:${spanishProvinceCodes.join("|")})-?[0-9]{0,4}|(?:${spanishProvinceCodes.join("|")})-?[0-9]{4}-?[${validPlateLetters}]{0,2})$`)
 };
+// ERRUBRIKA: HIZKUNTZA ANITZEA (EU / ES / EN)
 const translations = {
   eu: {
     languageLabel: "Hizkuntza", schoolName: "CIFP TXURDINAGA LHII", accessControl: "SARBIDE-KONTROLA", welcome: "Ongi etorri", welcomePlace: "Txurdinagara.",

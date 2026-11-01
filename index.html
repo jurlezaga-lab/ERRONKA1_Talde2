@@ -13,6 +13,7 @@
   <script src="JS/dashboard.js" defer></script>
 </head>
 <body>
+  <!-- ERRUBRIKA: INTERFAZE ETA NABIGAZIO NAGUSIA -->
     <div class="global-controls">
       <label class="visually-hidden" for="language-select" data-i18n="languageLabel">Hizkuntza</label>
       <select class="language-select" id="language-select" aria-label="Hizkuntza">
@@ -44,6 +45,7 @@
       <p class="eyebrow"><span data-i18n="schoolName">FP TXURDINAGA</span> <span>·</span> <span data-i18n="accessControl">SARBIDE-KONTROLA</span></p>
       <h1 id="cover-title"><span data-i18n="welcome">Ongi etorri</span><br><span data-i18n="welcomePlace">Txurdinagara.</span></h1>
       <p class="cover-description" data-i18n="coverDescription">Ikastetxeko sarrera eta irteeren kontrola, toki bakar batean.</p>
+      <!-- ERRUBRIKA: LOGINA ETA AUTENTIFIKAZIO VISUALA -->
       <form class="login-form" id="login-form">
         <div class="login-field">
           <label for="login-username" data-i18n="username">Erabiltzailea</label>
@@ -90,6 +92,7 @@
 
     <p class="demo-mode-notice" id="demo-mode-notice" role="status" data-i18n="demoModeNotice" hidden></p>
 
+    <!-- ERRUBRIKA: IKUSPEGIAK ROLAREN ARABERA (overview / users / inventory) -->
     <nav class="view-switcher" aria-label="Nabigazio nagusia" data-i18n-aria-label="appNavigation">
       <button class="view-tab is-active" id="overview-view-button" type="button" data-app-view="overview" aria-pressed="true" data-i18n="overviewView">Ikuspegi orokorra</button>
       <button class="view-tab" id="users-view-button" type="button" data-app-view="users" aria-pressed="false" data-i18n="usersView">Erabiltzaileak</button>

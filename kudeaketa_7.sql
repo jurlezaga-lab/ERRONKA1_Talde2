@@ -7,6 +7,10 @@ USE `kudeaketa_7`;
 -- 1. TAULAK ETA DATUAK
 -- =============================================================================
 
+-- ERRUBRIKA: ERLAZIO-ESKEMA ETA DATUEN IRAUNKORTASUNA
+-- rol, usuarios, inbentario eta parking taulak sistemaaren egitura definitzen dute,
+-- erlazioak eta murrizketak, erabiltzaile eta stockaren kudeaketa zuzen ahalbidetuz.
+
 -- 1. ESTRUKTURA ETA DATUAK: ROL
 CREATE TABLE `rol` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,

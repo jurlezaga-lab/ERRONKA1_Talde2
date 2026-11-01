@@ -1,3 +1,4 @@
+// ERRUBRIKA: PRIBATUTASUNA ETA BAIETZA TEKNIKOA
 const cookieNotice = document.querySelector("#cookie-notice");
 const cookieNoticeError = cookieNotice.querySelector('[data-cookie-text="error"]');
 const cookieDismissButton = cookieNotice.querySelector("[data-cookie-dismiss]");

@@ -1,4 +1,7 @@
 <?php
+// ERRUBRIKA: ERABILTZAILEEN ETA ROLEN KONTSULTA MYSQL-TIK
+// Endpoint honek erabiltzaileak eta rolak JSON formatuan itzultzen ditu, kudeaketa
+// ikuspegia kargatzeko eta autentifikatutako profilaren arabera sarbideak filtratzeko.
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/session.php';

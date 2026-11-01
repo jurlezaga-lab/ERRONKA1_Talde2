@@ -1,4 +1,6 @@
 <?php
+// ERRUBRIKA: SERVER-LOGINA ETA SAIO AUTENTIFIKATUA
+// Hemen erabiltzailea balioztatzen da eta rolaren informazioa nabigatzailearen saioan gordetzen da.
 require_once __DIR__ . '/session.php';
 
 header('Content-Type: application/json; charset=utf-8');

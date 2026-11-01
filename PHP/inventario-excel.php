@@ -1,4 +1,7 @@
 <?php
+// ERRUBRIKA: INBENTARIOA EXCEL-TIK INPORTATZEA ETA DOKUMENTUAREN PARSINGA
+// Endpoint honek Excel liburua irakurtzen du eta errenkadak/zutabeak JSON-era
+// bihurtzen ditu aplikazio barruan inbentarioaren panela kargatzeko.
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
@@ -10,13 +13,31 @@ function fail(string $message): never
     exit;
 }
 
-function readEntry(PharData $workbook, string $path): string
+function startsWith(string $haystack, string $needle): bool
 {
-    if (!isset($workbook[$path])) {
-        throw new RuntimeException('No existe la entrada ' . $path);
+    return $needle === '' || strpos($haystack, $needle) === 0;
+}
+
+function readEntryFromArchive($archive, string $path): string
+{
+    if ($archive instanceof PharData) {
+        if (!isset($archive[$path])) {
+            throw new RuntimeException('No existe la entrada ' . $path);
+        }
+
+        return $archive[$path]->getContent();
     }
 
-    return $workbook[$path]->getContent();
+    if ($archive instanceof ZipArchive) {
+        $content = $archive->getFromName($path);
+        if ($content === false) {
+            throw new RuntimeException('No existe la entrada ' . $path);
+        }
+
+        return $content;
+    }
+
+    throw new RuntimeException('Tipo de archivo no soportado para leer el Excel.');
 }
 
 function parseXml(string $content, string $path): DOMDocument
@@ -69,151 +90,176 @@ function cellText(DOMElement $cell, DOMXPath $xpath, array $sharedStrings): stri
 }
 
 try {
-    if (!class_exists(PharData::class)) {
-        throw new RuntimeException('La extensión Phar de PHP no está disponible.');
-    }
-
     $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'InbentorioaE1T2.xlsx';
     if (!is_file($file)) {
         throw new RuntimeException('No se encuentra ' . $file);
     }
 
-    $workbook = new PharData($file);
-    $workbookXml = parseXml(readEntry($workbook, 'xl/workbook.xml'), 'xl/workbook.xml');
-    $workbookXPath = new DOMXPath($workbookXml);
-    $workbookXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
-    $workbookXPath->registerNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
-    $sheet = $workbookXPath->query('/m:workbook/m:sheets/m:sheet')->item(0);
-    if (!$sheet instanceof DOMElement) {
-        throw new RuntimeException('El libro no contiene hojas.');
-    }
-
-    $relationshipId = $sheet->getAttributeNS(
-        'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        'id'
-    );
-    $relationshipsXml = parseXml(readEntry($workbook, 'xl/_rels/workbook.xml.rels'), 'xl/_rels/workbook.xml.rels');
-    $relationshipsXPath = new DOMXPath($relationshipsXml);
-    $relationshipsXPath->registerNamespace('rel', 'http://schemas.openxmlformats.org/package/2006/relationships');
-    $relationship = $relationshipsXPath->query(
-        '/rel:Relationships/rel:Relationship[@Id="' . htmlspecialchars($relationshipId, ENT_XML1) . '"]'
-    )->item(0);
-    if (!$relationship instanceof DOMElement) {
-        throw new RuntimeException('No se encontró la relación de la hoja.');
-    }
-
-    $target = str_replace('\\', '/', $relationship->getAttribute('Target'));
-    $sheetPath = str_starts_with($target, '/') ? ltrim($target, '/') : 'xl/' . $target;
-    $pathParts = [];
-    foreach (explode('/', $sheetPath) as $part) {
-        if ($part === '' || $part === '.') {
-            continue;
+    $archive = null;
+    if (class_exists('PharData')) {
+        $archive = new PharData($file);
+    } elseif (class_exists('ZipArchive')) {
+        $zip = new ZipArchive();
+        $opened = $zip->open($file);
+        if ($opened !== true) {
+            throw new RuntimeException('No se pudo abrir el archivo Excel con ZipArchive (código: ' . $opened . ').');
         }
-        if ($part === '..') {
-            array_pop($pathParts);
-            continue;
-        }
-        $pathParts[] = $part;
-    }
-    $sheetPath = implode('/', $pathParts);
-
-    $sharedStrings = [];
-    if (isset($workbook['xl/sharedStrings.xml'])) {
-        $sharedXml = parseXml(readEntry($workbook, 'xl/sharedStrings.xml'), 'xl/sharedStrings.xml');
-        $sharedXPath = new DOMXPath($sharedXml);
-        $sharedXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
-        foreach ($sharedXPath->query('/m:sst/m:si') as $string) {
-            $sharedStrings[] = implode('', array_map(
-                static fn (DOMNode $node): string => $node->textContent,
-                iterator_to_array($sharedXPath->query('.//m:t', $string))
-            ));
-        }
+        $archive = $zip;
+    } else {
+        throw new RuntimeException('La extensión Phar ni ZipArchive no está disponible. Habilita una de las dos para leer archivos XLSX.');
     }
 
-    $sheetXml = parseXml(readEntry($workbook, $sheetPath), $sheetPath);
-    $sheetXPath = new DOMXPath($sheetXml);
-    $sheetXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
-    $rows = [];
-    foreach ($sheetXPath->query('/m:worksheet/m:sheetData/m:row') as $row) {
-        $cells = [];
-        foreach ($sheetXPath->query('m:c', $row) as $cell) {
-            if (!$cell instanceof DOMElement) {
+    try {
+        $workbookXml = parseXml(readEntryFromArchive($archive, 'xl/workbook.xml'), 'xl/workbook.xml');
+        $workbookXPath = new DOMXPath($workbookXml);
+        $workbookXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
+        $workbookXPath->registerNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
+        $sheet = $workbookXPath->query('/m:workbook/m:sheets/m:sheet')->item(0);
+        if (!$sheet instanceof DOMElement) {
+            throw new RuntimeException('El libro no contiene hojas.');
+        }
+
+        $relationshipId = $sheet->getAttributeNS(
+            'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+            'id'
+        );
+        $relationshipsXml = parseXml(readEntryFromArchive($archive, 'xl/_rels/workbook.xml.rels'), 'xl/_rels/workbook.xml.rels');
+        $relationshipsXPath = new DOMXPath($relationshipsXml);
+        $relationshipsXPath->registerNamespace('rel', 'http://schemas.openxmlformats.org/package/2006/relationships');
+        $relationship = $relationshipsXPath->query(
+            '/rel:Relationships/rel:Relationship[@Id="' . htmlspecialchars($relationshipId, ENT_XML1) . '"]'
+        )->item(0);
+        if (!$relationship instanceof DOMElement) {
+            throw new RuntimeException('No se encontró la relación de la hoja.');
+        }
+
+        $target = str_replace('\\', '/', $relationship->getAttribute('Target'));
+        $sheetPath = startsWith($target, '/') ? ltrim($target, '/') : 'xl/' . $target;
+        $pathParts = [];
+        foreach (explode('/', $sheetPath) as $part) {
+            if ($part === '' || $part === '.') {
                 continue;
             }
-            $cells[cellColumn($cell->getAttribute('r'))] = normalizeText(cellText($cell, $sheetXPath, $sharedStrings));
+            if ($part === '..') {
+                array_pop($pathParts);
+                continue;
+            }
+            $pathParts[] = $part;
         }
-        $rows[] = $cells;
-    }
+        $sheetPath = implode('/', $pathParts);
 
-    $groups = [];
-    $headers = [];
-    $activeGroup = null;
-    $quantityColumn = null;
-    foreach ($rows as $cells) {
-        $hasComponentHeader = false;
-        foreach ($cells as $value) {
-            if (stripos($value, 'Osagaia') !== false || stripos($value, 'Componente') !== false) {
-                $hasComponentHeader = true;
-                break;
+        $sharedStrings = [];
+        if (method_exists($archive, 'locateName') && $archive->locateName('xl/sharedStrings.xml') !== false) {
+            $sharedXml = parseXml(readEntryFromArchive($archive, 'xl/sharedStrings.xml'), 'xl/sharedStrings.xml');
+            $sharedXPath = new DOMXPath($sharedXml);
+            $sharedXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
+            foreach ($sharedXPath->query('/m:sst/m:si') as $string) {
+                $sharedStrings[] = implode('', array_map(
+                    static fn (DOMNode $node): string => $node->textContent,
+                    iterator_to_array($sharedXPath->query('.//m:t', $string))
+                ));
+            }
+        } elseif (isset($archive['xl/sharedStrings.xml'])) {
+            $sharedXml = parseXml(readEntryFromArchive($archive, 'xl/sharedStrings.xml'), 'xl/sharedStrings.xml');
+            $sharedXPath = new DOMXPath($sharedXml);
+            $sharedXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
+            foreach ($sharedXPath->query('/m:sst/m:si') as $string) {
+                $sharedStrings[] = implode('', array_map(
+                    static fn (DOMNode $node): string => $node->textContent,
+                    iterator_to_array($sharedXPath->query('.//m:t', $string))
+                ));
             }
         }
 
-        if ($hasComponentHeader) {
-            $headers = [];
-            $headerColumns = array_filter(
-                array_keys($cells),
-                static fn (int $column): bool => $column >= 3 && $cells[$column] !== ''
-            );
-            if (!$headerColumns) {
-                throw new RuntimeException('La tabla no contiene encabezados.');
+        $sheetXml = parseXml(readEntryFromArchive($archive, $sheetPath), $sheetPath);
+        $sheetXPath = new DOMXPath($sheetXml);
+        $sheetXPath->registerNamespace('m', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
+        $rows = [];
+        foreach ($sheetXPath->query('/m:worksheet/m:sheetData/m:row') as $row) {
+            $cells = [];
+            foreach ($sheetXPath->query('m:c', $row) as $cell) {
+                if (!$cell instanceof DOMElement) {
+                    continue;
+                }
+                $cells[cellColumn($cell->getAttribute('r'))] = normalizeText(cellText($cell, $sheetXPath, $sharedStrings));
             }
-            $firstHeaderColumn = min($headerColumns);
-            $lastHeaderColumn = max($headerColumns);
-            for ($column = $firstHeaderColumn; $column <= $lastHeaderColumn; $column++) {
-                $value = $cells[$column] ?? '';
-                $headers[$column] = $value !== '' ? $value : 'Columna ' . $column;
-            }
+            $rows[] = $cells;
+        }
 
-            $groupTitle = normalizeText($cells[2] ?? '');
-            if ($groupTitle === '') {
-                $groupTitle = 'Inventario';
-            }
-            $groups[] = ['title' => $groupTitle, 'items' => []];
-            $activeGroup = count($groups) - 1;
-            foreach ($headers as $column => $header) {
-                if (stripos($header, 'Kantitatea') !== false || stripos($header, 'Cantidad') !== false || stripos($header, 'Quantity') !== false) {
-                    $quantityColumn = array_search($column, array_keys($headers), true);
+        $groups = [];
+        $headers = [];
+        $activeGroup = null;
+        $quantityColumn = null;
+        foreach ($rows as $cells) {
+            $hasComponentHeader = false;
+            foreach ($cells as $value) {
+                if (stripos($value, 'Osagaia') !== false || stripos($value, 'Componente') !== false) {
+                    $hasComponentHeader = true;
+                    break;
                 }
             }
-            continue;
+
+            if ($hasComponentHeader) {
+                $headers = [];
+                $headerColumns = array_filter(
+                    array_keys($cells),
+                    static fn (int $column): bool => $column >= 3 && $cells[$column] !== ''
+                );
+                if (!$headerColumns) {
+                    throw new RuntimeException('La tabla no contiene encabezados.');
+                }
+                $firstHeaderColumn = min($headerColumns);
+                $lastHeaderColumn = max($headerColumns);
+                for ($column = $firstHeaderColumn; $column <= $lastHeaderColumn; $column++) {
+                    $value = $cells[$column] ?? '';
+                    $headers[$column] = $value !== '' ? $value : 'Columna ' . $column;
+                }
+
+                $groupTitle = normalizeText($cells[2] ?? '');
+                if ($groupTitle === '') {
+                    $groupTitle = 'Inventario';
+                }
+                $groups[] = ['title' => $groupTitle, 'items' => []];
+                $activeGroup = count($groups) - 1;
+                foreach ($headers as $column => $header) {
+                    if (stripos($header, 'Kantitatea') !== false || stripos($header, 'Cantidad') !== false || stripos($header, 'Quantity') !== false) {
+                        $quantityColumn = array_search($column, array_keys($headers), true);
+                    }
+                }
+                continue;
+            }
+
+            if ($activeGroup === null || !$headers) {
+                continue;
+            }
+
+            $values = [];
+            $hasValue = false;
+            foreach ($headers as $column => $_header) {
+                $value = $cells[$column] ?? '';
+                $values[] = $value;
+                $hasValue = $hasValue || $value !== '';
+            }
+            if ($hasValue) {
+                $groups[$activeGroup]['items'][] = $values;
+            }
         }
 
-        if ($activeGroup === null || !$headers) {
-            continue;
+        if (!$groups || !$headers) {
+            throw new RuntimeException('No se encontraron tablas de componentes en el libro.');
         }
 
-        $values = [];
-        $hasValue = false;
-        foreach ($headers as $column => $_header) {
-            $value = $cells[$column] ?? '';
-            $values[] = $value;
-            $hasValue = $hasValue || $value !== '';
-        }
-        if ($hasValue) {
-            $groups[$activeGroup]['items'][] = $values;
+        echo json_encode([
+            'source' => basename($file),
+            'columns' => array_values($headers),
+            'quantityColumn' => $quantityColumn,
+            'groups' => $groups
+        ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    } finally {
+        if ($archive instanceof ZipArchive) {
+            $archive->close();
         }
     }
-
-    if (!$groups || !$headers) {
-        throw new RuntimeException('No se encontraron tablas de componentes en el libro.');
-    }
-
-    echo json_encode([
-        'source' => basename($file),
-        'columns' => array_values($headers),
-        'quantityColumn' => $quantityColumn,
-        'groups' => $groups
-    ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 } catch (Throwable $error) {
     fail($error->getMessage());
 }

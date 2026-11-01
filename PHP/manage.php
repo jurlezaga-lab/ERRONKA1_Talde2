@@ -1,4 +1,7 @@
 <?php
+// ERRUBRIKA: ERABILTZAILE ETA INBENTARIOAREN CRUDA BALIDAZIOREKIN
+// API honek create/update/delete onartzen ditu sarrerak balidatuta eta
+// baimenak kontrolatuta datu-basean idatzi aurretik.
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, private');
 

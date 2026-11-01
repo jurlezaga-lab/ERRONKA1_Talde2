@@ -1,3 +1,4 @@
+// ERRUBRIKA: INTERFAZEAREN PERTSONALIZAZIOA (gai argia/iluna)
 const themeRoot = document.documentElement;
 const themeButtons = document.querySelectorAll("[data-theme-toggle]");
 const themeStorageKey = "txurdinaga-theme";

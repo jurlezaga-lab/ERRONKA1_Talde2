@@ -1,4 +1,7 @@
 <?php
+// ERRUBRIKA: AUTENTIFIKAZIOA, SAIOA ETA ROL-ARABERAKO SARBIDE KONTROLA
+// Bloke honek saio segurua abiarazten du HttpOnly cookieekin eta baimenak
+// balioztatzen ditu sistemaaren datuak edo kudeaketa atzitu aurretik.
 function startAppSession(): bool
 {
     if (session_status() === PHP_SESSION_ACTIVE) {
@@ -25,6 +28,9 @@ function startAppSession(): bool
     return true;
 }
 
+// ERRUBRIKA: ROL-BAIMENAK (Admin / Teacher / Student / Inventory)
+// Erabiltzailea autentifikatuta ez badago edo bere rola ez bada onartua, APIak
+// 401/403 erantzuna ematen du eta erabiltzaile edo inbentarioaren sarbidea blokeatzen du.
 function requireAppRole(array $allowedRoles): void
 {
     if (!isset($_SESSION['account'])) {
